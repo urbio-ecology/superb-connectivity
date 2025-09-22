@@ -1,16 +1,21 @@
 # clean any spatial data layer (shape file)
-# many shape files contain errors, places where the edges of a polygon cross over or polygons which overlap
-# this function helps to remove some of those errors by smoothing the edges of polygons, removing corners
-# and dissolving edges where polygons overlap. This reduces the complexity of the shape file, making future steps quicker
-clean <- function(spatialData, ...) {
-  cd <- sf::st_buffer(spatialData, dist = 0, nQuadSegs = 5) # buffer by a small amount
-  cd <- sf::st_union(cd, by_feature = FALSE) # union to create one large polygon rather than multiple small ones
-  cd <- sf::st_simplify(cd, dTolerance = 1) # simplify to remove some vertices
-  cd
+# many shape files contain errors, places where the edges of a polygon cross
+# over or polygons which overlap. This helps remove some of those errors by
+# smoothing the edges of polygons, removing corners, and dissolving
+# edges where polygons overlap. This reduces the complexity of the shape file,
+# making future steps quicker
+clean <- function(spatial_data, ...) {
+  # buffer by a small amount
+  buffered <- sf::st_buffer(spatial_data, dist = 0, nQuadSegs = 5)
+  # union to create one large polygon rather than multiple small ones
+  unioned <- sf::st_union(buffered, by_feature = FALSE)
+  # simplify to remove some vertices
+  simplified <- sf::st_simplify(unioned, dTolerance = 1)
+  simplified
 }
 
-# clean membership function to account for when some fragments appear in no buffered areas,
-# or some appear in more than one.
+# clean membership to account for when some fragments appear in no buffered
+# areas, or some appear in more than one.
 clean_inter <- function(membership_vector) {
   # check for empty vectors
   if (length(membership_vector) == 0) {

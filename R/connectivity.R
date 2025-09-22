@@ -2,57 +2,62 @@
 # which habitat patches are no longer considered connected)
 habitat_buffer <- function(habitat, distance) {
   # buffer by the required distance
-  hb <- sf::st_buffer(habitat, dist = distance, nQuadSegs = 5)
+  habitat_buffer <- sf::st_buffer(habitat, dist = distance, nQuadSegs = 5)
   # union creates one large polygon rather than multiple small ones
-  hb <- sf::st_union(hb, by_feature = FALSE)
-  hb
+  habitat_union <- sf::st_union(habitat_buffer, by_feature = FALSE)
+  habitat_union
 }
 
 # create the fragmentation geometry
-fragment_geometry <- function(bufferedHabitat, barrier) {
-  fg <- sf::st_difference(bufferedHabitat, barrier) # difference removes the road polygon areas from the buffered habitat polygon, creating gaps
-  fg <- sf::st_cast(fg, "POLYGON") # creates individual polygons, rather than one mega polygon
-  fg <- sf::st_sf(fg)
-  fg$ID <- seq.int(nrow(fg)) # squentially number the
-  fg
+fragment_geometry <- function(habitat_buffered, barrier) {
+  # Remove road polygon areas from buffered habitat polygon, creating gaps
+  habitat_buffered_no_roads <- sf::st_difference(habitat_buffered, barrier)
+  # creates individual polygons, rather than one mega polygon
+  fragmented_geometry <- habitat_buffered_no_roads |>
+    sf::st_cast("POLYGON") |>
+    sf::st_sf(fg = _)
+
+  # sequentially number the ID
+  fragmented_geometry$ID <- seq.int(nrow(fragmented_geometry))
+  fragmented_geometry
 }
 
 # original habitat patches underneath barriers need to be removed
 remaining_patches <- function(habitat, barrier) {
   # remove all habitat under barriers
-  hab_barrier_remove <- sf::st_difference(habitat, barrier)
+  habitat_no_barriers <- sf::st_difference(habitat, barrier)
   # split multipolygon into the original number of separate polygons
-  hab_barrier_remove <- sf::st_cast(hab_barrier_remove, "POLYGON")
-  hab_barrier_remove
+  remaining_patchs <- sf::st_cast(habitat_no_barriers, "POLYGON")
+  remaining_patchs
 }
 
-# identify which of the remaining original habitat patches belong in which connected area
-identify_patches <- function(remaining, fragID) {
-  inter <- sf::st_intersects(remaining, fragID)
+# identify the remaining original habitat patches belong in which connected area
+identify_patches <- function(remaining, fragment_id) {
+  inter <- sf::st_intersects(remaining, fragment_id)
   # code to sanitise "inter"  (a list of vectors) to make sure any empty vectors are non-empty
   # and make sure there are no vectors longer that 1
   cleaned_inter <- lapply(inter, clean_inter)
   membership <- unlist(cleaned_inter)
-  habID <- sf::st_sf(geometry = remaining, cluster = membership)
-  habID
+  habitat_id <- sf::st_sf(geometry = remaining, cluster = membership)
+  habitat_id
 }
 
 # calculate area of each habitat patch
 patch_area <- function(patches) {
   patches$area <- sf::st_area(patches)
-  areas <- data.frame(cbind(patches$cluster, patches$area))
+  areas <- data.frame(patches$cluster, patches$area)
   # rename columns
-  names(areas)[1] <- "patchID"
+  names(areas)[1] <- "patch_id"
   names(areas)[2] <- "area"
   areas
 }
 
 # function to group the remaining habitat patches by area
-group_connect_areas <- function(patchAreas) {
-  grouped <- group_by(patchAreas, patchID)
-  summed <- summarise(grouped, total_area = sum(area))
-  # create a column with  area squared in it
-  summed$areaSquared <- summed$total_area^2
+group_connect_areas <- function(patch_areas) {
+  summed <- patch_areas |>
+    dplyr::group_by(patch_id) |>
+    dplyr::summarise(area_total = sum(area)) |>
+    dplyr::mutate(area_squared = area_total^2)
   summed
 }
 
@@ -62,18 +67,18 @@ group_connect_areas <- function(patchAreas) {
 # d = distance used as a threshold for whether habitat patches are joined or not.
 connectivity <- function(habitat, barrier, distance) {
   # buffer the habitat layer by the distance
-  buff <- habitat_buffer(habitat, distance)
+  buffer <- habitat_buffer(habitat, distance)
   # create fragmentation geometry
-  frag <- fragment_geometry(buff, barrier)
+  fragment <- fragment_geometry(buffer, barrier)
   # clean the original habitat layer up
-  simpleHab <- clean(habitat)
+  habitat_simplified <- clean(habitat)
   # remove all habitat under barriers
-  remainingHab <- remaining_patches(simpleHab, barrier)
+  habitat_remaining <- remaining_patches(habitat_simplified, barrier)
   # identify the remaining habitat patches according to which connected area they belong to
-  IDRemainingHab <- identify_patches(remainingHab, frag)
+  habitat_remaining_id <- identify_patches(habitat_remaining, fragment)
   # calculate area of each habitat patch
-  areaHab <- patch_area(IDRemainingHab)
+  habitat_area <- patch_area(habitat_remaining_id)
   # group the patches by connected area ID
-  connectAreas <- group_connect_areas(areaHab)
-  connectAreas
+  areas_connected <- group_connect_areas(habitat_area)
+  areas_connected
 }

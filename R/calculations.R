@@ -1,22 +1,19 @@
 # the connectivity calculation
-calc_connectivity <- function(groupedAreas) {
-  effMesh <- sum(groupedAreas$areaSquared) / sum(groupedAreas$total_area)
-  # convert to hectares
-  effMesh <- effMesh * 0.0001
-  # return
-  effMesh
+calc_connectivity <- function(grouped_areas) {
+  effective_mesh <- sum(grouped_areas$area_squared) /
+    sum(grouped_areas$area_total)
+  effective_mesh_hectares <- effective_mesh * 0.0001
+  effective_mesh_hectares
 }
 
 # calculate mean size of connected areas
-calc_mean_size <- function(groupedAreas) {
-  mean_size <- mean(groupedAreas$total_area)
-  # return
+calc_mean_size <- function(grouped_areas) {
+  mean_size <- mean(grouped_areas$area_total)
   mean_size
 }
 
 # find number of connected areas
-calc_num_areas <- function(groupedAreas) {
-  numAreas <- length(groupedAreas$total_area)
-  # return
-  numAreas
+calc_num_areas <- function(grouped_areas) {
+  n_areas <- length(grouped_areas$area_total)
+  n_areas
 }

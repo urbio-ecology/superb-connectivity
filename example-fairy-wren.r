@@ -18,40 +18,48 @@ dir_map(path = "R/", fun = source)
 ## it is possible we might focus on using the raster approach/vector approach
 # run existing connectivity calculation for SFW
 # load barriers - here all main roads
-barrier <- read_geometry(here(
-  "R/example-workflow-superb-fairy-wren/allSFWRoads.shp"
-))
+barrier <- read_geometry(here("data/allSFWRoads.shp"))
+
+plot(barrier)
 
 # load habitat - here all understorey from the LiDAR data
-habitat <- read_geometry(here(
-  "R/example-workflow-superb-fairy-wren/superbHab.shp"
-))
-habitat <- clean(habitat)
+# also clean up the edges, this helps remove some of the resolution
+# that is at a very high level of details which we do not need
+habitat <- read_geometry(here("data/superbHab.shp")) |> clean()
+
+plot(habitat)
+
+plot(barrier, border = "orange2")
+plot(habitat, border = "midnightblue", add = TRUE)
 
 # buffer the habitat by distance
-buff <- habitat_buffer(habitat = habitat, distance = 250)
+buffer <- habitat_buffer(habitat, distance = 250)
+
+plot(buffer)
 
 # create fragmentation geometry
-frag <- fragment_geometry(buff = buff, barrier = barrier)
+fragment <- fragment_geometry(buffer, barrier = barrier)
+
+plot(fragment$fg)
+
 # remove all habitat under barriers
-remaining_habitat <- remaining_patches(habitat = habitat, barrier = barrier)
+remaining_habitat <- remaining_patches(habitat, barrier = barrier)
+
+plot(habitat)
+plot(remaining_habitat)
 # identify remaining habitat patches according to which connected area they
 # belong to
-id_remaining_habitat <- identify_patches(remaining_habitat, frag)
+id_remaining_habitat <- identify_patches(remaining_habitat, fragment)
 # id_remaining_habitat is a key output that shows you the connected areas in a
 # landscape
+
+plot(id_remaining_habitat)
 
 ## Remaining code calculates several metrics of connectivity
 # calculate area of each habitat patch
 area_hectares <- patch_area(id_remaining_habitat)
 # group the patches by connected area ID
 connect_habitat <- group_connect_areas(area_hectares)
-
-# connectivity calculation
-area_hectares <- patch_area(id_remaining_habitat)
-# group the patches by connected area ID
-connect_habitat <- group_connect_areas(area_hectares)
-# write csv output
 
 # calculation
 connect_value <- calc_connectivity(connect_habitat)

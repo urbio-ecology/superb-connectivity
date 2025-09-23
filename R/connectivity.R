@@ -46,8 +46,8 @@ identify_patches <- function(remaining, fragment_id) {
   habitat_id
 }
 
-## TODO - I believe this is a mistake - area is calculated twice, not necessarily
-# creating problems, but I don't think we need to do this?
+## TODO - I believe this is a mistake - area is calculated twice, not
+# necessarily creating problems, but I don't think we need to do this?
 # calculate area of each habitat patch
 patch_area <- function(patches) {
   patches$area <- sf::st_area(patches)
@@ -70,17 +70,15 @@ group_connect_areas <- function(patch_areas) {
 # function to run the calculate connectivity functions
 # x = habitat layer
 # y = barrier layer
-# d = distance used as a threshold for whether habitat patches are joined or not.
+# d = distance used as threshold for whether habitat patches are joined or not.
 connectivity <- function(habitat, barrier, distance) {
   # buffer the habitat layer by the distance
   buffer <- habitat_buffer(habitat, distance)
   # create fragmentation geometry
   fragment <- fragment_geometry(buffer, barrier)
-  # clean the original habitat layer up
-  habitat_simplified <- clean(habitat)
   # remove all habitat under barriers
-  habitat_remaining <- remaining_patches(habitat_simplified, barrier)
-  # identify the remaining habitat patches according to which connected area they belong to
+  habitat_remaining <- remaining_patches(habitat, barrier)
+  # identify remaining habitat patches according to their connected area
   habitat_remaining_id <- identify_patches(habitat_remaining, fragment)
   # calculate area of each habitat patch
   habitat_area <- patch_area(habitat_remaining_id)

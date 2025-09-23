@@ -50,7 +50,7 @@ identify_patches <- function(remaining, fragment_id) {
 # calculate area of each habitat patch
 patch_area <- function(patches) {
   patches$area <- sf::st_area(patches)
-  areas <- data.frame(
+  areas <- tibble::tibble(
     patch_id = patches$cluster,
     area = patches$area
   )

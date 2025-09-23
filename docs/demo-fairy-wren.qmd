@@ -1,0 +1,145 @@
+---
+title: "Demonstrate Urban Connectivity example with Fairy Wren"
+format: 
+  html:
+      toc: true
+---
+
+This is an analysis of how connected the habitat of the Superb Fairy Wren is in a region of Victoria, Knox. We use a vector based (as opposed to raster) geospatial data, in this first instance. Our goal is to provide metrics of connectedness, as well as maps showing the connections in the landscape.
+
+First we have to source the R packages and the R files in the R directory:
+
+```{r}
+#| echo: false
+# prep habitat layer (lidar and shrubs)
+## vector based
+source(here::here("packages.R"))
+dir_map(path = here::here("R/"), fun = source)
+```
+
+This will eventually be an R package, so just noting that here.
+
+We load two shapefiles:
+
+1. The barrier: Roads, houses, etc
+2. The habitat: Grass, trees, water, etc
+
+Out inputs are essentially the movements of species (habitat), against the barriers in the city (barriers). Our outputs are a map of connectedness, and various metrics of connectedness.
+
+Reading the barrier for the superb fairy wren, this is all main roads:
+
+```{r}
+barrier <- read_geometry(here("data/allSFWRoads.shp"))
+
+plot(barrier, border = "orange2")
+```
+
+We can then read in the habitat of the superb fairy wren. Here it is all understorey from the LiDATa data. We also run `clean` to clean up the edges of the shapefile data, to rmove some of the very high level details that we do not need:
+
+```{r}
+habitat <- read_geometry(here("data/superbHab.shp")) |> clean()
+plot(barrier, border = "orange2")
+plot(habitat, border = "midnightblue", add = TRUE)
+```
+
+We can then put these inputs into the `connectivity()` function, which erturns to us a data frame that has identified the various patches that are created by the barriers, as well as the areas of each of these patches
+
+```{r}
+connect_habitat <- connectivity(
+  habitat = habitat,
+  barrier = barrier,
+  distance = 250
+)
+
+connect_habitat
+```
+
+We can can summarise these metrics with `summarise_connectivity()`:
+
+```{r}
+results <- summarise_connectivity(connect_habitat)
+results
+```
+
+There are a few steps that go on behind the scenes in `connectivity()` - below we step through each of these steps and, where relevant, show the output of the map.
+
+First we create a 250 buffer around the environment, which tells us that the fairy wren have a range of 500m. We can see the habitat in darker green, and the buffer in lighter green.
+
+```{r}
+# buffer the habitat by distance
+buffer <- habitat_buffer(habitat, distance = 250)
+```
+
+
+```{r}
+plot(habitat, border = "forestgreen")
+plot(
+  buffer,
+  border = "darkgreen",
+  add = TRUE,
+  col = alpha(colour = "forestgreen", alpha = 0.25)
+)
+```
+
+We then essentially fragment the environment by the barriers with `fragment_geometrc()`:
+
+```{r}
+# create fragmentation geometry
+fragment <- fragment_geometry(buffer, barrier = barrier)
+
+plot(habitat, border = "darkgreen", col = "forestgreen")
+plot(
+  fragment$fg,
+  border = "transparent",
+  col = alpha(colour = "midnightblue", alpha = 0.5),
+  add = TRUE
+)
+```
+
+Then we remove all habitat that lies under the barriers, and identify the patches that are connected and not severed by the barriers.
+
+```{r}
+# remove all habitat under barriers
+remaining_habitat <- remaining_patches(habitat, barrier = barrier)
+
+# identify remaining habitat patches according to which connected area they
+# belong to
+id_remaining_habitat <- identify_patches(remaining_habitat, fragment)
+# id_remaining_habitat is a key output that shows you the connected areas in a
+# landscape
+id_remaining_habitat
+```
+
+The dataset contains the polygons of each patch - we then get add the area of each patch, and group by each patch to get the total area of each patch as well as the area squared:
+
+```{r}
+# calculate area of each habitat patch
+area_hectares <- patch_area(id_remaining_habitat)
+area_hectares
+# group the patches by connected area ID
+connect_habitat <- group_connect_areas(area_hectares)
+connect_habitat
+```
+
+This is the same as our `connectivity()` function:
+
+```{r}
+# or, as one step
+connect_habitat2 <- connectivity(
+  habitat = habitat,
+  barrier = barrier,
+  distance = 250
+)
+
+all.equal(connect_habitat, connect_habitat2)
+```
+
+We then summarise these measurements of connectivity:
+
+```{r}
+# calculation
+results <- summarise_connectivity(connect_habitat)
+results
+
+```
+

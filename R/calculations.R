@@ -34,11 +34,11 @@ calc_prob_connect <- function(grouped_areas) {
 
 summarise_connectivity <- function(habitat_connectivity) {
   results <- tibble(
+    n_patches = calc_num_areas(habitat_connectivity),
     prob_connectedness = calc_prob_connect(habitat_connectivity),
-    connect_value = calc_connectivity(habitat_connectivity),
-    num = calc_num_areas(habitat_connectivity),
-    mean = calc_mean_size(habitat_connectivity),
-    total = calc_total(habitat_connectivity)
+    effective_mesh_hectares = calc_connectivity(habitat_connectivity),
+    patch_area_mean = calc_mean_size(habitat_connectivity),
+    patch_area_total = calc_total(habitat_connectivity)
   )
   results
 }

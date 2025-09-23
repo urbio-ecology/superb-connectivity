@@ -20,33 +20,40 @@ dir_map(path = "R/", fun = source)
 # load barriers - here all main roads
 barrier <- read_geometry(here("data/allSFWRoads.shp"))
 
-plot(barrier)
+plot(barrier, border = "orange2")
 
 # load habitat - here all understorey from the LiDAR data
 # also clean up the edges, this helps remove some of the resolution
 # that is at a very high level of details which we do not need
 habitat <- read_geometry(here("data/superbHab.shp")) |> clean()
 
-plot(habitat)
-
-plot(barrier, border = "orange2")
 plot(habitat, border = "midnightblue", add = TRUE)
 
 # buffer the habitat by distance
 buffer <- habitat_buffer(habitat, distance = 250)
 
-plot(buffer)
+plot(habitat, border = "forestgreen")
+plot(
+  buffer,
+  border = "darkgreen",
+  add = TRUE,
+  col = alpha(colour = "forestgreen", alpha = 0.25)
+)
 
 # create fragmentation geometry
 fragment <- fragment_geometry(buffer, barrier = barrier)
 
-plot(fragment$fg)
+plot(habitat, border = "darkgreen", col = "forestgreen")
+plot(
+  fragment$fg,
+  border = "orange2",
+  col = alpha(colour = "midnightblue", alpha = 0.5),
+  add = TRUE
+)
 
 # remove all habitat under barriers
 remaining_habitat <- remaining_patches(habitat, barrier = barrier)
 
-plot(habitat)
-plot(remaining_habitat)
 # identify remaining habitat patches according to which connected area they
 # belong to
 id_remaining_habitat <- identify_patches(remaining_habitat, fragment)

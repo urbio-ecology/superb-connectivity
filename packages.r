@@ -1,4 +1,7 @@
+library(fasterize)
 library(fs)
 library(here)
+library(raster)
 library(sf)
+library(stars)
 library(tidyverse)

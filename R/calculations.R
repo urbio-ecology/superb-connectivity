@@ -31,3 +31,14 @@ calc_prob_connect <- function(grouped_areas) {
   prob_connect <- connect_value / total_habitat
   prob_connect
 }
+
+summarise_connectivity <- function(habitat_connectivity) {
+  results <- tibble(
+    prob_connectedness = calc_prob_connect(habitat_connectivity),
+    connect_value = calc_connectivity(habitat_connectivity),
+    num = calc_num_areas(habitat_connectivity),
+    mean = calc_mean_size(habitat_connectivity),
+    total = calc_total(habitat_connectivity)
+  )
+  results
+}

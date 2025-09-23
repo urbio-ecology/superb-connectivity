@@ -60,20 +60,21 @@ id_remaining_habitat <- identify_patches(remaining_habitat, fragment)
 # id_remaining_habitat is a key output that shows you the connected areas in a
 # landscape
 
-plot(id_remaining_habitat)
-
 ## Remaining code calculates several metrics of connectivity
 # calculate area of each habitat patch
 area_hectares <- patch_area(id_remaining_habitat)
 # group the patches by connected area ID
 connect_habitat <- group_connect_areas(area_hectares)
 
-# calculation
-connect_value <- calc_connectivity(connect_habitat)
-mean <- calc_mean_size(connect_habitat)
-num <- calc_num_areas(connect_habitat)
-tot <- calc_total(connect_habitat)
-prob_connectedness <- calc_prob_connect(connect_habitat)
-results <- tibble(prob_connectedness, connect_value, num, mean, tot)
+# or, as one step
+connect_habitat2 <- connectivity(
+  habitat = habitat,
+  barrier = barrier,
+  distance = 250
+)
 
+all.equal(connect_habitat, connect_habitat2)
+
+# calculation
+results <- summarise_connectivity(connect_habitat)
 results

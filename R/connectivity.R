@@ -19,10 +19,10 @@ fragment_geometry <- function(habitat_buffered, barrier) {
   # creates individual polygons, rather than one mega polygon
   fragmented_geometry <- habitat_buffered_no_roads |>
     sf::st_cast("POLYGON") |>
-    sf::st_sf(fg = _)
+    sf::st_sf(fg = _) |>
+    # sequentially number the ID
+    tibble::rowid_to_column(var = "id")
 
-  # sequentially number the ID
-  fragmented_geometry$id <- seq.int(nrow(fragmented_geometry))
   fragmented_geometry
 }
 
@@ -41,13 +41,12 @@ identify_patches <- function(remaining, fragment_id) {
   intersects <- sf::st_intersects(remaining, fragment_id)
   membership <- sapply(intersects, first)
   habitat_id <- sf::st_sf(geometry = remaining, cluster = membership)
+  # TODO check with Holly about removing this area calculation here as we do this in the next step
   # calculate the area of each patch
-  habitat_id$area <- sf::st_area(habitat_id)
+  # habitat_id$area <- sf::st_area(habitat_id)
   habitat_id
 }
 
-## TODO - I believe this is a mistake - area is calculated twice, not
-# necessarily creating problems, but I don't think we need to do this?
 # calculate area of each habitat patch
 patch_area <- function(patches) {
   patches$area <- sf::st_area(patches)

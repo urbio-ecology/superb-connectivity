@@ -2,7 +2,11 @@
 # which habitat patches are no longer considered connected)
 habitat_buffer <- function(habitat, distance) {
   # buffer by the required distance
-  habitat_buffer <- sf::st_buffer(habitat, dist = distance, nQuadSegs = 5)
+  habitat_buffer <- sf::st_buffer(
+    x = habitat,
+    dist = distance,
+    nQuadSegs = 5
+  )
   # union creates one large polygon rather than multiple small ones
   habitat_union <- sf::st_union(habitat_buffer, by_feature = FALSE)
   habitat_union
@@ -18,7 +22,7 @@ fragment_geometry <- function(habitat_buffered, barrier) {
     sf::st_sf(fg = _)
 
   # sequentially number the ID
-  fragmented_geometry$ID <- seq.int(nrow(fragmented_geometry))
+  fragmented_geometry$id <- seq.int(nrow(fragmented_geometry))
   fragmented_geometry
 }
 
@@ -31,24 +35,26 @@ remaining_patches <- function(habitat, barrier) {
   remaining_patchs
 }
 
-# identify the remaining original habitat patches belong in which connected area
+# identify which of the remaining original habitat patches belong in which
+# connected area
 identify_patches <- function(remaining, fragment_id) {
-  inter <- sf::st_intersects(remaining, fragment_id)
-  # code to sanitise "inter"  (a list of vectors) to make sure any empty vectors are non-empty
-  # and make sure there are no vectors longer that 1
-  cleaned_inter <- lapply(inter, clean_inter)
-  membership <- unlist(cleaned_inter)
+  intersects <- sf::st_intersects(remaining, fragment_id)
+  membership <- sapply(intersects, first)
   habitat_id <- sf::st_sf(geometry = remaining, cluster = membership)
+  # calculate the area of each patch
+  habitat_id$area <- sf::st_area(habitat_id)
   habitat_id
 }
 
+## TODO - I believe this is a mistake - area is calculated twice, not necessarily
+# creating problems, but I don't think we need to do this?
 # calculate area of each habitat patch
 patch_area <- function(patches) {
   patches$area <- sf::st_area(patches)
-  areas <- data.frame(patches$cluster, patches$area)
-  # rename columns
-  names(areas)[1] <- "patch_id"
-  names(areas)[2] <- "area"
+  areas <- data.frame(
+    patch_id = patches$cluster,
+    area = patches$area
+  )
   areas
 }
 

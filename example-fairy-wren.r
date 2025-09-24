@@ -8,7 +8,6 @@
 
 source("packages.R")
 dir_map(path = "R/", fun = source)
-
 ##########
 ## inputs are: barriers (roads, houses, etc), habitat (grass, trees, water, etc)
 ## we run that code, get information about movement of species
@@ -41,7 +40,7 @@ plot(
 )
 
 # create fragmentation geometry
-fragment <- fragment_geometry(buffer, barrier = barrier)
+fragment <- fragment_geometry(habitat_buffered = buffer, barrier = barrier)
 
 plot(habitat, border = "darkgreen", col = "forestgreen")
 plot(
@@ -52,19 +51,20 @@ plot(
 )
 
 # remove all habitat under barriers
-remaining_habitat <- remaining_patches(habitat, barrier = barrier)
+remaining_habitat <- remove_habitat_under_barrier(habitat, barrier = barrier)
 
 # identify remaining habitat patches according to which connected area they
 # belong to
-id_remaining_habitat <- identify_patches(remaining_habitat, fragment)
+id_remaining_habitat <- identify_connected_patches(remaining_habitat, fragment)
 # id_remaining_habitat is a key output that shows you the connected areas in a
 # landscape
 
 ## Remaining code calculates several metrics of connectivity
 # calculate area of each habitat patch
-area_hectares <- patch_area(id_remaining_habitat)
+area_hectares <- add_patch_area(id_remaining_habitat)
 # group the patches by connected area ID
-connect_habitat <- group_connect_areas(area_hectares)
+
+connect_habitat <- aggregate_connected_patches(area_hectares)
 
 # or, as one step
 connect_habitat2 <- connectivity(

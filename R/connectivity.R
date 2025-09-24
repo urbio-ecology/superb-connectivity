@@ -2,11 +2,7 @@
 # which habitat patches are no longer considered connected)
 habitat_buffer <- function(habitat, distance) {
   # buffer by the required distance
-  habitat_buffer <- sf::st_buffer(
-    x = habitat,
-    dist = distance,
-    nQuadSegs = 5
-  )
+  habitat_buffer <- sf::st_buffer(x = habitat, dist = distance, nQuadSegs = 5)
   # union creates one large polygon rather than multiple small ones
   habitat_union <- sf::st_union(habitat_buffer, by_feature = FALSE)
   habitat_union
@@ -27,7 +23,7 @@ fragment_geometry <- function(habitat_buffered, barrier) {
 }
 
 # original habitat patches underneath barriers need to be removed
-remaining_patches <- function(habitat, barrier) {
+remove_habitat_under_barrier <- function(habitat, barrier) {
   # remove all habitat under barriers
   habitat_no_barriers <- sf::st_difference(habitat, barrier)
   # split multipolygon into the original number of separate polygons
@@ -37,29 +33,25 @@ remaining_patches <- function(habitat, barrier) {
 
 # identify which of the remaining original habitat patches belong in which
 # connected area
-identify_patches <- function(remaining, fragment_id) {
+identify_connected_patches <- function(remaining, fragment_id) {
   intersects <- sf::st_intersects(remaining, fragment_id)
   membership <- sapply(intersects, first)
-  habitat_id <- sf::st_sf(geometry = remaining, cluster = membership)
-  # TODO check with Holly about removing this area calculation here as we do this in the next step
-  # calculate the area of each patch
-  # habitat_id$area <- sf::st_area(habitat_id)
+  habitat_id <- sf::st_sf(geometry = remaining, patch_id = membership)
   habitat_id
 }
 
 # calculate area of each habitat patch
-patch_area <- function(patches) {
-  patches$area <- sf::st_area(patches)
-  areas <- tibble::tibble(
-    patch_id = patches$cluster,
-    area = patches$area
-  )
-  areas
+add_patch_area <- function(patches) {
+  patches |>
+    mutate(
+      area = sf::st_area(patches)
+    )
 }
 
 # function to group the remaining habitat patches by area
-group_connect_areas <- function(patch_areas) {
+aggregate_connected_patches <- function(patch_areas) {
   summed <- patch_areas |>
+    sf::st_drop_geometry() |>
     dplyr::group_by(patch_id) |>
     dplyr::summarise(area_total = sum(area)) |>
     dplyr::mutate(area_squared = area_total^2)
@@ -76,12 +68,15 @@ connectivity <- function(habitat, barrier, distance) {
   # create fragmentation geometry
   fragment <- fragment_geometry(buffer, barrier)
   # remove all habitat under barriers
-  habitat_remaining <- remaining_patches(habitat, barrier)
+  habitat_remaining <- remove_habitat_under_barrier(habitat, barrier)
   # identify remaining habitat patches according to their connected area
-  habitat_remaining_id <- identify_patches(habitat_remaining, fragment)
-  # calculate area of each habitat patch
-  habitat_area <- patch_area(habitat_remaining_id)
+  habitat_remaining_id <- identify_connected_patches(
+    habitat_remaining,
+    fragment
+  ) |>
+    # calculate area of each habitat patch
+    add_patch_area()
   # group the patches by connected area ID
-  areas_connected <- group_connect_areas(habitat_area)
+  areas_connected <- aggregate_connected_patches(habitat_remaining_id)
   areas_connected
 }

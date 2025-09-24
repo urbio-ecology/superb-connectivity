@@ -9,7 +9,7 @@ habitat_buffer <- function(habitat, distance) {
 }
 
 # create the fragmentation geometry
-fragment_geometry <- function(habitat_buffered, barrier) {
+fragment_habitat <- function(habitat_buffered, barrier) {
   # Remove road polygon areas from buffered habitat polygon, creating gaps
   habitat_buffered_no_roads <- sf::st_difference(habitat_buffered, barrier)
   # creates individual polygons, rather than one mega polygon
@@ -27,13 +27,13 @@ remove_habitat_under_barrier <- function(habitat, barrier) {
   # remove all habitat under barriers
   habitat_no_barriers <- sf::st_difference(habitat, barrier)
   # split multipolygon into the original number of separate polygons
-  remaining_patchs <- sf::st_cast(habitat_no_barriers, "POLYGON")
-  remaining_patchs
+  remaining_patches <- sf::st_cast(habitat_no_barriers, "POLYGON")
+  remaining_patches
 }
 
 # identify which of the remaining original habitat patches belong in which
 # connected area
-identify_connected_patches <- function(remaining, fragment_id) {
+assign_patches_to_fragments <- function(remaining, fragment_id) {
   intersects <- sf::st_intersects(remaining, fragment_id)
   membership <- sapply(intersects, first)
   habitat_id <- sf::st_sf(geometry = remaining, patch_id = membership)
@@ -62,15 +62,15 @@ aggregate_connected_patches <- function(patch_areas) {
 # x = habitat layer
 # y = barrier layer
 # d = distance used as threshold for whether habitat patches are joined or not.
-connectivity <- function(habitat, barrier, distance) {
+habitat_connectivity <- function(habitat, barrier, distance) {
   # buffer the habitat layer by the distance
   buffer <- habitat_buffer(habitat, distance)
   # create fragmentation geometry
-  fragment <- fragment_geometry(buffer, barrier)
+  fragment <- fragment_habitat(buffer, barrier)
   # remove all habitat under barriers
   habitat_remaining <- remove_habitat_under_barrier(habitat, barrier)
   # identify remaining habitat patches according to their connected area
-  habitat_remaining_id <- identify_connected_patches(
+  habitat_remaining_id <- assign_patches_to_fragments(
     habitat_remaining,
     fragment
   ) |>

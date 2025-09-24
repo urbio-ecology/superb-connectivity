@@ -40,7 +40,7 @@ plot(
 )
 
 # create fragmentation geometry
-fragment <- fragment_geometry(habitat_buffered = buffer, barrier = barrier)
+fragment <- fragment_habitat(habitat_buffered = buffer, barrier = barrier)
 
 plot(habitat, border = "darkgreen", col = "forestgreen")
 plot(
@@ -55,7 +55,7 @@ remaining_habitat <- remove_habitat_under_barrier(habitat, barrier = barrier)
 
 # identify remaining habitat patches according to which connected area they
 # belong to
-id_remaining_habitat <- identify_connected_patches(remaining_habitat, fragment)
+id_remaining_habitat <- assign_patches_to_fragments(remaining_habitat, fragment)
 # id_remaining_habitat is a key output that shows you the connected areas in a
 # landscape
 
@@ -67,7 +67,7 @@ area_hectares <- add_patch_area(id_remaining_habitat)
 connect_habitat <- aggregate_connected_patches(area_hectares)
 
 # or, as one step
-connect_habitat2 <- connectivity(
+connect_habitat2 <- habitat_connectivity(
   habitat = habitat,
   barrier = barrier,
   distance = 250

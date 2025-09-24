@@ -6,13 +6,12 @@ source("packages.R")
 dir_map(path = "R/", fun = source)
 # set the outfolder
 # load prepped barrier layer
-barrier <- read_geometry(here("data/allSFWRoads.shp"))
+barrier <- read_geometry(here("data/allSFWRoads.shp")) |> st_as_sf()
 
 # load habitat layer
 habitat <- read_geometry(here("data/superbHab.shp")) |> clean() |> st_as_sf()
 
-# what's the resolution?
-reso <- 10
+resolution <- 10
 # working out resolution of overlay grid
 # base resolution
 small <- 10
@@ -22,14 +21,12 @@ aggregation_factor <- big / small
 
 # RASTERISE LAYERS
 # make the habitat file into a sf object, not sfc
-# create an empty raster grid of the correct dimensions, reso resolution
-grid <- raster(habitat, res = reso)
+# create an empty raster grid of the correct dimensions, resolution
 # set the CRS to the same as the habitat layer
-crs(grid) <- crs(habitat)
+grid <- raster(habitat, res = resolution, crs = crs(habitat))
 # rasterise the habitat layer
 habitat_raster <- fasterize(habitat, raster = grid, background = NA)
 # rasterise barrier
-barrier <- st_as_sf(barrier)
 barrier_raster <- fasterize(barrier, raster = grid, background = 0)
 
 # aggregate rasters to make them the size of the overlay raster
@@ -39,7 +36,7 @@ coarse_template <- disaggregate(coarse_raster, aggregation_factor)
 habitat_raster2 <- extend(habitat_raster, coarse_template)
 barrier_raster2 <- extend(barrier_raster, coarse_template)
 
-# convert the barrier layer (1s and NAs) to a multiplier (NA where the barrier is)
+# convert barrier layer (1s and NAs) to a multiplier (NA where the barrier is)
 barrier_multiplier <- barrier_raster2
 barrier_multiplier[is.na(barrier_multiplier)] <- 0
 barrier_multiplier[barrier_multiplier == 1] <- NA
@@ -47,13 +44,11 @@ barrier_multiplier <- barrier_multiplier + 1
 
 # mask out the barrier bits from habitat_raster
 habitat_raster2 <- mask(habitat_raster2, barrier_multiplier)
-# plot(habitat_raster)
-# > plot(tmp, col = "red", add = TRUE)
 
 # CONNECTIVITY WORKFLOW
 # buffer by radius (metres)
 radius <- 250
-buffer_window <- focalWeight(habitat_raster2, radius, "circle")
+buffer_window <- focalWeight(x = habitat_raster2, d = radius, type = "circle")
 buffer_window <- buffer_window / max(buffer_window)
 buffered_habitat <- focal(
   x = habitat_raster2,
@@ -86,11 +81,10 @@ df <- tibble(
   ) %>%
   summarise(
     area = sum(area)
-  )
-# df
+  ) |>
+  mutate(areaSquared = area^2)
 
 # CONNECTIVITY CALCULATION
-df$areaSquared <- df$area^2
 effMesh <- sum(df$areaSquared) / sum(df$area) #also needed for next bit
 # convert to hectares
 effMeshHa <- effMesh * 0.0001
@@ -171,40 +165,17 @@ results <- tibble(
 #       area = sum(area)
 #     )
 #
-#   # CONNECTIVITY CALCULATION
+# Calculate connectivity ----
 #   df2$areaSquared <- df2$area^2
 #   effMesh2 <- sum(df2$areaSquared) / tot
-#   # effMesh2 <- sum(df2$areaSquared) / tot # original existing habitat area
 #   # store in rasters
 #   connectivity[i] <- effMesh2
 #   changeConnect[i] <- effMesh - effMesh2
 # }
 #
 #
-# # output the connectivity rasters
-# writeRaster(
-#   connectivity,
-#   filename = file.path(outfolder, "connectAnalysis_sfw.tif"),
-#   format = "GTiff"
-# )
-# writeRaster(
-#   changeConnect,
-#   filename = file.path(outfolder, "changeConnect_sfw.tif"),
-#   format = "GTiff"
-# )
-#
-# # effMesh
-# # [1] 3452371
-# # > effMeshHa
-# # [1] 345.2371
-# # > mean_size
-# # [1] 101582.6
-# # > numAreas
-# # [1] 144
-# # > tot
-# # [1] 14627900
-# # > totHa
-# # [1] 1462.79
-# # > probConnect
-# # [1] 0.2360128
-# # >
+# TODO
+# output the connectivity rasters
+# Save as .tif using GTiff ? into outfolder
+# Explore
+# effMesh, effMeshHa, mean_size, numAreas, tot, totHa, probConnect

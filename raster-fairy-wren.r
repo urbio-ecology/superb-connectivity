@@ -11,7 +11,6 @@ barrier <- read_geometry(here("data/allSFWRoads.shp")) |> st_as_sf()
 # load habitat layer
 habitat <- read_geometry(here("data/superbHab.shp")) |> clean() |> st_as_sf()
 
-resolution <- 10
 # working out resolution of overlay grid
 # base resolution
 small <- 10
@@ -23,7 +22,7 @@ aggregation_factor <- big / small
 # make the habitat file into a sf object, not sfc
 # create an empty raster grid of the correct dimensions, resolution
 # set the CRS to the same as the habitat layer
-grid <- raster(habitat, res = resolution, crs = crs(habitat))
+grid <- empty_grid(habitat, resolution = 10)
 # rasterise the habitat layer
 habitat_raster <- fasterize(habitat, raster = grid, background = NA)
 # rasterise barrier
@@ -36,82 +35,61 @@ coarse_template <- disaggregate(coarse_raster, aggregation_factor)
 habitat_raster2 <- extend(habitat_raster, coarse_template)
 barrier_raster2 <- extend(barrier_raster, coarse_template)
 
-# convert barrier layer (1s and NAs) to a multiplier (NA where the barrier is)
-barrier_multiplier <- barrier_raster2
-barrier_multiplier[is.na(barrier_multiplier)] <- 0
-barrier_multiplier[barrier_multiplier == 1] <- NA
-barrier_multiplier <- barrier_multiplier + 1
+barrier_mask <- create_barrier_mask(barrier = barrier_raster2)
 
-# mask out the barrier bits from habitat_raster
-habitat_raster2 <- mask(habitat_raster2, barrier_multiplier)
+remaining_habitat <- rast_remove_habitat_under_barrier(
+  habitat = habitat_raster2,
+  barrier_mask = barrier_mask
+)
 
 # CONNECTIVITY WORKFLOW
 # buffer by radius (metres)
-radius <- 250
-buffer_window <- focalWeight(x = habitat_raster2, d = radius, type = "circle")
-buffer_window <- buffer_window / max(buffer_window)
-buffered_habitat <- focal(
-  x = habitat_raster2,
-  w = buffer_window,
-  fun = max,
-  na.rm = TRUE
-) # the long bit
-buffered_habitat[buffered_habitat != 1] <- NA
+buffered_habitat <- rast_habitat_buffer(
+  habitat = remaining_habitat,
+  distance = 250
+)
 
 # apply barriers to get the fragmentation
-fragmentation_raster <- buffered_habitat * barrier_multiplier
+fragmentation_raster <- rast_fragment_habitat(
+  buffered_habitat,
+  barrier_mask
+)
+
 # get IDs of connected areas
-area_id_raster <- clump(fragmentation_raster)
 # intersect with habitat to get area IDs of habitat patches
-patch_id_raster <- habitat_raster2 * area_id_raster
-# write this raster to disk
+patch_id_raster <- rast_assign_patches_to_fragments(
+  remaining_habitat = remaining_habitat,
+  fragment = fragmentation_raster
+) |>
+  rast_add_patch_area()
+###
 
+rast_areas_connected <- rast_aggregate_connected_patches(patch_id_raster)
 ## This code is to do with finding the actual connectivity calculation
+
 # FIND PATCH AREAS
-df <- tibble(
-  area_id = getValues(patch_id_raster),
-  area = getValues(area(patch_id_raster))
-  # area = prod(res(patch_id_raster))
-) %>%
-  filter(
-    !is.na(area_id)
-  ) %>%
-  group_by(
-    area_id
-  ) %>%
-  summarise(
-    area = sum(area)
-  ) |>
-  mutate(areaSquared = area^2)
+summarise_connectivity(
+  area_squared = rast_areas_connected$area_squared,
+  area_total = rast_areas_connected$area
+)
 
-# CONNECTIVITY CALCULATION
-effMesh <- sum(df$areaSquared) / sum(df$area) #also needed for next bit
-# convert to hectares
-effMeshHa <- effMesh * 0.0001
-#total area
-tot <- sum(df$area) # this is needed in the next stage!!
-totHa <- tot * 0.0001
-# calculate mean size of connected areas
-mean_size <- mean(df$area)
-# find number of connected areas
-numAreas <- length(df$area)
-# find probability of connectedness
-probConnect <- effMesh / tot
+# and as one step
+rast_areas_connected2 <- rast_habitat_connectivity(
+  habitat = habitat_raster2,
+  barrier = barrier_raster2,
+  distance = 250
+)
 
-results <- tibble(
-  probConnect,
-  effMesh,
-  effMeshHa,
-  numAreas,
-  mean_size,
-  tot,
-  totHa
+# FIND PATCH AREAS
+summarise_connectivity(
+  area_squared = rast_areas_connected$area_squared,
+  area_total = rast_areas_connected$area
 )
 
 # Leave One Out ----
 #
 # ## How to prioritise which parts are the most important
-# ## This forms a key ideal output of the application/product
+## This forms a key ideal output of the application/product
 # # MAIN PRIORITISATION ANALYSIS
 # # This code loops through the habitat raster, removing one pixel at at time
 # # and then recalculates effective mesh size. The difference in the effective

@@ -1,44 +1,50 @@
-# the connectivity calculation
-calc_connectivity <- function(grouped_areas) {
-  effective_mesh <- sum(grouped_areas$area_squared) /
-    sum(grouped_areas$area_total)
+# TODO consider slightly cleaner names - we don't necessarily need
+# a calc_ prefix.
+# potentially: connectivity()
+calc_connectivity <- function(area_squared, area_total) {
+  effective_mesh <- sum(area_squared) / sum(area_total)
   effective_mesh_hectares <- effective_mesh * 0.0001
   effective_mesh_hectares
 }
 
 # calculate mean size of connected areas
-calc_mean_size <- function(grouped_areas) {
-  mean_size <- mean(grouped_areas$area_total)
+# potentially: area_connected_mean
+calc_mean_size <- function(area_total) {
+  mean_size <- mean(area_total)
   mean_size
 }
 
 # find number of connected areas
-calc_num_areas <- function(grouped_areas) {
-  n_areas <- length(grouped_areas$area_total)
+# potentially: area_connected_n
+calc_num_areas <- function(area_total) {
+  n_areas <- length(area_total)
   n_areas
 }
 
-calc_total <- function(grouped_areas) {
-  total <- sum(grouped_areas$area_total)
+# area_connected_total
+calc_total <- function(area_total) {
+  total <- sum(area_total)
   total_hectares <- total * 0.0001
   total_hectares
 }
 
+# probability_connectedness
 # find probability of connectedness
-calc_prob_connect <- function(grouped_areas) {
-  total_habitat <- sum(grouped_areas$area_total)
-  connect_value <- calc_connectivity(grouped_areas)
+calc_prob_connect <- function(area_squared, area_total) {
+  total_habitat <- sum(area_total)
+  connect_value <- calc_connectivity(area_squared, area_total)
   prob_connect <- connect_value / total_habitat
   prob_connect
 }
 
-summarise_connectivity <- function(habitat_connectivity) {
+# this could also be an S3 method for connectiveness?
+summarise_connectivity <- function(area_squared, area_total) {
   results <- tibble(
-    n_patches = calc_num_areas(habitat_connectivity),
-    prob_connectedness = calc_prob_connect(habitat_connectivity),
-    effective_mesh_hectares = calc_connectivity(habitat_connectivity),
-    patch_area_mean = calc_mean_size(habitat_connectivity),
-    patch_area_total = calc_total(habitat_connectivity)
+    n_patches = calc_num_areas(area_total),
+    prob_connectedness = calc_prob_connect(area_squared, area_total),
+    effective_mesh_hectares = calc_connectivity(area_squared, area_total),
+    patch_area_mean = calc_mean_size(area_total),
+    patch_area_total = calc_total(area_total)
   )
   results
 }

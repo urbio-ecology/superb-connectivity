@@ -76,5 +76,8 @@ connect_habitat2 <- connectivity(
 all.equal(connect_habitat, connect_habitat2)
 
 # calculation
-results <- summarise_connectivity(connect_habitat)
+results <- summarise_connectivity(
+  area_squared = connect_habitat$area_squared,
+  area_total = connect_habitat$area_total
+)
 results

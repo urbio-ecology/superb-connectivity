@@ -1,6 +1,7 @@
 library(fasterize)
 library(fs)
 library(here)
+library(igraph)
 library(raster)
 library(sf)
 library(stars)

@@ -11,38 +11,24 @@ barrier <- read_geometry(here("data/allSFWRoads.shp")) |> st_as_sf()
 # load habitat layer
 habitat <- read_geometry(here("data/superbHab.shp")) |> clean() |> st_as_sf()
 
-# working out resolution of overlay grid
-# base resolution
-small <- 10
-# resolution of overlay grid
-big <- 500
-aggregation_factor <- big / small
-
 # RASTERISE LAYERS
-# make the habitat file into a sf object, not sfc
-# create an empty raster grid of the correct dimensions, resolution
-# set the CRS to the same as the habitat layer
-grid <- empty_grid(habitat, resolution = 10)
-# rasterise the habitat layer
-habitat_raster <- fasterize(habitat, raster = grid, background = NA)
-# rasterise barrier
-barrier_raster <- fasterize(barrier, raster = grid, background = 0)
+prepared_rasters <- prepare_rasters(
+  habitat = habitat,
+  barrier = barrier,
+  base_resolution = 10,
+  overlay_resolution = 500
+)
 
-# aggregate rasters to make them the size of the overlay raster
-coarse_raster <- aggregate(barrier_raster * 0, aggregation_factor)
-coarse_template <- disaggregate(coarse_raster, aggregation_factor)
-# create the new habitat
-habitat_raster2 <- extend(habitat_raster, coarse_template)
-barrier_raster2 <- extend(barrier_raster, coarse_template)
+habitat_raster <- prepared_rasters$habitat_raster
+barrier_raster <- prepared_rasters$barrier_raster
 
-barrier_mask <- create_barrier_mask(barrier = barrier_raster2)
+barrier_mask <- create_barrier_mask(barrier = barrier_raster)
 
 remaining_habitat <- rast_remove_habitat_under_barrier(
-  habitat = habitat_raster2,
+  habitat = habitat_raster,
   barrier_mask = barrier_mask
 )
 
-# CONNECTIVITY WORKFLOW
 # buffer by radius (metres)
 buffered_habitat <- rast_habitat_buffer(
   habitat = remaining_habitat,
@@ -62,7 +48,6 @@ patch_id_raster <- rast_assign_patches_to_fragments(
   fragment = fragmentation_raster
 ) |>
   rast_add_patch_area()
-###
 
 rast_areas_connected <- rast_aggregate_connected_patches(patch_id_raster)
 ## This code is to do with finding the actual connectivity calculation
@@ -80,7 +65,6 @@ rast_areas_connected2 <- rast_habitat_connectivity(
   distance = 250
 )
 
-# FIND PATCH AREAS
 summarise_connectivity(
   area_squared = rast_areas_connected$area_squared,
   area_total = rast_areas_connected$area

@@ -45,7 +45,7 @@ fragment <- fragment_habitat(habitat_buffered = buffer, barrier = barrier)
 plot(habitat, border = "darkgreen", col = "forestgreen")
 plot(
   fragment$fg,
-  border = "orange2",
+  border = "white",
   col = alpha(colour = "midnightblue", alpha = 0.5),
   add = TRUE
 )
@@ -67,7 +67,7 @@ area_hectares <- add_patch_area(id_remaining_habitat)
 connect_habitat <- aggregate_connected_patches(area_hectares)
 
 # or, as one step
-connect_habitat2 <- habitat_connectivity(
+connect_habitat <- habitat_connectivity(
   habitat = habitat,
   barrier = barrier,
   distance = 250
@@ -75,7 +75,9 @@ connect_habitat2 <- habitat_connectivity(
 
 all.equal(connect_habitat, connect_habitat2)
 
+connect_habitat
 # calculation
+## TODO explore units and m^2 and hectares
 results <- summarise_connectivity(
   area_squared = connect_habitat$area_squared,
   area_total = connect_habitat$area_total

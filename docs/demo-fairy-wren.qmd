@@ -42,10 +42,10 @@ plot(barrier, border = "orange2")
 plot(habitat, border = "midnightblue", add = TRUE)
 ```
 
-We can then put these inputs into the `connectivity()` function, which erturns to us a data frame that has identified the various patches that are created by the barriers, as well as the areas of each of these patches
+We can then put these inputs into the `habitat_connectivity()` function, which returns to us a data frame that has identified the various patches that are created by the barriers, as well as the areas of each of these patches
 
 ```{r}
-connect_habitat <- connectivity(
+connect_habitat <- habitat_connectivity(
   habitat = habitat,
   barrier = barrier,
   distance = 250
@@ -61,7 +61,7 @@ results <- summarise_connectivity(connect_habitat)
 results
 ```
 
-There are a few steps that go on behind the scenes in `connectivity()` - below we step through each of these steps and, where relevant, show the output of the map.
+There are a few steps that go on behind the scenes in `habitat_connectivity()` - below we step through each of these steps and, where relevant, show the output of the map.
 
 First we create a 250 buffer around the environment, which tells us that the fairy wren have a range of 500m. We can see the habitat in darker green, and the buffer in lighter green.
 
@@ -85,7 +85,7 @@ We then essentially fragment the environment by the barriers with `fragment_geom
 
 ```{r}
 # create fragmentation geometry
-fragment <- fragment_geometry(buffer, barrier = barrier)
+fragment <- fragment_habitat(buffer, barrier = barrier)
 
 plot(habitat, border = "darkgreen", col = "forestgreen")
 plot(
@@ -104,7 +104,7 @@ remaining_habitat <- remove_habitat_under_barrier(habitat, barrier = barrier)
 
 # identify remaining habitat patches according to which connected area they
 # belong to
-id_remaining_habitat <- identify_connected_patches(remaining_habitat, fragment)
+id_remaining_habitat <- assign_patches_to_fragments(remaining_habitat, fragment)
 # id_remaining_habitat is a key output that shows you the connected areas in a
 # landscape
 id_remaining_habitat
@@ -121,11 +121,11 @@ connect_habitat <- aggregate_connected_patches(area_hectares)
 connect_habitat
 ```
 
-This is the same as our `connectivity()` function:
+This is the same as our `habitat_connectivity()` function:
 
 ```{r}
 # or, as one step
-connect_habitat2 <- connectivity(
+connect_habitat2 <- habitat_connectivity(
   habitat = habitat,
   barrier = barrier,
   distance = 250

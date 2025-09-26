@@ -26,9 +26,19 @@ prepare_rasters <- function(
   barrier_raster <- fasterize(barrier, raster = grid, background = 0)
 
   # aggregate rasters to make them the size of the overlay raster
+  ## could generate an empty raster with this resolution instead of using
+  ## barrier data directly - we could instead do raster of this grid spec
   coarse_raster <- aggregate(barrier_raster * 0, aggregation_factor)
+  ## making the grid finer
   coarse_template <- disaggregate(coarse_raster, aggregation_factor)
+  ## terra resample or project could help us get to these different resolutions
+  ## terra resample by util
 
+  ## again, we could get around this by specifying a grid spec
+  ## make sure the extent snaps to the right shape
+  ## so give it the extent and resolution
+  ## with the extent and the resolution, make sure that they snap together
+  ## terra::rast(nrow = ..., ncol = ..., extent)
   habitat_raster_final <- extend(habitat_raster, coarse_template)
   barrier_raster_final <- extend(barrier_raster, coarse_template)
 
@@ -79,6 +89,7 @@ rast_fragment_habitat <- function(buffered_habitat, barrier_mask) {
 
 rast_assign_patches_to_fragments <- function(remaining_habitat, fragment) {
   # get IDs of connected areas
+  ## terra::patches
   patch_id_raster <- clump(fragment)
   # intersect with habitat to get area IDs of habitat patches
   patch_id_raster <- remaining_habitat * patch_id_raster

@@ -97,9 +97,11 @@ for (i in seq_len(5)) {
   # A lot of these calculations are already created in summaries
   ## total_habitat_area() is what was used to calculate `tot` for the
   ## original data (as dsicussed in #13)
-  loo_effective_mesh_ha <- sum(loo_rast_areas_connected$area_squared) /
-    # original total area Hectares
-    connectivity_summary$patch_area_total_ha
+  loo_effective_mesh_ha <- effective_mesh_size(
+    area_squared = loo_rast_areas_connected$area_squared,
+    # original area measurement, which will get summed
+    area_total = rast_areas_connected$area
+  )
 
   ## TODO this number seems wrong, slash, off by an order of magnitude
   # store in rasters

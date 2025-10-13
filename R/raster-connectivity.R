@@ -176,3 +176,20 @@ rast_habitat_connectivity <- function(
   rast_areas_connected <- rast_aggregate_connected_patches(patch_id_raster)
   rast_areas_connected
 }
+
+
+# loo helpers
+
+rast_remove_habitat_cell <- function(
+  habitat_raster,
+  i,
+  coarse_raster,
+  aggregation_factor
+) {
+  deleted_raster <- coarse_raster + 1
+  deleted_raster[i] <- NA
+  deleted_raster_hi_res <- disaggregate(deleted_raster, aggregation_factor)
+  # create the new habitat with a bit deleted
+  loo_habitat <- habitat_raster * deleted_raster_hi_res
+  loo_habitat
+}

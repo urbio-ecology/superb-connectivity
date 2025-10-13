@@ -4,11 +4,28 @@ barrier <- read_geometry(here("data/allSFWRoads.shp")) |> st_as_sf()
 
 habitat <- read_geometry(here("data/superbHab.shp")) |> clean() |> st_as_sf()
 
+# Calculate connectivity to then use later in the LOO method
+rast_areas_connected <- rast_habitat_connectivity(
+  habitat = habitat_raster,
+  barrier = barrier_raster,
+  distance = 250
+)
+
+connectivity_summary <- summarise_connectivity(
+  area_squared = rast_areas_connected$area_squared,
+  area_total = rast_areas_connected$area
+)
+
+# this is used later
+total_patch_area_hectares <- connectivity_summary$patch_area_total_ha
+
+base_resolution <- 10
+overlay_resolution <- 500
 prepared_rasters <- prepare_rasters(
   habitat = habitat,
   barrier = barrier,
-  base_resolution = 10,
-  overlay_resolution = 500
+  base_resolution = base_resolution,
+  overlay_resolution = overlay_resolution
 )
 
 habitat_raster <- prepared_rasters$habitat_raster
@@ -37,48 +54,59 @@ barrier_mask <- create_barrier_mask(barrier = barrier_raster)
 
 # loop through coarse raster cells, running the connectivity thingo every time
 # store the connect value in one raster and then
-for (i in seq_len(ncell(coarse_raster))) {
-  del <- coarse_raster + 1
-  del[i] <- NA
-  del_hires <- disaggregate(del, aggregation_factor)
-  # create the new habitat with a bit deleted
-  habitat_del <- habitat_raster * del_hires
+# for (i in seq_len(ncell(coarse_raster))) {
+for (i in seq_len(5)) {
+  loo_habitat <- rast_remove_habitat_cell(
+    habitat_raster,
+    i,
+    coarse_raster,
+    aggregation_factor
+  )
 
   # mask out the barrier bits from habitat_raster
-  habitat_del <- rast_remove_habitat_under_barrier(
-    habitat = habitat_del,
+  loo_remaining_habitat <- rast_remove_habitat_under_barrier(
+    habitat = loo_habitat,
     barrier_mask = barrier_mask
   )
 
-  # buffer by radius (metres)
-  buffhabitat <- rast_habitat_buffer(
-    habitat = habitat_del,
+  loo_buffered_habitat <- rast_habitat_buffer(
+    habitat = loo_remaining_habitat,
     distance = 250
   )
 
   # apply barriers to get the fragmentation
-  fragRast <- rast_fragment_habitat(
-    buffhabitat,
+  loo_fragmentation_raster <- rast_fragment_habitat(
+    loo_buffered_habitat,
     barrier_mask
   )
 
   # get IDs of connected areas
   # intersect with habitat to get area IDs of habitat patches
-  patchID <- rast_assign_patches_to_fragments(
-    remaining_habitat = habitat_del,
-    fragment = fragRast
+  loo_patch_id_raster <- rast_assign_patches_to_fragments(
+    remaining_habitat = loo_remaining_habitat,
+    fragment = loo_fragmentation_raster
   ) |>
     rast_add_patch_area()
 
-  df2 <- rast_aggregate_connected_patches(patchID)
+  loo_rast_areas_connected <- rast_aggregate_connected_patches(
+    loo_patch_id_raster
+  )
 
   # Calculate connectivity ----
-  # TODO check `tot` calculation - is this done on the whole data set or?
-  df2$areaSquared <- df2$area^2
-  effMesh2 <- sum(df2$areaSquared) / tot
+  # A lot of these calculations are already created in summaries
+  ## total_habitat_area() is what was used to calculate `tot` for the
+  ## original data (as dsicussed in #13)
+  loo_effective_mesh_ha <- effective_mesh_size(
+    area_squared = loo_rast_areas_connected$area_squared,
+    # original area measurement, which will get summed
+    area_total = rast_areas_connected$area
+  )
+
   # store in rasters
-  connectivity[i] <- effMesh2
-  changeConnect[i] <- effMesh - effMesh2
+  connectivity[i] <- loo_effective_mesh_ha
+  # difference between effective mesh calculated above
+  changeConnect[i] <- connectivity_summary$effective_mesh_ha -
+    loo_effective_mesh_ha
 }
 
 # TODO

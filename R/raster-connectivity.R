@@ -2,7 +2,7 @@
 # make the habitat file into a sf object, not sfc
 # create an empty raster grid of the correct dimensions, resolution
 # set the CRS to the same as the habitat layer
-empty_grid <- function(habitat, resolution = 10) {
+rast_empty_grid <- function(habitat, resolution = 10) {
   grid <- raster::raster(
     x = habitat,
     res = resolution,
@@ -20,7 +20,7 @@ prepare_rasters <- function(
 ) {
   aggregation_factor <- overlay_resolution / base_resolution
 
-  grid <- empty_grid(habitat, resolution = base_resolution)
+  grid <- rast_empty_grid(habitat, resolution = base_resolution)
 
   habitat_raster <- fasterize(habitat, raster = grid, background = NA)
   barrier_raster <- fasterize(barrier, raster = grid, background = 0)

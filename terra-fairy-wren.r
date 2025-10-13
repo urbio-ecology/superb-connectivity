@@ -3,11 +3,15 @@
 # echidna = 115421600 500m buffer
 
 source("packages.R")
-dir_map(path = "R/", fun = source)
+source("R/calculations.R")
+source("R/clean.R")
+source("R/connectivity.R")
+source("R/read_geometry.R")
+source("R/terra-connectivity.R")
 barrier <- read_geometry(here("data/allSFWRoads.shp")) |> st_as_sf()
 habitat <- read_geometry(here("data/superbHab.shp")) |> clean() |> st_as_sf()
 
-prepared_rasters <- prepare_rasters(
+prepared_rasters <- terra_prepare_rasters(
   habitat = habitat,
   barrier = barrier,
   base_resolution = 10,
@@ -24,32 +28,31 @@ barrier_mask <- create_barrier_mask(barrier = barrier_raster)
 
 plot(barrier_mask)
 
-remaining_habitat <- rast_remove_habitat_under_barrier(
+remaining_habitat <- terra_remove_habitat_under_barrier(
   habitat = habitat_raster,
   barrier_mask = barrier_mask
 )
 
 # buffer by radius (metres)
-buffered_habitat <- rast_habitat_buffer(
+buffered_habitat <- terra_habitat_buffer(
   habitat = remaining_habitat,
   distance = 250
 )
 
 # apply barriers to get the fragmentation
-fragmentation_raster <- rast_fragment_habitat(
+fragmentation_raster <- terra_fragment_habitat(
   buffered_habitat,
   barrier_mask
 )
-
 # get IDs of connected areas
 # intersect with habitat to get area IDs of habitat patches
-patch_id_raster <- rast_assign_patches_to_fragments(
+patch_id_raster <- terra_assign_patches_to_fragments(
   remaining_habitat = remaining_habitat,
   fragment = fragmentation_raster
 ) |>
-  rast_add_patch_area()
+  terra_add_patch_area()
 
-rast_areas_connected <- rast_aggregate_connected_patches(patch_id_raster)
+rast_areas_connected <- terra_aggregate_connected_patches(patch_id_raster)
 ## This code is to do with finding the actual connectivity calculation
 
 summarise_connectivity(
@@ -57,12 +60,17 @@ summarise_connectivity(
   area_total = rast_areas_connected$area
 )
 
-# and as one step
-rast_areas_connected2 <- rast_habitat_connectivity(
+terra_areas_connected2 <- terra_habitat_connectivity(
   habitat = habitat_raster,
   barrier = barrier_raster,
   distance = 250
 )
+# and as one step
+# rast_areas_connected2 <- rast_habitat_connectivity(
+#   habitat = habitat_raster,
+#   barrier = barrier_raster,
+#   distance = 250
+# )
 # # these values are the same
 # summarise_connectivity(
 #   area_squared = rast_areas_connected$area_squared,

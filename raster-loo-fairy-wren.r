@@ -56,7 +56,6 @@ barrier_mask <- create_barrier_mask(barrier = barrier_raster)
 # store the connect value in one raster and then
 # for (i in seq_len(ncell(coarse_raster))) {
 for (i in seq_len(5)) {
-  i <- 1
   loo_habitat <- rast_remove_habitat_cell(
     habitat_raster,
     i,
@@ -103,7 +102,6 @@ for (i in seq_len(5)) {
     area_total = rast_areas_connected$area
   )
 
-  ## TODO this number seems wrong, slash, off by an order of magnitude
   # store in rasters
   connectivity[i] <- loo_effective_mesh_ha
   # difference between effective mesh calculated above

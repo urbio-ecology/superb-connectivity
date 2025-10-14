@@ -101,3 +101,11 @@ summarise_connectivity(
       n_patches prob_connectedness effective_mesh_ha patch_area_mean patch_area_total_ha
           <int>              <dbl>             <dbl>           <dbl>               <dbl>
     1       149          0.0000236              345.          98148.               1462.
+
+```
+#> # A tibble: 1 × 5
+#>   n_patches prob_connectedness effective_mesh_ha patch_area_mean
+#>       <int>              <dbl>             <dbl>           <dbl>
+#> 1       153          0.0000227              337.          96870.
+#> # ℹ 1 more variable: patch_area_total_ha <dbl>
+```

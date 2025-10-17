@@ -22,9 +22,11 @@ fragmentation_raster|stem|b8eb2240007a09ac|eaa8b28db7c1d8e4|d983dd0ffa957479|187
 patch_id_raster|stem|c709af3d6b09d630|4eb0c83e1f6527b3|4b5e345d89c667d4|-2036104339||t20378.0313524815s|s5853957b|5853957|format_custom&read=dGVycmE6OnJhc3QocGF0aCk&write=ewogICAgZG8uY2FsbCh0ZXJyYTo6d3JpdGVSYXN0ZXIsIGMobGlzdChvYmplY3QsIGZpbGVuYW1lID0gcGF0aCwgCiAgICAgICAgZmlsZXR5cGUgPSAiR1RpZmYiLCBvdmVyd3JpdGUgPSBUUlVFLCBnZGFsID0gTlVMTCksIGxpc3QoKSkpCn0&marshal=dGVycmE6OndyYXAob2JqZWN0KQ&unmarshal=dGVycmE6OnVud3JhcChvYmplY3Qp&convert=&copy=&repository=|local|list|||3.913||
 rast_areas_connected|stem|0621cd6783d20eb7|195b1a0c2c4790d0|f2d8b3277758dd94|-2081698739||t20378.0313560101s|s2592b|2592|rds|local|vector|||0.267||
 connectivity_wren|stem|be3119225ac3cd20|9b2adfd86f9af1b3|9d702423b4e94b5b|1300366494||t20378.0313560885s|s247b|247|rds|local|vector|||0.002||
+terra_areas_connected|stem|0621cd6783d20eb7|3376dee87541bacb|0024c8d89e5ab5ae|1878617838||t20378.0637595121s|s2592b|2592|rds|local|vector|||18.423||
+explore_doc|stem|dcd366f75618ae57|cdd69c433735acd8|ab557a34746867e6|-970232506|doc/explore.html*doc/explore.qmd|t20378.1376668702s|s32981b|32981|file|local|vector|||6.003||
 rast_habitat_buffer|function|a998c48c6cb3b21f
 fragment_habitat|function|0bdf4bdc9dd549c0
-.Random.seed|object|26e9e6090bdb1f59
+.Random.seed|object|987d3ccf36b51e44
 rast_fragment_habitat|function|19f11c542618f138
 rast_empty_grid|function|82538353a89c1370
 read_geometry|function|917475c87c24f033
@@ -60,4 +62,3 @@ habitat_connectivity|function|d1618f00d1d0c585
 summarise_connectivity|function|36c3fd79aa25657c
 terra_habitat_connectivity|function|5cdb3fbfedd60e29
 rast_habitat_connectivity|function|e5892adfb81bfc0a
-explore_doc|stem|c656aab96e7bacd2|8044b027a49d3184|b2dd23370670f40f|-970232506|doc/explore.html*doc/explore.qmd|t20378.0363894801s|s24124b|24124|file|local|vector|||5.736||

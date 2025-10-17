@@ -95,7 +95,7 @@ tar_assign({
   # buffer the habitat by distance
   buffer <- habitat_buffer(habitat, distance = 250) |> tar_target()
 
-  connect_habitat_vect <- habitat_connectivity(
+  vect_areas_connected <- habitat_connectivity(
     habitat = habitat,
     barrier = barrier,
     distance = 250
@@ -103,8 +103,8 @@ tar_assign({
     tar_target()
 
   results_connect_habitat_vect <- summarise_connectivity(
-    area_squared = connect_habitat_vect$area_squared,
-    area_total = connect_habitat_vect$area_total
+    area_squared = vect_areas_connected$area_squared,
+    area_total = vect_areas_connected$area_total
   ) |>
     tar_target()
 

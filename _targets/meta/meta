@@ -24,7 +24,7 @@ rast_areas_connected|stem|0621cd6783d20eb7|195b1a0c2c4790d0|f2d8b3277758dd94|-20
 connectivity_wren|stem|be3119225ac3cd20|9b2adfd86f9af1b3|9d702423b4e94b5b|1300366494||t20378.0313560885s|s247b|247|rds|local|vector|||0.002||
 rast_habitat_buffer|function|a998c48c6cb3b21f
 fragment_habitat|function|0bdf4bdc9dd549c0
-.Random.seed|object|2b4a17b21111bdf2
+.Random.seed|object|26e9e6090bdb1f59
 rast_fragment_habitat|function|19f11c542618f138
 rast_empty_grid|function|82538353a89c1370
 read_geometry|function|917475c87c24f033
@@ -54,9 +54,10 @@ mean_patch_size|function|e32f7e7d659e8c4c
 prepare_rasters|function|398b1827df604243
 connectivity_probability|function|10aa86c858604904
 .terra_habitat_connectivity|function|2fda8b9f2589c4aa
-terra_prepare_rasters|function|de2c1f2a570a6612
+terra_prepare_rasters|function|b429606ee34d823c
 habitat_connectivity|function|d1618f00d1d0c585
 .rast_habitat_connectivity|function|18535114f4b74f6f
 summarise_connectivity|function|36c3fd79aa25657c
 terra_habitat_connectivity|function|5cdb3fbfedd60e29
 rast_habitat_connectivity|function|e5892adfb81bfc0a
+explore_doc|stem|c656aab96e7bacd2|8044b027a49d3184|b2dd23370670f40f|-970232506|doc/explore.html*doc/explore.qmd|t20378.0363894801s|s24124b|24124|file|local|vector|||5.736||

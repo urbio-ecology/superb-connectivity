@@ -75,17 +75,8 @@ tar_assign({
   barrier_raster <- terra::extend(barrier_rasterised, coarse_template) |>
     tar_terra_rast()
 
-  # TODO
-  # move these to an EDA doc
-  # plot(habitat_raster)
-  # plot(barrier_raster)
-
   barrier_mask <- create_barrier_mask(barrier = barrier_raster) |>
     tar_terra_rast()
-
-  # TODO
-  # move this to an EDA doc
-  # plot(barrier_mask)
 
   remaining_habitat <- terra_remove_habitat_under_barrier(
     habitat = habitat_raster,
@@ -132,4 +123,6 @@ tar_assign({
     distance = 250
   ) |>
     tar_target()
+
+  explore_doc <- tar_quarto(path = "doc/explore.qmd")
 })

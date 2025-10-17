@@ -23,10 +23,12 @@ patch_id_raster|stem|c709af3d6b09d630|4eb0c83e1f6527b3|4b5e345d89c667d4|-2036104
 rast_areas_connected|stem|0621cd6783d20eb7|195b1a0c2c4790d0|f2d8b3277758dd94|-2081698739||t20378.0313560101s|s2592b|2592|rds|local|vector|||0.267||
 connectivity_wren|stem|be3119225ac3cd20|9b2adfd86f9af1b3|9d702423b4e94b5b|1300366494||t20378.0313560885s|s247b|247|rds|local|vector|||0.002||
 terra_areas_connected|stem|0621cd6783d20eb7|3376dee87541bacb|0024c8d89e5ab5ae|1878617838||t20378.0637595121s|s2592b|2592|rds|local|vector|||18.423||
-explore_doc|stem|dcd366f75618ae57|cdd69c433735acd8|ab557a34746867e6|-970232506|doc/explore.html*doc/explore.qmd|t20378.1376668702s|s32981b|32981|file|local|vector|||6.003||
+connect_habitat_vect|stem|8e3d7cb513744c34|3812726abf4f4d3e|c020849d63722803|-1747412861||t20378.1633697876s|s3262b|3262|rds|local|vector|||1.716||
+results_connect_habitat_vect|stem|4fd79d4e315a7057|7e4ee94aefa9db69|1bff4c640294cd86|-964064227||t20378.1633713601s|s340b|340|rds|local|vector|||0.004||
+buffer|stem|0319de834ff7e3a7|e4ba3ac24f7da64e|7231a31058b51835|-1662062267||t20378.1657879396s|s68714b|68714|rds|local|vector|||1.496||
 rast_habitat_buffer|function|a998c48c6cb3b21f
 fragment_habitat|function|0bdf4bdc9dd549c0
-.Random.seed|object|987d3ccf36b51e44
+.Random.seed|object|f06d99bdd75423b4
 rast_fragment_habitat|function|19f11c542618f138
 rast_empty_grid|function|82538353a89c1370
 read_geometry|function|917475c87c24f033
@@ -34,7 +36,7 @@ terra_assign_patches_to_fragments|function|c7b28de72d6bbfdd
 add_patch_area|function|20440e0dd937213f
 terra_add_patch_area|function|8c76b326e7968e0e
 rast_aggregate_connected_patches|function|52ade16bc268d22a
-assign_patches_to_fragments|function|0288d7a9693584a8
+assign_patches_to_fragments|function|619ec649a7cc126b
 effective_mesh_size|function|f4955d2789ede4c2
 create_barrier_mask|function|79c862bcf6f83800
 terra_aggregate_connected_patches|function|ce68921d7111a823
@@ -57,8 +59,9 @@ prepare_rasters|function|398b1827df604243
 connectivity_probability|function|10aa86c858604904
 .terra_habitat_connectivity|function|2fda8b9f2589c4aa
 terra_prepare_rasters|function|b429606ee34d823c
-habitat_connectivity|function|d1618f00d1d0c585
+habitat_connectivity|function|7dc4fb24b4cce332
 .rast_habitat_connectivity|function|18535114f4b74f6f
 summarise_connectivity|function|36c3fd79aa25657c
 terra_habitat_connectivity|function|5cdb3fbfedd60e29
 rast_habitat_connectivity|function|e5892adfb81bfc0a
+explore_doc|stem|de398865fed3d8b0|0d4428cb567e6e62|e8fe88d330e4fdba|-970232506|doc/explore.html*doc/explore.qmd|t20378.1666397612s|s34843b|34843|file|local|vector|||6.241||

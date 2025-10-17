@@ -80,5 +80,33 @@ tar_assign({
   ) |>
     tar_target()
 
+  ### using the vector based approach ------------------------------------------
+  ## how connected is your landscape?
+  ## provides a map output
+  ## inputs: barriers (roads, houses, etc), habitat (grass, trees, water, etc)
+  ## outputs are: the connectedness map, and measurements of connectedness
+  ## possible to speed up this code by moving it from vectors to rasters
+  ## it is possible we might focus on using the raster approach/vector approach
+  # run existing connectivity calculation for SFW
+
+  # habitat - here all understorey from the LiDAR data
+  # also clean up the edges, this helps remove some of the resolution
+  # that is at a very high level of details which we do not need
+  # buffer the habitat by distance
+  buffer <- habitat_buffer(habitat, distance = 250) |> tar_target()
+
+  connect_habitat_vect <- habitat_connectivity(
+    habitat = habitat,
+    barrier = barrier,
+    distance = 250
+  ) |>
+    tar_target()
+
+  results_connect_habitat_vect <- summarise_connectivity(
+    area_squared = connect_habitat_vect$area_squared,
+    area_total = connect_habitat_vect$area_total
+  ) |>
+    tar_target()
+
   explore_doc <- tar_quarto(path = "doc/explore.qmd")
 })

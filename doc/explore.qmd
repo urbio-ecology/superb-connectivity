@@ -18,26 +18,50 @@ tar_source()  # not always necessary
 #| label: load-targets
 #| include: false
 withr::with_dir(here::here(), {
+tar_load(habitat)
+tar_load(barrier)
+tar_load(buffer)
 tar_load(habitat_raster)
 tar_load(barrier_raster)
 tar_load(barrier_mask)
 tar_load(terra_areas_connected)
 tar_load(connectivity_wren)
+tar_load(vect_areas_connected)
+tar_load(results_connect_habitat_vect)
+
 })
-# tar_load(habitat_raster)
-# tar_load(barrier_raster)
-# tar_load(barrier_mask)
-# tar_load(terra_areas_connected2)
-# tar_load(connectivity_wren)
 ```
 
 ## Exploration
+
+### vectors
+
+```{r}
+plot(barrier, border = "orange2")
+plot(habitat, border = "midnightblue", add = TRUE)
+  plot(habitat, border = "forestgreen")
+  plot(
+    buffer,
+    border = "darkgreen",
+    add = TRUE,
+    col = alpha(colour = "forestgreen", alpha = 0.25)
+  )
+
+  vect_areas_connected 
+
+  results_connect_habitat_vect 
+
+```
+
+
+## rasters
 
 ```{r}
 plot(habitat_raster)
 plot(barrier_raster)
 
 plot(barrier_mask)
+
 ```
 
 Explore results
@@ -50,8 +74,21 @@ terra_areas_connected |> datatable()
 connectivity_wren |> datatable()
 ```
 
-Ideas: 
+## Understanding timing
 
+It is useful to understand how long the pipeline takes, let's take a look at the timing of some key targets
+
+```{r}
+target_timings <- tar_meta() |> dplyr::select(name, bytes, seconds)
+
+target_timings |> 
+  filter(
+    name %in% c(
+      "vect_areas_connected",
+      "terra_areas_connected"
+    )
+  )
+```
 
 
 ## Reproducibility

@@ -1,0 +1,79 @@
+---
+title: "Untitled Draft"
+author: "Report Author"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+format: html
+---
+
+```{r}
+#| label: setup
+#| include: false
+knitr::opts_chunk$set(echo = FALSE)
+## target knits qmds in their own session, so load libraries here.
+source(here::here("packages.R"))
+tar_source()  # not always necessary
+```
+
+```{r}
+#| label: load-targets
+#| include: false
+withr::with_dir(here::here(), {
+tar_load(habitat_raster)
+tar_load(barrier_raster)
+tar_load(barrier_mask)
+tar_load(terra_areas_connected)
+tar_load(connectivity_wren)
+})
+# tar_load(habitat_raster)
+# tar_load(barrier_raster)
+# tar_load(barrier_mask)
+# tar_load(terra_areas_connected2)
+# tar_load(connectivity_wren)
+```
+
+## Exploration
+
+```{r}
+plot(habitat_raster)
+plot(barrier_raster)
+
+plot(barrier_mask)
+```
+
+Explore results
+
+```{r}
+terra_areas_connected |> datatable()
+```
+
+```{r}
+connectivity_wren |> datatable()
+```
+
+Ideas: 
+
+
+
+## Reproducibility
+
+<details><summary>Reproducibility receipt</summary>
+
+```{r}
+## datetime
+Sys.time()
+
+## repository
+if(requireNamespace('git2r', quietly = TRUE)) {
+  git2r::repository()
+} else {
+  c(
+    system2("git", args = c("log", "--name-status", "-1"), stdout = TRUE),
+    system2("git", args = c("remote", "-v"), stdout = TRUE)
+  )
+}
+
+## session info
+sessionInfo()
+```
+
+</details>

@@ -36,7 +36,8 @@ remove_habitat_under_barrier <- function(habitat, barrier) {
 assign_patches_to_fragments <- function(remaining, fragment_id) {
   intersects <- sf::st_intersects(remaining, fragment_id)
   membership <- sapply(intersects, first)
-  habitat_id <- sf::st_sf(geometry = remaining, patch_id = membership)
+  habitat_id <- sf::st_sf(geometry = remaining) |>
+    mutate(patch_id = membership)
   habitat_id
 }
 

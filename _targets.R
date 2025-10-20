@@ -6,8 +6,8 @@ tar_source()
 
 ## Assign like regular R, just make sure to pipe into a tar_ operation
 tar_assign({
-  barrier_file <- tar_file(here("data/allSFWRoads.shp"))
-  habitat_file <- tar_file(here("data/superbHab.shp"))
+  barrier_file <- tar_file(here("data/superb-fairy-wren/allSFWRoads.shp"))
+  habitat_file <- tar_file(here("data/superb-fairy-wren/superbHab.shp"))
   barrier <- read_geometry(barrier_file) |> st_as_sf() |> tar_target()
   habitat <- read_geometry(habitat_file) |>
     clean() |>

@@ -1,6 +1,6 @@
 ---
-title: "Untitled Draft"
-author: "Report Author"
+title: "Brief Exploration of results"
+author: "Nicholas Tierney"
 date: "`r format(Sys.time(), '%d %B, %Y')`"
 format: html
 ---
@@ -8,7 +8,7 @@ format: html
 ```{r}
 #| label: setup
 #| include: false
-knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_chunk$set(echo = TRUE)
 ## target knits qmds in their own session, so load libraries here.
 source(here::here("packages.R"))
 tar_source()  # not always necessary
@@ -20,74 +20,75 @@ tar_source()  # not always necessary
 withr::with_dir(here::here(), {
 tar_load(habitat)
 tar_load(barrier)
-tar_load(buffer)
 tar_load(habitat_raster)
 tar_load(barrier_raster)
-tar_load(barrier_mask)
 tar_load(terra_areas_connected)
-tar_load(connectivity_wren)
-tar_load(vect_areas_connected)
-tar_load(results_connect_habitat_vect)
-
+tar_load(results_connect_habitat)
 })
 ```
 
 ## Exploration
 
-### vectors
-
 ```{r}
-plot(barrier, border = "orange2")
-plot(habitat, border = "midnightblue", add = TRUE)
-  plot(habitat, border = "forestgreen")
-  plot(
-    buffer,
-    border = "darkgreen",
-    add = TRUE,
-    col = alpha(colour = "forestgreen", alpha = 0.25)
-  )
-
-  vect_areas_connected 
-
-  results_connect_habitat_vect 
-
-```
-
-
-## rasters
-
-```{r}
-plot(habitat_raster)
+#| label: plot-raster
+plot(habitat_raster, col = "forestgreen")
 plot(barrier_raster)
-
-plot(barrier_mask)
-
 ```
 
 Explore results
 
 ```{r}
-terra_areas_connected |> datatable()
+#| label: display-areas
+terra_areas_connected |> 
+  mutate(across(starts_with("area"), \(x) round(x, 3))) |> 
+  datatable()
 ```
 
 ```{r}
-connectivity_wren |> datatable()
+#| label: display-connectivity
+terra_areas_connected |> 
+  mutate(across(where(is.numeric), \(x) round(x, 6))) |> 
+  pivot_longer(
+    cols = everything(),
+    names_to = "Variable",
+    values_to = "Value"
+  ) |> 
+  datatable()
 ```
 
-## Understanding timing
+```{r}
+results_connect_habitat |> datatable()
+```
+
+
+## Running time
 
 It is useful to understand how long the pipeline takes, let's take a look at the timing of some key targets
 
 ```{r}
+#| label: running-time
 target_timings <- tar_meta() |> dplyr::select(name, bytes, seconds)
 
 target_timings |> 
-  filter(
-    name %in% c(
-      "vect_areas_connected",
-      "terra_areas_connected"
-    )
-  )
+  drop_na() |> 
+  arrange(desc(seconds)) |> 
+  mutate(
+    bytes_pretty = prettyunits::pretty_bytes(bytes),
+    .after = bytes
+  ) |> 
+  rename(
+    target_name = name,
+    runtime_seconds = seconds
+  ) |> 
+  datatable()
+
+# target_timings |> 
+#   filter(
+#     name %in% c(
+#       "vect_areas_connected",
+#       "terra_areas_connected"
+#     )
+#   )
 ```
 
 

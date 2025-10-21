@@ -6,8 +6,10 @@ tar_source()
 
 ## Assign like regular R, just make sure to pipe into a tar_ operation
 tar_assign({
-  barrier_file <- tar_file(here("data/superb-fairy-wren/allSFWRoads.shp"))
-  habitat_file <- tar_file(here("data/superb-fairy-wren/superbHab.shp"))
+  barrier_file <- tar_file(here(
+    "data/wood-bird/AllWoodbirdBarriers_CorrCRS.shp"
+  ))
+  habitat_file <- tar_file(here("data/wood-bird/WoodbirdAllHabitat.shp"))
   barrier <- read_geometry(barrier_file) |> st_as_sf() |> tar_target()
   habitat <- read_geometry(habitat_file) |>
     clean() |>
@@ -81,6 +83,8 @@ tar_assign({
     tar_target()
 
   ### using the vector based approach ------------------------------------------
+  ## Not running this for larger file sizes
+  ## TODO query this from @mdsumner
   ## how connected is your landscape?
   ## provides a map output
   ## inputs: barriers (roads, houses, etc), habitat (grass, trees, water, etc)
@@ -93,20 +97,20 @@ tar_assign({
   # also clean up the edges, this helps remove some of the resolution
   # that is at a very high level of details which we do not need
   # buffer the habitat by distance
-  buffer <- habitat_buffer(habitat, distance = 250) |> tar_target()
-
-  vect_areas_connected <- habitat_connectivity(
-    habitat = habitat,
-    barrier = barrier,
-    distance = 250
-  ) |>
-    tar_target()
-
-  results_connect_habitat_vect <- summarise_connectivity(
-    area_squared = vect_areas_connected$area_squared,
-    area_total = vect_areas_connected$area_total
-  ) |>
-    tar_target()
+  # buffer <- habitat_buffer(habitat, distance = 250) |> tar_target()
+  #
+  # vect_areas_connected <- habitat_connectivity(
+  #   habitat = habitat,
+  #   barrier = barrier,
+  #   distance = 250
+  # ) |>
+  #   tar_target()
+  #
+  # results_connect_habitat_vect <- summarise_connectivity(
+  #   area_squared = vect_areas_connected$area_squared,
+  #   area_total = vect_areas_connected$area_total
+  # ) |>
+  #   tar_target()
 
   explore_doc <- tar_quarto(path = "doc/explore.qmd")
 })

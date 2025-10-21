@@ -82,6 +82,12 @@ tar_assign({
   ) |>
     tar_target()
 
+  results_connect_habitat <- summarise_connectivity(
+    area_squared = terra_areas_connected$area_squared,
+    area_total = terra_areas_connected$area
+  ) |>
+    tar_target()
+
   ### using the vector based approach ------------------------------------------
   ## Not running this for larger file sizes
   ## TODO query this from @mdsumner

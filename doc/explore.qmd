@@ -23,6 +23,7 @@ tar_load(barrier)
 tar_load(habitat_raster)
 tar_load(barrier_raster)
 tar_load(terra_areas_connected)
+tar_load(results_connect_habitat)
 })
 ```
 
@@ -30,7 +31,7 @@ tar_load(terra_areas_connected)
 
 ```{r}
 #| label: plot-raster
-plot(habitat_raster)
+plot(habitat_raster, col = "forestgreen")
 plot(barrier_raster)
 ```
 
@@ -54,6 +55,11 @@ terra_areas_connected |>
   ) |> 
   datatable()
 ```
+
+```{r}
+results_connect_habitat |> datatable()
+```
+
 
 ## Running time
 

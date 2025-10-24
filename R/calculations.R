@@ -35,13 +35,26 @@ connectivity_probability <- function(area_squared, area_total) {
 }
 
 # this could also be an S3 method for connectiveness?
-summarise_connectivity <- function(area_squared, area_total) {
+summarise_connectivity <- function(
+  area_squared,
+  area_total,
+  buffer_distance,
+  overlay_resolution,
+  base_resolution,
+  aggregation_factor,
+  species_name
+) {
   results <- tibble(
+    species_name = species_name,
+    buffer_distance = buffer_distance,
     n_patches = n_patches(area_total),
     prob_connectedness = connectivity_probability(area_squared, area_total),
     effective_mesh_ha = effective_mesh_size(area_squared, area_total),
     patch_area_mean = mean_patch_size(area_total),
-    patch_area_total_ha = total_habitat_area(area_total)
+    patch_area_total_ha = total_habitat_area(area_total),
+    overlay_resolution = overlay_resolution,
+    base_resolution = base_resolution,
+    aggregation_factor = aggregation_factor
   )
   results
 }

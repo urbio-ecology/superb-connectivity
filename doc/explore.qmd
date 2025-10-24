@@ -24,6 +24,10 @@ tar_load(habitat_raster)
 tar_load(barrier_raster)
 tar_load(terra_areas_connected)
 tar_load(results_connect_habitat)
+tar_load(fragmentation_raster)
+tar_load(buffered_habitat)
+tar_load(remaining_habitat)
+tar_load(patch_id_raster)
 })
 ```
 
@@ -33,7 +37,28 @@ tar_load(results_connect_habitat)
 #| label: plot-raster
 plot(habitat_raster, col = "forestgreen")
 plot(barrier_raster)
+plot(remaining_habitat)
+plot(fragmentation_raster)
+
+plot(patch_id_raster[[1]])
+
+plot(buffered_habitat, col = "grey80")
+plot(barrier_raster, add = TRUE)
 ```
+
+```{r}
+terra::as.polygons(patch_id_raster[[1]])
+
+plot(patch_id_raster[[1]])
+```
+
+
+```{r}
+library(tidyterra)
+ggplot() +
+  geom_spatraster(data = habitat_raster)
+```
+
 
 Explore results
 

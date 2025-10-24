@@ -16,9 +16,11 @@ tar_assign({
     st_as_sf() |>
     tar_target()
 
+  species_name <- tar_target("Woodbird")
   overlay_resolution <- tar_target(500)
   base_resolution <- tar_target(10)
   aggregation_factor <- tar_target(overlay_resolution / base_resolution)
+  buffer_distance <- tar_target(250)
   # ran into error
   # Error storing output: [writeRaster] there are no cell values
   # TODO lodge bug report for geotargets
@@ -74,17 +76,56 @@ tar_assign({
   barrier_raster <- terra::extend(barrier_rasterised, coarse_template) |>
     tar_terra_rast()
 
-  # and as one step, which is now quite straightforward
-  terra_areas_connected <- terra_habitat_connectivity(
+  barrier_mask <- create_barrier_mask(barrier = barrier_raster) |>
+    tar_terra_rast()
+
+  remaining_habitat <- terra_remove_habitat_under_barrier(
     habitat = habitat_raster,
-    barrier = barrier_raster,
-    distance = 250
+    barrier_mask = barrier_mask
   ) |>
+    tar_terra_rast()
+
+  buffered_habitat <- terra_habitat_buffer(
+    habitat = remaining_habitat,
+    distance = buffer_distance
+  ) |>
+    tar_terra_rast()
+
+  # apply barriers to get the fragmentation
+  fragmentation_raster <- terra_fragment_habitat(
+    buffered_habitat,
+    barrier_mask
+  ) |>
+    tar_terra_rast()
+
+  # get IDs of connected areas
+  # intersect with habitat to get area IDs of habitat patches
+  patch_id_raster <- terra_assign_patches_to_fragments(
+    remaining_habitat = remaining_habitat,
+    fragment = fragmentation_raster
+  ) |>
+    terra_add_patch_area() |>
+    tar_terra_rast()
+
+  terra_areas_connected <- terra_aggregate_connected_patches(patch_id_raster) |>
     tar_target()
+
+  # or as one step
+  # terra_areas_connected <- terra_habitat_connectivity(
+  #   habitat = habitat_raster,
+  #   barrier = barrier_raster,
+  #   distance = 250
+  # ) |>
+  #   tar_target()
 
   results_connect_habitat <- summarise_connectivity(
     area_squared = terra_areas_connected$area_squared,
-    area_total = terra_areas_connected$area
+    area_total = terra_areas_connected$area,
+    buffer_distance = buffer_distance,
+    overlay_resolution = overlay_resolution,
+    base_resolution = base_resolution,
+    aggregation_factor = aggregation_factor,
+    species_name = species_name
   ) |>
     tar_target()
 

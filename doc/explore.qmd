@@ -18,32 +18,23 @@ tar_source()  # not always necessary
 #| label: load-targets
 #| include: false
 withr::with_dir(here::here(), {
-tar_load(habitat)
-tar_load(barrier)
 tar_load(habitat_raster)
 tar_load(barrier_raster)
+tar_load(buffered_habitat)
+tar_load(patch_id_raster)
 tar_load(terra_areas_connected)
 tar_load(results_connect_habitat)
-tar_load(fragmentation_raster)
-tar_load(buffered_habitat)
-tar_load(remaining_habitat)
-tar_load(patch_id_raster)
 })
 ```
 
 ## Exploration
 
 ```{r}
-# terra::as.polygons(patch_id_raster[[1]])
-# plot(patch_id_raster[[1]])
-```
-
-```{r}
 col2hex <- function(color_name) {
   rgb(t(col2rgb(color_name)), maxColorValue = 255)
 }
 
-col2hex("forestgreen")
+# col2hex("forestgreen")
 ```
 
 ## Habitat, Buffered Habitat, and Barrier
@@ -53,28 +44,55 @@ col2hex("forestgreen")
 library(terra)
 library(tidyterra)
 library(colorspace)
-library(ggtext)
+library(marquee)
 
+plot_barrier_habitat_buffer <- function(barrier, buffer, habitat){
+  # colorspace::hcl_palettes(type = "Qualitative", plot = TRUE)
+
+# geo_cols <- colorspace::qualitative_hcl(n = 5, palette = "Dark 3") |> as.list()
+geo_cols <- scico::scico(n = 6, palette = "bukavu") |> as.list()
+
+names(geo_cols) <- c("dark_blue", "mid_blue", "light_blue", "dark_green", "tan", "offwhite")
+# geo_cols |> swatchplot()
+  col_barrier <- geo_cols$mid_blue
+  col_habitat <- geo_cols$dark_green
+  col_buffer <- geo_cols$tan
+  
 # First, reclassify your rasters to assign actual color values
-barrier_coloured <- subst(barrier_raster, 1, "white")
-buffer_coloured <- subst(buffered_habitat, 1, lighten("forestgreen", 0.5))
-habitat_coloured <- subst(habitat_raster, 1, "forestgreen")
+barrier_coloured <- subst(barrier, 1, col_barrier)
+buffer_coloured <- subst(buffer, 1, col_buffer)
+habitat_coloured <- subst(habitat, 1, col_habitat)
 
 # Now plot them in layers (bottom to top)
 ggplot() +
   geom_spatraster(data = buffer_coloured) +
   geom_spatraster(data = barrier_coloured) +
   geom_spatraster(data = habitat_coloured) +
+  theme_minimal(paper = geo_cols$offwhite) +
   scale_fill_identity(na.value = NA) +
-  theme_minimal() +
- labs(title = "Distribution of <span style='color:#228B22'>habitat</span>, 
-                <span style='color:#73CD73'>buffered habitat</span>, 
-                and <span style='color:white'>barriers</span>") +
-  theme_minimal(
-    paper = "black"
-  ) +
-  theme(plot.title = element_markdown())  # This enables the HTML rendering
+ labs(title = marquee_glue("{.{col_habitat} Habitat}, buffered {.{col_buffer} habitat}, and {.{col_barrier} barriers}")) +
+  theme(plot.title = element_marquee())
+}
+
 ```
+
+```{r}
+plot_barrier_habitat_buffer(
+  barrier = barrier_raster,
+  buffer = buffered_habitat[[1]],
+  habitat = habitat_raster
+) +
+  labs(subtitle = "125m buffer")
+
+plot_barrier_habitat_buffer(
+  barrier = barrier_raster,
+  buffer = buffered_habitat[[2]],
+  habitat = habitat_raster
+) + 
+  labs(subtitle = "250m buffer")
+
+```
+
 
 ## Patch ID
 

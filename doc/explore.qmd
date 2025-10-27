@@ -34,29 +34,68 @@ tar_load(patch_id_raster)
 ## Exploration
 
 ```{r}
-#| label: plot-raster
-plot(habitat_raster, col = "forestgreen")
-plot(barrier_raster)
-plot(remaining_habitat)
-plot(fragmentation_raster)
-
-plot(patch_id_raster[[1]])
-
-plot(buffered_habitat, col = "grey80")
-plot(barrier_raster, add = TRUE)
+# terra::as.polygons(patch_id_raster[[1]])
+# plot(patch_id_raster[[1]])
 ```
 
 ```{r}
-terra::as.polygons(patch_id_raster[[1]])
+col2hex <- function(color_name) {
+  rgb(t(col2rgb(color_name)), maxColorValue = 255)
+}
 
-plot(patch_id_raster[[1]])
+col2hex("forestgreen")
 ```
 
+## Habitat, Buffered Habitat, and Barrier
 
 ```{r}
+#| echo: false
+library(terra)
 library(tidyterra)
+library(colorspace)
+library(ggtext)
+
+# First, reclassify your rasters to assign actual color values
+barrier_coloured <- subst(barrier_raster, 1, "white")
+buffer_coloured <- subst(buffered_habitat, 1, lighten("forestgreen", 0.5))
+habitat_coloured <- subst(habitat_raster, 1, "forestgreen")
+
+# Now plot them in layers (bottom to top)
 ggplot() +
-  geom_spatraster(data = habitat_raster)
+  geom_spatraster(data = buffer_coloured) +
+  geom_spatraster(data = barrier_coloured) +
+  geom_spatraster(data = habitat_coloured) +
+  scale_fill_identity(na.value = NA) +
+  theme_minimal() +
+ labs(title = "Distribution of <span style='color:#228B22'>habitat</span>, 
+                <span style='color:#73CD73'>buffered habitat</span>, 
+                and <span style='color:white'>barriers</span>") +
+  theme_minimal(
+    paper = "black"
+  ) +
+  theme(plot.title = element_markdown())  # This enables the HTML rendering
+```
+
+## Patch ID
+
+```{r}
+my_colours <- colorspace::qualitative_hcl(n = 7)
+
+raster_patches <- as.factor(patch_id_raster[[1]])
+
+unique_vals <- unique(values(raster_patches))
+unique_vals <- unique_vals[!is.na(unique_vals)]
+
+# assign colours cyclically
+colour_indices <- ((unique_vals - 1) %% 7) + 1
+colour_map <- my_colours[colour_indices]
+names(colour_map) <- as.character(unique_vals)
+
+ggplot() +
+  geom_spatraster(data = raster_patches) +
+  scale_fill_manual(values = colour_map, na.value = NA) +
+  theme_minimal() +
+  theme(legend.position = "none")
 ```
 
 

@@ -4,6 +4,17 @@ source("packages.R")
 ## Load your R files
 tar_source()
 
+# facilitate this working in parallel
+controller <- crew_controller_local(
+  name = "my_controller",
+  workers = 4,
+  seconds_idle = 3
+)
+
+tar_option_set(
+  controller = controller
+)
+
 ## Assign like regular R, just make sure to pipe into a tar_ operation
 tar_assign({
   barrier_file <- tar_file(here(
@@ -20,7 +31,7 @@ tar_assign({
   overlay_resolution <- tar_target(500)
   base_resolution <- tar_target(10)
   aggregation_factor <- tar_target(overlay_resolution / base_resolution)
-  buffer_distance <- tar_target(250)
+  buffer_distance <- tar_target(c(125, 250))
   # ran into error
   # Error storing output: [writeRaster] there are no cell values
   # TODO lodge bug report for geotargets
@@ -89,14 +100,18 @@ tar_assign({
     habitat = remaining_habitat,
     distance = buffer_distance
   ) |>
-    tar_terra_rast()
+    tar_terra_rast(
+      pattern = map(buffer_distance)
+    )
 
   # apply barriers to get the fragmentation
   fragmentation_raster <- terra_fragment_habitat(
-    buffered_habitat,
-    barrier_mask
+    buffered_habitat = buffered_habitat,
+    barrier_mask = barrier_mask
   ) |>
-    tar_terra_rast()
+    tar_terra_rast(
+      pattern = map(buffered_habitat)
+    )
 
   # get IDs of connected areas
   # intersect with habitat to get area IDs of habitat patches
@@ -105,18 +120,20 @@ tar_assign({
     fragment = fragmentation_raster
   ) |>
     terra_add_patch_area() |>
-    tar_terra_rast()
-
-  terra_areas_connected <- terra_aggregate_connected_patches(patch_id_raster) |>
-    tar_target()
+    tar_terra_rast(
+      pattern = map(fragmentation_raster)
+    )
 
   # or as one step
-  # terra_areas_connected <- terra_habitat_connectivity(
-  #   habitat = habitat_raster,
-  #   barrier = barrier_raster,
-  #   distance = 250
-  # ) |>
-  #   tar_target()
+  terra_areas_connected <- terra_habitat_connectivity(
+    habitat = habitat_raster,
+    barrier = barrier_raster,
+    distance = buffer_distance
+  ) |>
+    tar_target(
+      pattern = map(buffer_distance),
+      iteration = "list"
+    )
 
   results_connect_habitat <- summarise_connectivity(
     area_squared = terra_areas_connected$area_squared,
@@ -127,7 +144,9 @@ tar_assign({
     aggregation_factor = aggregation_factor,
     species_name = species_name
   ) |>
-    tar_target()
+    tar_target(
+      pattern = map(terra_areas_connected, buffer_distance)
+    )
 
   ### using the vector based approach ------------------------------------------
   ## Not running this for larger file sizes

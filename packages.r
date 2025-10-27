@@ -1,4 +1,5 @@
 library(conflicted)
+library(crew)
 library(DT)
 library(fasterize)
 library(fs)

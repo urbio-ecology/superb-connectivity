@@ -19,9 +19,12 @@ buffered_habitat|stem|c2e905c0d888a380|9a95edd2cfc02fe0|a351bc4fb4545ad9|1336237
 fragmentation_raster|stem|7777b5e6e1b8c505|eaa8b28db7c1d8e4|0f69876c1fa1af8e|1871938973||t20382.2228733017s|s192262b|192262|format_custom&read=dGVycmE6OnJhc3QocGF0aCk&write=ewogICAgZG8uY2FsbCh0ZXJyYTo6d3JpdGVSYXN0ZXIsIGMobGlzdChvYmplY3QsIGZpbGVuYW1lID0gcGF0aCwgCiAgICAgICAgZmlsZXR5cGUgPSAiR1RpZmYiLCBvdmVyd3JpdGUgPSBUUlVFLCBnZGFsID0gTlVMTCksIGxpc3QoKSkpCn0&marshal=dGVycmE6OndyYXAob2JqZWN0KQ&unmarshal=dGVycmE6OnVud3JhcChvYmplY3Qp&convert=&copy=&repository=|local|list|||0.017||
 patch_id_raster|stem|7bdd08b84c473ac1|4eb0c83e1f6527b3|a89786cc55ab3750|-2036104339||t20382.222888905s|s1952705b|1952705|format_custom&read=dGVycmE6OnJhc3QocGF0aCk&write=ewogICAgZG8uY2FsbCh0ZXJyYTo6d3JpdGVSYXN0ZXIsIGMobGlzdChvYmplY3QsIGZpbGVuYW1lID0gcGF0aCwgCiAgICAgICAgZmlsZXR5cGUgPSAiR1RpZmYiLCBvdmVyd3JpdGUgPSBUUlVFLCBnZGFsID0gTlVMTCksIGxpc3QoKSkpCn0&marshal=dGVycmE6OndyYXAob2JqZWN0KQ&unmarshal=dGVycmE6OnVud3JhcChvYmplY3Qp&convert=&copy=&repository=|local|list|||1.28||
 terra_areas_connected|stem|18ea137307ee8fea|195b1a0c2c4790d0|cdf96dde1f312fc5|1878617838||t20382.2228914376s|s2078b|2078|rds|local|vector|||0.197||
+species_name|stem|25dc922b57d24804|ed4b39f202b0b014|2c530c1562a7fbd1|-667913104||t20385.0939356979s|s61b|61|rds|local|vector|||0||
+results_connect_habitat|stem|80de8509e9ed6209|e689ef0747e4d788|9a62a047ce256b25|-2019928970||t20385.0939359238s|s335b|335|rds|local|vector|||0.003||
+explore_doc|stem|6cb57ae6b88b834e|ca12af29231fcad8|cfd2ffd9263077ea|-970232506|doc/explore.html*doc/explore.qmd|t20385.140785001s|s64115b|64115|file|local|vector|||11.385||
 rast_habitat_buffer|function|a998c48c6cb3b21f
 fragment_habitat|function|0bdf4bdc9dd549c0
-.Random.seed|object|896e721c1693906b
+.Random.seed|object|bc1038d465a15eb3
 rast_fragment_habitat|function|19f11c542618f138
 rast_empty_grid|function|82538353a89c1370
 read_geometry|function|917475c87c24f033
@@ -57,6 +60,3 @@ habitat_connectivity|function|7dc4fb24b4cce332
 summarise_connectivity|function|956d439f9adb41fe
 terra_habitat_connectivity|function|5cdb3fbfedd60e29
 rast_habitat_connectivity|function|e5892adfb81bfc0a
-species_name|stem|25dc922b57d24804|ed4b39f202b0b014|2c530c1562a7fbd1|-667913104||t20385.0939356979s|s61b|61|rds|local|vector|||0||
-results_connect_habitat|stem|80de8509e9ed6209|e689ef0747e4d788|9a62a047ce256b25|-2019928970||t20385.0939359238s|s335b|335|rds|local|vector|||0.003||
-explore_doc|stem|9ac361511130cb27|ca12af29231fcad8|cfd2ffd9263077ea|-970232506|doc/explore.html*doc/explore.qmd|t20385.0940401383s|s62803b|62803|file|local|vector|||8.859||

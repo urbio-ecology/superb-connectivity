@@ -148,35 +148,41 @@ tar_assign({
       pattern = map(terra_areas_connected, buffer_distance)
     )
 
-  ### using the vector based approach ------------------------------------------
-  ## Not running this for larger file sizes
+  saved_spatraster <- plot_save_barrier_habitat_buffer(
+    barrier = barrier_raster,
+    buffer = buffered_habitat,
+    habitat = habitat_raster,
+    distance = buffer_distance,
+    species_name = species_name
+  ) |>
+    tar_file(
+      pattern = map(buffered_habitat, buffer_distance)
+    )
+
+  # <- map2(
+  #   .x = buffered_habitat,
+  #   .y = buffer_distance,
+  #   .f = function(buffer, distance) {
+  #     plot_barrier_habitat_buffer(
+  #       barrier = barrier_raster,
+  #       buffer = buffer,
+  #       habitat = habitat_raster,
+  #       distance = distance
+  #     )
+  #   }
+  # ) |>
+  #   setNames(buffer_distance)
+
   ## TODO query this from @mdsumner
   ## how connected is your landscape?
   ## provides a map output
   ## inputs: barriers (roads, houses, etc), habitat (grass, trees, water, etc)
   ## outputs are: the connectedness map, and measurements of connectedness
-  ## possible to speed up this code by moving it from vectors to rasters
-  ## it is possible we might focus on using the raster approach/vector approach
-  # run existing connectivity calculation for SFW
 
   # habitat - here all understorey from the LiDAR data
   # also clean up the edges, this helps remove some of the resolution
   # that is at a very high level of details which we do not need
   # buffer the habitat by distance
-  # buffer <- habitat_buffer(habitat, distance = 250) |> tar_target()
-  #
-  # vect_areas_connected <- habitat_connectivity(
-  #   habitat = habitat,
-  #   barrier = barrier,
-  #   distance = 250
-  # ) |>
-  #   tar_target()
-  #
-  # results_connect_habitat_vect <- summarise_connectivity(
-  #   area_squared = vect_areas_connected$area_squared,
-  #   area_total = vect_areas_connected$area_total
-  # ) |>
-  #   tar_target()
 
-  explore_doc <- tar_quarto(path = "doc/explore.qmd")
+  explore_doc <- tar_quarto(path = "doc/explore.qmd", quiet = FALSE)
 })

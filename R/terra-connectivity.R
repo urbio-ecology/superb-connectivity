@@ -120,7 +120,8 @@ terra_aggregate_connected_patches <- function(raster) {
     summarise(
       area = sum(area)
     ) |>
-    mutate(area_squared = area^2)
+    mutate(area_squared = area^2) |>
+    mutate(across(starts_with("area"), \(x) round(x, 3)))
   summed
 }
 

@@ -55,6 +55,15 @@ summarise_connectivity <- function(
     overlay_resolution = overlay_resolution,
     base_resolution = base_resolution,
     aggregation_factor = aggregation_factor
-  )
+  ) |>
+    mutate(
+      prob_connectedness = round(prob_connectedness, 6)
+    ) |>
+    mutate(
+      across(
+        .cols = c(effective_mesh_ha, patch_area_mean, patch_area_total_ha),
+        round
+      )
+    )
   results
 }

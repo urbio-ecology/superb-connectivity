@@ -31,7 +31,7 @@ tar_assign({
   overlay_resolution <- tar_target(500)
   base_resolution <- tar_target(10)
   aggregation_factor <- tar_target(overlay_resolution / base_resolution)
-  buffer_distance <- tar_target(c(125, 250))
+  buffer_distance <- tar_target(c(100, 250, 400))
   # ran into error
   # Error storing output: [writeRaster] there are no cell values
   # TODO lodge bug report for geotargets

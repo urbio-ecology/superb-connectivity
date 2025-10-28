@@ -110,7 +110,7 @@ rast_aggregate_connected_patches <- function(raster) {
     patch_id = getValues(raster$patch_id),
     area = getValues(raster$area)
   ) %>%
-    filter(
+    dplyr::filter(
       !is.na(patch_id)
     ) %>%
     group_by(

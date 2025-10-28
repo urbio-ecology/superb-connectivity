@@ -111,7 +111,7 @@ terra_aggregate_connected_patches <- function(raster) {
     patch_id = as.numeric(terra::values(raster$patch_id)),
     area = as.numeric(terra::values(raster$area))
   ) %>%
-    filter(
+    dplyr::filter(
       !is.na(patch_id)
     ) %>%
     group_by(

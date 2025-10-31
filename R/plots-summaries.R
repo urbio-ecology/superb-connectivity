@@ -5,7 +5,7 @@ col2hex <- function(color_name) {
 
 plot_barrier_habitat_buffer <- function(
   barrier,
-  buffer,
+  buffered,
   habitat,
   distance,
   species_name
@@ -27,7 +27,7 @@ plot_barrier_habitat_buffer <- function(
 
   # First, reclassify your rasters to assign actual color values
   barrier_coloured <- subst(barrier, 1, col_barrier)
-  buffer_coloured <- subst(buffer, 1, col_buffer)
+  buffer_coloured <- subst(buffered, 1, col_buffer)
   habitat_coloured <- subst(habitat, 1, col_habitat)
 
   # Now plot them in layers (bottom to top)

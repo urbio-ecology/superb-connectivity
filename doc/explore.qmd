@@ -43,12 +43,12 @@ with_dir(here(), {
 buffer_barrier_plots <- map2(
   .x = buffered_habitat,
   .y = buffer_distance,
-  .f = function(buffer, distance) {
+  .f = function(buffered_habitat, buffer_distance) {
     plot_barrier_habitat_buffer(
       barrier = barrier_raster,
-      buffer = buffer,
-      habitat = habitat_raster,
-      distance = distance,
+      buffered = buffered_habitat,
+      habitat = buffered_habitat,
+      distance = buffer_distance,
       species_name = species_name
     ) 
   }

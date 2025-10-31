@@ -6,6 +6,7 @@ format:
   html:
     code-fold: true
     embed-resources: true
+    lightbox: true
 ---
 
 ```{r}
@@ -20,7 +21,7 @@ tar_source() # not always necessary
 ```{r}
 #| label: load-targets
 #| include: false
-withr::with_dir(here::here(), {
+with_dir(here(), {
   tar_load(habitat_raster)
   tar_load(barrier_raster)
   tar_load(buffered_habitat)
@@ -32,88 +33,6 @@ withr::with_dir(here::here(), {
 })
 ```
 
-```{r}
-#| label: functions
-col2hex <- function(color_name) {
-  rgb(t(col2rgb(color_name)), maxColorValue = 255)
-}
-
-# col2hex("forestgreen")
-
-
-plot_barrier_habitat_buffer <- function(barrier, buffer, habitat, distance) {
-  # colorspace::hcl_palettes(type = "Qualitative", plot = TRUE)
-
-  # geo_cols <- colorspace::qualitative_hcl(n = 5, palette = "Dark 3") |> as.list()
-  geo_cols <- scico::scico(n = 6, palette = "bukavu") |> as.list()
-
-  names(geo_cols) <- c("dark_blue", "mid_blue", "light_blue", "dark_green", "tan", "offwhite")
-  # geo_cols |> swatchplot()
-  col_barrier <- geo_cols$mid_blue
-  col_habitat <- geo_cols$dark_green
-  col_buffer <- geo_cols$tan
-
-  # First, reclassify your rasters to assign actual color values
-  barrier_coloured <- subst(barrier, 1, col_barrier)
-  buffer_coloured <- subst(buffer, 1, col_buffer)
-  habitat_coloured <- subst(habitat, 1, col_habitat)
-
-  # Now plot them in layers (bottom to top)
-  ggplot() +
-    geom_spatraster(data = buffer_coloured) +
-    geom_spatraster(data = barrier_coloured) +
-    geom_spatraster(data = habitat_coloured) +
-    theme_minimal(paper = geo_cols$offwhite) +
-    scale_fill_identity(na.value = NA) +
-    labs(title = marquee_glue("{.{col_habitat} Habitat}, buffered {.{col_buffer} habitat}, and {.{col_barrier} barriers} for {.bold {species_name}}")) +
-    theme(plot.title = element_marquee()) +
-    labs(subtitle = glue::glue("{distance}m buffer"))
-}
-
-show_tabs <- function(the_list, message = NULL){
-  for(iplot in names(the_list)){
-  cat(sprintf("## %s %s\n", message, iplot))
-  print(the_list[[iplot]])
-  cat(sprintf("\n\n"))
-  }
-}
-
-show_tabs_dt <- function(the_list, message = NULL){
-  for(iplot in names(the_list)){
-  cat(sprintf("## %s %s\n", message, iplot))
-  print(datatable(the_list[[iplot]]))
-  cat(sprintf("\n\n"))
-  }
-}
-
-plot_patches <- function(patch_id, distance, n_cols = 7) {
-  raster_patches <- as.factor(patch_id$patch_id)
-  
-  n_patches <- patch_id$patch_id |> unique() |> nrow()
-
-  my_colours <- colorspace::qualitative_hcl(n = n_cols)
-
-  unique_vals <- unique(values(raster_patches))
-  unique_vals <- unique_vals[!is.na(unique_vals)]
-
-  # assign colours cyclically
-  colour_indices <- ((unique_vals - 1) %% n_cols) + 1
-  colour_map <- my_colours[colour_indices]
-  names(colour_map) <- as.character(unique_vals)
-
-  ggplot() +
-    geom_spatraster(data = raster_patches) +
-    scale_fill_manual(values = colour_map, na.value = NA) +
-    theme_minimal() +
-    theme(legend.position = "none") +
-    labs(
-      title = glue::glue("There are {n_patches} patches\neach coloured one of {n_cols} colours, for the {species_name}"),
-      subtitle = glue::glue("{distance}m buffer"))
-}
-
-```
-
-
 ## Habitat, Buffered Habitat, and Barrier
 
 ```{r}
@@ -124,17 +43,17 @@ plot_patches <- function(patch_id, distance, n_cols = 7) {
 buffer_barrier_plots <- map2(
   .x = buffered_habitat,
   .y = buffer_distance,
-  .f = function(buffer, distance) {
+  .f = function(buffered_habitat, buffer_distance) {
     plot_barrier_habitat_buffer(
       barrier = barrier_raster,
-      buffer = buffer,
-      habitat = habitat_raster,
-      distance = distance
+      buffered = buffered_habitat,
+      habitat = buffered_habitat,
+      distance = buffer_distance,
+      species_name = species_name
     ) 
   }
 ) |> 
   setNames(buffer_distance)
-
 
 show_tabs(buffer_barrier_plots, "Buffer: ")
 ```
@@ -164,40 +83,24 @@ show_tabs(patch_plots, message = "Buffer: ")
 
 terra_summary_dts <- terra_areas_connected |> 
   setNames(buffer_distance) |> 
-  map(
-    .f = \(data) mutate(data, across(starts_with("area"), \(x) round(x, 3))) 
-  )
-
-terra_summary_dts |> 
   bind_rows(
     .id = "buffer"
   ) |> 
   datatable()
+
+terra_summary_dts
 ```
 
 ## Prob connectedness and summary information for each buffer
 
 ```{r}
-results_connect_habitat_rounded <- results_connect_habitat |> 
-  mutate(
-    prob_connectedness = round(prob_connectedness, 6)
-  ) |> 
-  mutate(
-    across(
-      .cols = c(effective_mesh_ha, 
-                patch_area_mean,
-                patch_area_total_ha),
-      round
-        )
-  )  
-
-results_connect_habitat_rounded |> datatable()
+results_connect_habitat |> datatable()
 ```
 
 ## Longer: Prob connectedness and summary information for each buffer
 
 ```{r}
-results_connect_habitat_rounded |> 
+results_connect_habitat |> 
 pivot_longer(
     cols = -c(species_name,
               buffer_distance)
@@ -213,44 +116,7 @@ pivot_longer(
 
 ```{r}
 #| fig-height: 10
-to_sentence <- function(x){
-  x |> 
-    stringr::str_replace_all("_", " ") |> 
-    stringr::str_to_sentence()
-}
-
-geo_cols <- scico::scico(n = 6, palette = "bukavu") |> as.list()
-
-  names(geo_cols) <- c("dark_blue", "mid_blue", "light_blue", "dark_green", "tan", "offwhite")
-results_connect_habitat_rounded |> 
-  dplyr::select(
-    species_name:patch_area_total_ha
-  ) |> 
-pivot_longer(
-    cols = -c(species_name,
-              buffer_distance)
-  ) |> 
-  ggplot(aes(x = buffer_distance,
-             y = value)) +
-           geom_point() +
-  geom_line(colour = geo_cols$dark_green) +
-  facet_wrap(~name, 
-             scales = "free", 
-             ncol = 1,
-             labeller = labeller(name = to_sentence)) +
-  scale_x_continuous(
-    breaks = buffer_distance,
-    labels = \(x) glue::glue("{x}m")
-  ) + 
-  labs(
-    x = "Buffer distance (m)"
-  ) + 
-  theme_minimal() +
-  theme_sub_panel(
-    border = element_rect(
-      colour = "grey85", fill = NA
-    )
-  )
+plot_connectivity(results_connect_habitat)
 ```
 
 
@@ -260,14 +126,13 @@ It is useful to understand how long the pipeline takes, let's take a look at the
 
 ```{r}
 #| label: running-time
-#| eval: false
 target_timings <- tar_meta() |> dplyr::select(name, bytes, seconds)
 
 target_timings |>
   drop_na() |>
   arrange(desc(seconds)) |>
   mutate(
-    bytes_pretty = prettyunits::pretty_bytes(bytes),
+    bytes_pretty = pretty_bytes(bytes),
     .after = bytes
   ) |>
   rename(

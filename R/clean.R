@@ -6,7 +6,7 @@
 # making future steps quicker
 clean <- function(spatial_data, ...) {
   # buffer by a small amount
-  buffered <- sf::st_buffer(spatial_data, dist = 0, nQuadSegs = 5)
+  buffered <- sf::st_make_valid(spatial_data)
   # union to create one large polygon rather than multiple small ones
   unioned <- sf::st_union(buffered, by_feature = FALSE)
   # simplify to remove some vertices

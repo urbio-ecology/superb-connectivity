@@ -148,6 +148,15 @@ tar_assign({
       pattern = map(terra_areas_connected, buffer_distance)
     )
 
+  # some of the palettes that we liked:
+  # scico::scico_palette_show(
+  #     palettes = c("cork",
+  #                  "bam",
+  #                  "tofino",
+  #                  "navia",
+  #                  "vanimo")
+  # )
+
   urbio_pal <- scico(n = 11, palette = "tofino") |>
     vec_slice(c(7, 10)) |>
     # add white

@@ -148,12 +148,29 @@ tar_assign({
       pattern = map(terra_areas_connected, buffer_distance)
     )
 
+  urbio_pal <- scico(n = 11, palette = "tofino") |>
+    vec_slice(c(7, 10)) |>
+    # add white
+    c(col2hex("white")) |>
+    tar_target()
+
+  urbio_cols <- list(
+    habitat = urbio_pal[1],
+    buffer = urbio_pal[2],
+    barrier = urbio_pal[3]
+  ) |>
+    tar_target()
+
   saved_spatraster <- plot_save_barrier_habitat_buffer(
     barrier = barrier_raster,
-    buffer = buffered_habitat,
+    buffered = buffered_habitat,
     habitat = habitat_raster,
     distance = buffer_distance,
-    species_name = species_name
+    species_name = species_name,
+    col_barrier = urbio_cols$barrier,
+    col_buffer = urbio_cols$buffer,
+    col_habitat = urbio_cols$habitat,
+    col_paper = "grey96"
   ) |>
     tar_file(
       pattern = map(buffered_habitat, buffer_distance)

@@ -8,23 +8,12 @@ plot_barrier_habitat_buffer <- function(
   buffered,
   habitat,
   distance,
-  species_name
+  species_name,
+  col_barrier,
+  col_buffer,
+  col_habitat,
+  col_paper = "white"
 ) {
-  geo_cols <- scico(n = 6, palette = "bukavu") |> as.list()
-
-  names(geo_cols) <- c(
-    "dark_blue",
-    "mid_blue",
-    "light_blue",
-    "dark_green",
-    "tan",
-    "offwhite"
-  )
-  # geo_cols |> swatchplot()
-  col_barrier <- geo_cols$mid_blue
-  col_habitat <- geo_cols$dark_green
-  col_buffer <- geo_cols$tan
-
   # First, reclassify your rasters to assign actual color values
   barrier_coloured <- subst(barrier, 1, col_barrier)
   buffer_coloured <- subst(buffered, 1, col_buffer)
@@ -35,21 +24,30 @@ plot_barrier_habitat_buffer <- function(
     geom_spatraster(data = buffer_coloured) +
     geom_spatraster(data = barrier_coloured) +
     geom_spatraster(data = habitat_coloured) +
-    theme_minimal(paper = geo_cols$offwhite) +
+    theme_minimal(paper = col_paper) +
     scale_fill_identity(na.value = NA) +
     labs(
       title = marquee_glue(
-        "{.{col_habitat} Habitat}, buffered {.{col_buffer} habitat}, and {.{col_barrier} barriers} for {.bold {species_name}}"
+        "{.{col_habitat} {species_name} Habitat}, {.{col_buffer} {distance}m buffer}, and barrier (white)"
       )
     ) +
-    theme(plot.title = element_marquee()) +
-    labs(subtitle = glue("{distance}m buffer"))
+    theme_sub_plot(
+      title = element_marquee()
+    )
 }
 
 show_tabs <- function(the_list, message = NULL) {
   for (iplot in names(the_list)) {
     cat(sprintf("## %s %s\n", message, iplot))
     print(the_list[[iplot]])
+    cat(sprintf("\n\n"))
+  }
+}
+
+show_image_tabs <- function(images, message = NULL) {
+  for (iplot in names(images)) {
+    cat(sprintf("## %s %s\n", message, iplot))
+    knitr::include_graphics(images[[iplot]])
     cat(sprintf("\n\n"))
   }
 }
@@ -87,9 +85,11 @@ plot_patches <- function(patch_id, distance, n_cols = 7) {
     ) +
     labs(
       title = glue(
-        "There are {n_patches} patches\neach coloured one of {n_cols} colours, for the {species_name}"
+        "Patches of {species_name} habitat"
       ),
-      subtitle = glue("{distance}m buffer")
+      subtitle = glue(
+        "# patches: {n_patches}\nBuffer size: {distance}m\n{n_cols} colours"
+      )
     )
 }
 
@@ -107,7 +107,8 @@ plot_connectivity <- function(results_connect_habitat) {
   )
   results_connect_habitat |>
     dplyr::select(
-      species_name:patch_area_total_ha
+      species_name:patch_area_total_ha,
+      -effective_mesh_ha
     ) |>
     pivot_longer(
       cols = -c(species_name, buffer_distance)

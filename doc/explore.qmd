@@ -30,7 +30,25 @@ with_dir(here(), {
   tar_load(results_connect_habitat)
   tar_load(buffer_distance)
   tar_load(species_name)
+  tar_load(saved_spatraster)
 })
+```
+
+```{r}
+urbio_pal <- scico::scico(n = 11, palette = "tofino")
+urbio_pal_cut <- urbio_pal[c(6:11)]
+# urbio_pal_cut |> swatchplot()
+# habitat  = 3/4
+# buffer = 6
+# barrier = 1/2
+
+urbio_cols <- list(
+    habitat = urbio_pal_cut[2],
+    buffer = urbio_pal_cut[5],
+    barrier = col2hex("white")
+)
+
+## TODO for mdsumner - can we get a buffer/outline of the city boundaries
 ```
 
 ## Habitat, Buffered Habitat, and Barrier
@@ -44,20 +62,23 @@ buffer_barrier_plots <- map2(
   .x = buffered_habitat,
   .y = buffer_distance,
   .f = function(buffered_habitat, buffer_distance) {
-    plot_barrier_habitat_buffer(
-      barrier = barrier_raster,
-      buffered = buffered_habitat,
-      habitat = buffered_habitat,
-      distance = buffer_distance,
-      species_name = species_name
-    ) 
+plot_barrier_habitat_buffer(
+  barrier = barrier_raster,
+  buffered = buffered_habitat,
+  habitat = habitat_raster,
+  distance = buffer_distance,
+  species_name = species_name,
+  col_barrier = urbio_cols$barrier,
+  col_buffer = urbio_cols$buffer,
+  col_habitat = urbio_cols$habitat,
+  col_paper = "grey96"
+) 
   }
 ) |> 
   setNames(buffer_distance)
 
 show_tabs(buffer_barrier_plots, "Buffer: ")
 ```
-
 
 ## Patch ID
 

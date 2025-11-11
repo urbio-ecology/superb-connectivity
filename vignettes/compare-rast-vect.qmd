@@ -1,0 +1,96 @@
+---
+Title: "Comparison of use of {terra} and {raster} packages and approaches"
+format: html
+---
+
+```{r include=FALSE}
+#| label: setup
+source(here::here("packages.R"))
+dir_map(path = "R/", fun = source)
+# baseline total habitat areas needed for comparison (in m2 not Ha)
+barrier <- read_geometry(here("data/superb-fairy-wren/allSFWRoads.shp")) |> st_as_sf()
+habitat <- read_geometry(here("data/superb-fairy-wren/superbHab.shp")) |> clean() |> st_as_sf()
+```
+
+Using `{terra}`
+
+```{r}
+#| label: terra-pkg-prepare
+prepared_rasters <- terra_prepare_rasters(
+  habitat = habitat,
+  barrier = barrier,
+  base_resolution = 10,
+  overlay_resolution = 500
+)
+
+habitat_raster <- prepared_rasters$habitat_raster
+barrier_raster <- prepared_rasters$barrier_raster
+```
+
+
+```{r}
+#| label: terra-pkg-analysis
+terra_areas_connected <- terra_habitat_connectivity(
+  habitat = habitat_raster,
+  barrier = barrier_raster,
+  distance = 250
+)
+
+buffering_dist <- 250
+overlay_res <- 500
+base_res <- 10
+aggregation_factor <- overlay_res / base_res
+
+summarise_connectivity(
+  area_squared = terra_areas_connected$area_squared,
+  area_total = terra_areas_connected$area,
+  buffer_distance = buffering_dist,
+  overlay_resolution = overlay_res,
+  base_resolution = base_res,
+  aggregation_factor = aggregation_factor,
+  species_name = "Superb Fairy Wren"
+)
+
+```
+
+
+Using `{raster}`
+
+```{r}
+#| label: raster-prepare
+prepared_rasters <- prepare_rasters(
+  habitat = habitat,
+  barrier = barrier,
+  base_resolution = base_res,
+  overlay_resolution = overlay_res
+)
+
+habitat_raster <- prepared_rasters$habitat_raster
+barrier_raster <- prepared_rasters$barrier_raster
+```
+
+(ran into issues getting this to run on render so these results are pasted in)
+
+```{r}
+#| label: raster-analysis
+#| eval: true
+# and as one step
+rast_areas_connected <- rast_habitat_connectivity(
+  habitat = habitat_raster,
+  barrier = barrier_raster,
+  distance = buffering_dist
+)
+```
+
+```{r}
+#| eval: true
+summarise_connectivity(
+  area_squared = rast_areas_connected$area_squared,
+  area_total = rast_areas_connected$area,
+  buffer_distance = buffering_dist,
+  overlay_resolution = overlay_res,
+  base_resolution = base_res,
+  aggregation_factor = aggregation_factor,
+  species_name = "Superb Fairy Wren"
+)
+```

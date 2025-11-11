@@ -15,97 +15,61 @@ overall method being developed by Holly Kirk et al., in [“Ecological
 connectivity as a planning tool for the conservation of wildlife in
 cities”](https://www.sciencedirect.com/science/article/pii/S2215016122003636?via%3Dihub).
 
-## Comparison of use of {terra} and {raster} packages and approaches
+# To recreate the analysis
 
-Using `{terra}`
+Use `targets` and `capsule` to recreate the paper.
 
-``` r
-prepared_rasters <- terra_prepare_rasters(
-  habitat = habitat,
-  barrier = barrier,
-  base_resolution = 10,
-  overlay_resolution = 500
-)
-#> |---------|---------|---------|---------|==                                          
+- `targets` is the workflow system that ensures the steps required to
+  complete the paper are completed in the right order.
+- `capsule` locks in the R package versions, including where they were
+  downloaded from (github or CRAN, for example), so that these can be
+  locked in. Under the hood it uses the `renv` R package.
 
-habitat_raster <- prepared_rasters$habitat_raster
-barrier_raster <- prepared_rasters$barrier_raster
-```
+There are three steps to reproduce the analysis
+
+## Step 1: Install `capsule`
 
 ``` r
-terra_areas_connected <- terra_habitat_connectivity(
-  habitat = habitat_raster,
-  barrier = barrier_raster,
-  distance = 250
-)
-#> ℹ Creating barrier mask✔ Creating barrier mask [59ms]
-#> ℹ Removing habitat underneath barrier✔ Removing habitat underneath barrier [16ms]
-#> ℹ Adding buffer of 250m to habitat layer✔ Adding buffer of 250m to habitat layer [12.9s]
-#> ℹ Fragmenting habitat layer along barrier intersection✔ Fragmenting habitat layer along barrier intersection [16ms]
-#> ℹ Assigning patches ID to fragments✔ Assigning patches ID to fragments [3.7s]
-#> ℹ Summarising area in each patch✔ Summarising area in each patch [373ms]
-
-summarise_connectivity(
-  area_squared = terra_areas_connected$area_squared,
-  area_total = terra_areas_connected$area
-)
-#> # A tibble: 1 × 5
-#>   n_patches prob_connectedness effective_mesh_ha patch_area_mean
-#>       <int>              <dbl>             <dbl>           <dbl>
-#> 1       153          0.0000227              337.          96870.
-#> # ℹ 1 more variable: patch_area_total_ha <dbl>
+install.packages('capsule', repos = c('https://milesmcbain.r-universe.dev', 'https://cloud.r-project.org'))
 ```
 
-Using `{raster}`
+## Step 2: Reproduce the libraries used
 
 ``` r
-prepared_rasters <- prepare_rasters(
-  habitat = habitat,
-  barrier = barrier,
-  base_resolution = 10,
-  overlay_resolution = 500
-)
-
-habitat_raster <- prepared_rasters$habitat_raster
-barrier_raster <- prepared_rasters$barrier_raster
+capsule::reproduce_lib()
 ```
 
-(ran into issues getting this to run on render so these results are
-pasted in)
+This recreates all of the R packages used in the analysis on your
+computer. Importantly, this will not change where your existing R
+packages are installed. It is just for this repository. So no need to be
+concerned about this impacting other analyses you run.
+
+## Step 3: Run the target workflow
 
 ``` r
-# and as one step
-rast_areas_connected <- rast_habitat_connectivity(
-  habitat = habitat_raster,
-  barrier = barrier_raster,
-  distance = 250
-)
+capsule::run(targets::tar_make())
 ```
 
-    ✔ Creating barrier mask [207ms]
-    ✔ Removing habitat underneath barrier [56ms]
-    ✔ Adding buffer of 250m to habitat layer [35.5s]
-    ✔ Fragmenting habitat layer along barrier intersection [64ms]
-    ✔ Assigning patches ID to fragments [1.7s]
-    ✔ Summarising area in each patch [22ms]
-    There were 50 or more warnings (use warnings() to see the first 50)
+This runs our targets workflow using the R packages specified.
+
+This will check if the targets are written, and if they aren’t, it will
+re-run the necessary ones.
+
+## Step 4: Add new dependencies into “packages.R”?
+
+Run:
 
 ``` r
-summarise_connectivity(
-  area_squared = rast_areas_connected$area_squared,
-  area_total = rast_areas_connected$area
-)
+capsule::recreate("./packages.R")
 ```
 
-    # A tibble: 1 × 5
-      n_patches prob_connectedness effective_mesh_ha patch_area_mean patch_area_total_ha
-          <int>              <dbl>             <dbl>           <dbl>               <dbl>
-    1       149          0.0000236              345.          98148.               1462.
+## Step 5 - ?
 
+Make some changes to the analysis and want to see them? Run the capsule
+again:
+
+``` r
+capsule::run(targets::tar_make())
 ```
-#> # A tibble: 1 × 5
-#>   n_patches prob_connectedness effective_mesh_ha patch_area_mean
-#>       <int>              <dbl>             <dbl>           <dbl>
-#> 1       153          0.0000227              337.          96870.
-#> # ℹ 1 more variable: patch_area_total_ha <dbl>
-```
+
+And the analysis will be recreated.

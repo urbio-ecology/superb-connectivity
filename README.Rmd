@@ -19,100 +19,61 @@ knitr::opts_chunk$set(
 
 The goal of superb-connectivity is to demonstrate a workflow of connectivity analysis for the superb fairy wren. The code has been lightly adapted from [urbanConnect](https://github.com/urbio-ecology/urbanConnect), with the overall method being developed by Holly Kirk et al., in ["Ecological connectivity as a planning tool for the conservation of wildlife in cities"](https://www.sciencedirect.com/science/article/pii/S2215016122003636?via%3Dihub).
 
-## Comparison of use of {terra} and {raster} packages and approaches
+# To recreate the analysis
 
+Use `targets` and `capsule` to recreate the paper.
 
-```{r include=FALSE}
-#| label: setup
-source("packages.R")
-dir_map(path = "R/", fun = source)
-# baseline total habitat areas needed for comparison (in m2 not Ha)
-barrier <- read_geometry(here("data/allSFWRoads.shp")) |> st_as_sf()
-habitat <- read_geometry(here("data/superbHab.shp")) |> clean() |> st_as_sf()
+-   `targets` is the workflow system that ensures the steps required to
+    complete the paper are completed in the right order.
+-   `capsule` locks in the R package versions, including where they were
+    downloaded from (github or CRAN, for example), so that these can be
+    locked in. Under the hood it uses the `renv` R package.
+
+There are three steps to reproduce the analysis
+
+## Step 1: Install `capsule`
+
+``` r
+install.packages('capsule', repos = c('https://milesmcbain.r-universe.dev', 'https://cloud.r-project.org'))
 ```
 
-Using `{terra}`
+## Step 2: Reproduce the libraries used
 
-```{r}
-#| label: terra-pkg-prepare
-prepared_rasters <- terra_prepare_rasters(
-  habitat = habitat,
-  barrier = barrier,
-  base_resolution = 10,
-  overlay_resolution = 500
-)
-
-habitat_raster <- prepared_rasters$habitat_raster
-barrier_raster <- prepared_rasters$barrier_raster
+``` r
+capsule::reproduce_lib()
 ```
 
+This recreates all of the R packages used in the analysis on your
+computer. Importantly, this will not change where your existing R
+packages are installed. It is just for this repository. So no need to be
+concerned about this impacting other analyses you run.
 
-```{r}
-#| label: terra-pkg-analysis
-terra_areas_connected <- terra_habitat_connectivity(
-  habitat = habitat_raster,
-  barrier = barrier_raster,
-  distance = 250
-)
+## Step 3: Run the target workflow
 
-summarise_connectivity(
-  area_squared = terra_areas_connected$area_squared,
-  area_total = terra_areas_connected$area
-)
-
+``` r
+capsule::run(targets::tar_make())
 ```
 
+This runs our targets workflow using the R packages specified.
 
-Using `{raster}`
+This will check if the targets are written, and if they aren’t, it will
+re-run the necessary ones.
 
-```{r}
-#| label: raster-prepare
-prepared_rasters <- prepare_rasters(
-  habitat = habitat,
-  barrier = barrier,
-  base_resolution = 10,
-  overlay_resolution = 500
-)
+## Step 4: Add new dependencies into "packages.R"?
 
-habitat_raster <- prepared_rasters$habitat_raster
-barrier_raster <- prepared_rasters$barrier_raster
+Run:
+
+``` r
+capsule::recreate("./packages.R")
 ```
 
-(ran into issues getting this to run on render so these results are pasted in)
+## Step 5 - ?
 
-```{r}
-#| label: raster-analysis
-#| eval: false
-# and as one step
-rast_areas_connected <- rast_habitat_connectivity(
-  habitat = habitat_raster,
-  barrier = barrier_raster,
-  distance = 250
-)
+Make some changes to the analysis and want to see them? Run the capsule
+again:
+
+``` r
+capsule::run(targets::tar_make())
 ```
 
-```
-✔ Creating barrier mask [207ms]
-✔ Removing habitat underneath barrier [56ms]
-✔ Adding buffer of 250m to habitat layer [35.5s]
-✔ Fragmenting habitat layer along barrier intersection [64ms]
-✔ Assigning patches ID to fragments [1.7s]
-✔ Summarising area in each patch [22ms]
-There were 50 or more warnings (use warnings() to see the first 50)
-```
-
-
-```{r}
-#| eval: false
-summarise_connectivity(
-  area_squared = rast_areas_connected$area_squared,
-  area_total = rast_areas_connected$area
-)
-```
-
-```
-# A tibble: 1 × 5
-  n_patches prob_connectedness effective_mesh_ha patch_area_mean patch_area_total_ha
-      <int>              <dbl>             <dbl>           <dbl>               <dbl>
-1       149          0.0000236              345.          98148.               1462.
-```
+And the analysis will be recreated.

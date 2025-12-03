@@ -2,126 +2,108 @@ library(shiny)
 library(bslib)
 library(DT)
 
+# Load colour palette and theme
+source("colours.R")
+
 ui <- page_navbar(
   title = "Urban Connectedness",
-  theme = bs_theme(
-    version = 5,
-    preset = "shiny",
-    primary = "#007bff",
-    secondary = "#6c757d",
-    success = "#28a745",
-    base_font = font_google("Inter"),
-    heading_font = font_google("Roboto")
-  ),
+  theme = urbio_theme(), # Use the urbio theme function
   fillable = TRUE,
 
-  ## inputs ----
-  nav_panel(
-    title = "Setup",
-    icon = icon("gear"),
-    layout_column_wrap(
-      col_widths = c(6, 6),
+  # Setup Tab
+  tabPanel(
+    "Setup",
+    h2("Setup"),
+    checkboxInput(
+      "use_example_data",
+      "Use example data: Superb Fairy Wren",
+      value = TRUE
+    ),
+    conditionalPanel(
+      condition = "input.use_example_data",
+      div(
+        class = "alert alert-success",
+        icon("check-circle"),
+        "Using example data: Superb Fairy Wren dataset with habitat and road barriers"
+      )
+    ),
+    textInput(
+      "species_name",
+      "Species Name",
+      placeholder = "e.g., Superb Fairy Wren"
+    ),
 
-      # Left Column - File Uploads
-      card(
-        card_header("Upload your data"),
-        card_body(
-          fileInput(
-            "habitat_file",
-            "Upload Habitat Data",
-            accept = c(
-              ".shp",
-              ".shx",
-              ".dbf",
-              ".prj",
-              ".tif",
-              ".tiff",
-              ".geojson"
-            ),
-            multiple = TRUE
-          ),
-          fileInput(
-            "barrier_file",
-            "Upload Barrier Data",
-            accept = c(
-              ".shp",
-              ".shx",
-              ".dbf",
-              ".prj",
-              ".tif",
-              ".tiff",
-              ".geojson"
-            ),
-            multiple = TRUE
-          ),
-          p(
-            class = "text-muted small",
-            
-            HTML(
-              "Leave files blank to use example data<br>
-              <strong>Shapefile:</strong> Select all files (.shp, .shx, .dbf, .prj)<br>
-                  <strong>Raster:</strong> Select .tif or .tiff file<br>
-                  <strong>Vector:</strong> Select .geojson file"
-            )
-          ),
-          textInput(
-            "species_name",
-            "Species Name",
-            value = "Superb Fairy Wren",
-            placeholder = "Species of interest, e.g., Superb Fairy Wren"
-          )
-        )
-      ),
-
-      # Right Column - Parameters
-      card(
-        card_header("Analysis Parameters"),
-        card_body(
-          numericInput(
-            "overlay_resolution",
-            "Overlay Resolution (m)",
-            value = 500,
-            min = 1,
-            step = 1
-          ),
-          numericInput(
-            "base_resolution",
-            "Base Resolution (m)",
-            value = 10,
-            min = 1,
-            step = 1
-          ),
-          textInput(
-            "buffer_distance",
-            "Buffer Distance(s) (m)",
-            value = "100",
-            placeholder = "e.g., 100 or 100, 250, 400"
-          ),
-          p(
-            class = "text-muted small",
-            "Enter one or more buffer distances separated by commas"
-          )
+    # Habitat file input - show disabled version when using example data
+    conditionalPanel(
+      condition = "!input.use_example_data",
+      fileInput(
+        "habitat_file",
+        "Upload Habitat Shapefile (.shp)",
+        accept = ".shp"
+      )
+    ),
+    conditionalPanel(
+      condition = "input.use_example_data",
+      div(
+        class = "form-group shiny-input-container",
+        tags$label("Upload Habitat Shapefile (.shp)"),
+        tags$input(
+          type = "text",
+          class = "form-control",
+          value = "superbHab.shp",
+          disabled = "disabled",
+          style = "background-color: #e9ecef; cursor: not-allowed;"
         )
       )
     ),
 
-    # Action Button
-    layout_columns(
-      col_widths = 12,
-      card(
-        card_body(
-          actionButton(
-            "run_analysis",
-            "Run Analysis",
-            icon = icon("play"),
-            class = "btn-primary btn-lg w-100"
-          )
+    # Barrier file input - show disabled version when using example data
+    conditionalPanel(
+      condition = "!input.use_example_data",
+      fileInput(
+        "barrier_file",
+        "Upload Barrier Shapefile (.shp)",
+        accept = ".shp"
+      )
+    ),
+    conditionalPanel(
+      condition = "input.use_example_data",
+      div(
+        class = "form-group shiny-input-container",
+        tags$label("Upload Barrier Shapefile (.shp)"),
+        tags$input(
+          type = "text",
+          class = "form-control",
+          value = "allSFWRoads.shp",
+          disabled = "disabled",
+          style = "background-color: #e9ecef; cursor: not-allowed;"
         )
       )
-    )
+    ),
+
+    numericInput(
+      "overlay_resolution",
+      "Overlay Resolution (m)",
+      value = 500,
+      min = 1,
+      step = 1
+    ),
+    numericInput(
+      "base_resolution",
+      "Base Resolution (m)",
+      value = 10,
+      min = 1
+    ),
+    textInput(
+      "buffer_distance",
+      "Buffer Distance (m)",
+      value = "250",
+      placeholder = "e.g., 100 or 250, 500, etc"
+    ),
+    actionButton("run_analysis", "Run Analysis", class = "btn-primary")
   ),
 
-  # Results Panel ----
+  # Results Panel
   nav_panel(
     title = "Results",
     icon = icon("chart-line"),
@@ -130,7 +112,6 @@ ui <- page_navbar(
     conditionalPanel(
       condition = "!output.results_ready",
       layout_column_wrap(
-        # col_widths = 12,
         card(
           card_body(
             div(
@@ -147,11 +128,92 @@ ui <- page_navbar(
     conditionalPanel(
       condition = "output.results_ready",
 
-      # Summary Statistics
-      layout_column_wrap(
-        # col_widths = 12,
+      # Analysis Metadata ----
+      layout_columns(
+        col_widths = 12,
         card(
-          card_header("Connectivity Summary"),
+          card_header(
+            class = "bg-info text-white",
+            "Analysis Information"
+          ),
+          card_body(
+            layout_columns(
+              col_widths = c(4, 4, 4),
+              div(
+                strong("Species: "),
+                textOutput("analysis_species", inline = TRUE)
+              ),
+              div(
+                strong("Run Time: "),
+                textOutput("analysis_timestamp", inline = TRUE)
+              ),
+              div(
+                strong("Session: "),
+                textOutput("analysis_session", inline = TRUE)
+              )
+            ),
+            layout_columns(
+              col_widths = c(6, 6),
+              div(
+                strong("Buffer Distances: "),
+                textOutput("analysis_buffers", inline = TRUE)
+              ),
+              div(
+                strong("Working Directory: "),
+                code(textOutput("analysis_workdir", inline = TRUE))
+              )
+            )
+          )
+        )
+      ),
+
+      # Habitat, Buffered Habitat, and Barrier
+      layout_columns(
+        col_widths = 12,
+        card(
+          card_header("Habitat, Buffered Habitat, and Barrier"),
+          card_body(
+            uiOutput("plot_barrier_habitat_buffer_tabs")
+          )
+        )
+      ),
+
+      # Patch ID
+      layout_columns(
+        col_widths = 12,
+        card(
+          card_header("Patch ID"),
+          card_body(
+            uiOutput("plot_patches_tabs")
+          )
+        )
+      ),
+
+      # Area and patch information for each buffer
+      layout_columns(
+        col_widths = 12,
+        card(
+          card_header("Area and patch information for each buffer"),
+          card_body(
+            DTOutput("terra_summary_table")
+          ),
+          card_footer(
+            downloadButton(
+              "download_terra_areas_csv",
+              "Download CSV",
+              class = "btn-sm"
+            )
+          )
+        )
+      ),
+
+      # Prob connectedness and summary information for each buffer
+      layout_columns(
+        col_widths = 12,
+        card(
+          card_header(
+            "Prob connectedness and summary information for each buffer"
+          ),
           card_body(
             DTOutput("results_connect_habitat_table")
           ),
@@ -165,62 +227,34 @@ ui <- page_navbar(
         )
       ),
 
-      # Patch Areas
+      # Longer: Prob connectedness and summary information for each buffer
       layout_columns(
         col_widths = 12,
         card(
-          card_header("Connected Patch Areas"),
+          card_header(
+            "Longer: Prob connectedness and summary information for each buffer"
+          ),
           card_body(
-            DTOutput("terra_areas_connected_table")
+            DTOutput("results_connect_habitat_longer_table")
+          )
+        )
+      ),
+
+      # Visualisation of changes in key stats over buffer distance
+      layout_columns(
+        col_widths = 12,
+        card(
+          card_header(
+            "Visualisation of changes in key stats over buffer distance"
+          ),
+          card_body(
+            plotOutput("plot_connectivity_output", height = "600px")
           ),
           card_footer(
             downloadButton(
-              "download_patches_csv",
-              "Download CSV",
+              "download_connectivity_plot",
+              "Download Plot",
               class = "btn-sm"
-            )
-          )
-        )
-      ),
-
-      # Maps
-      layout_column_wrap(
-        card(
-          card_header("Habitat, Barrier & Buffer Map"),
-          card_body(
-            plotOutput("map_habitat_barrier", height = "400px")
-          ),
-          card_footer(
-            downloadButton("download_map_1", "Download Plot", class = "btn-sm")
-          )
-        ),
-        card(
-          card_header("Connected Areas Map"),
-          card_body(
-            plotOutput("map_patches", height = "400px")
-          ),
-          card_footer(
-            downloadButton("download_map_2", "Download Plot", class = "btn-sm")
-          )
-        )
-      ),
-
-      # Buffer Distance Comparison (conditional)
-      conditionalPanel(
-        condition = "output.show_buffer_comparison",
-        layout_columns(
-          col_widths = 12,
-          card(
-            card_header("Buffer Distance Comparison"),
-            card_body(
-              plotOutput("plot_buffer_comparison", height = "500px")
-            ),
-            card_footer(
-              downloadButton(
-                "download_comparison_plot",
-                "Download Plot",
-                class = "btn-sm"
-              )
             )
           )
         )
@@ -257,7 +291,7 @@ ui <- page_navbar(
     )
   ),
 
-  # About Panel ----
+  # About Panel
   nav_panel(
     title = "About",
     icon = icon("info-circle"),
@@ -266,7 +300,7 @@ ui <- page_navbar(
       card_body(
         h4("Overview"),
         p(
-          "This tool analyzes habitat connectivity for urban planning by calculating how barriers (such as roads) fragment habitat areas."
+          "This tool analyses habitat connectivity for urban planning by calculating how barriers (such as roads) fragment habitat areas."
         ),
 
         h4("How it works"),

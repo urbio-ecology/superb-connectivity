@@ -1,25 +1,64 @@
-library(shiny)
-library(terra)
-library(sf)
-library(tidyverse)
+library(bslib)
+library(colorspace)
+library(conflicted)
+library(crew)
 library(DT)
+library(fasterize)
+library(fs)
+library(geotargets)
+# library(git2r)
+library(glue)
 library(here)
+library(igraph)
+library(knitr)
+library(marquee)
+library(magick)
+library(prettyunits)
+library(quarto)
+library(raster)
+library(scico)
+library(sf)
+library(stars)
+library(shiny)
+library(stringr)
+library(targets)
+library(tarchetypes)
+library(terra)
+library(tidyterra)
+library(tidyverse)
+library(vctrs)
+library(withr)
+
 
 # Source all R functions
 lapply(list.files(here("R/"), pattern = "*.R|*.r", full.names = TRUE), source)
 
+# Load color palette
+source("colors.R")
+
 server <- function(input, output, session) {
+  # Observer to update species name when example data checkbox is toggled
+  observeEvent(input$use_example_data, {
+    if (input$use_example_data) {
+      updateTextInput(session, "species_name", value = "Superb Fairy Wren")
+      # Disable the species name input when using example data
+      shinyjs::disable("species_name")
+    } else {
+      # Enable the species name input when not using example data
+      shinyjs::enable("species_name")
+    }
+  })
   # Reactive values to store results ----
   results <- reactiveValues(
-    habitat = NULL,
-    barrier = NULL,
+    ready = FALSE,
     habitat_raster = NULL,
     barrier_raster = NULL,
-    terra_areas_connected = NULL,
-    results_connect_habitat = NULL,
-    patch_raster = NULL,
+    buffered_habitat = NULL,
+    patch_id_raster = NULL,
     buffer_distances = NULL,
-    ready = FALSE
+    results_connect_habitat = NULL,
+    terra_areas_connected = NULL,
+    analysis_time = NULL
   )
 
   # Parse buffer distances ----
@@ -116,23 +155,26 @@ server <- function(input, output, session) {
       {
         # Read files
         withProgress(message = "Loading data...", value = 0.1, {
-          # Use uploaded files or default example files
-          if (!is.null(input$habitat_file)) {
-            habitat_data <- read_uploaded_file(input$habitat_file)
-          } else {
+          # Use example data if checkbox is selected, otherwise use uploaded files
+          if (input$use_example_data) {
             habitat_file_path <- here("data/superb-fairy-wren/superbHab.shp")
             habitat_data <- read_geometry(habitat_file_path) |>
               clean() |>
               st_as_sf()
-          }
 
-          if (!is.null(input$barrier_file)) {
-            barrier_data <- read_uploaded_file(input$barrier_file)
-          } else {
-            barrier_file_path <- here("data/superb-fairy-wren/superbBar.shp")
+            barrier_file_path <- here("data/superb-fairy-wren/allSFWRoads.shp")
             barrier_data <- read_geometry(barrier_file_path) |>
               clean() |>
               st_as_sf()
+          } else {
+            # Use uploaded files
+            if (is.null(input$habitat_file) || is.null(input$barrier_file)) {
+              stop(
+                "Please upload both habitat and barrier files, or check 'Use example data'"
+              )
+            }
+            habitat_data <- read_uploaded_file(input$habitat_file)
+            barrier_data <- read_uploaded_file(input$barrier_file)
           }
 
           # Store for later use
@@ -161,37 +203,40 @@ server <- function(input, output, session) {
           incProgress(0.3, message = "Calculating connectivity...")
 
           # Run connectivity analysis for each buffer distance
-          terra_areas_list <- map(
+          # Use _full version to get intermediate results for plotting
+          terra_results_list <- map(
             .x = buffer_dists,
             .f = function(distance) {
               incProgress(
                 0.1 / length(buffer_dists),
                 message = paste("Processing buffer:", distance, "m")
               )
-              # terra_habitat_connectivity with verbose=FALSE returns a list from quietly()
-              # We need to extract $result
-              result <- terra_habitat_connectivity(
+              terra_habitat_connectivity_full(
                 habitat = results$habitat_raster,
                 barrier = results$barrier_raster,
                 distance = distance,
                 verbose = FALSE
               )
-
-              # Extract the actual result if wrapped by quietly()
-              if (is.list(result) && "result" %in% names(result)) {
-                result$result
-              } else {
-                result
-              }
             }
           )
 
-          # Store the results
+          # Extract the areas connected for summary
+          terra_areas_list <- map(terra_results_list, ~ .$terra_areas_connected)
           results$terra_areas_connected <- terra_areas_list
+
+          # Store buffered_habitat and patch_id for the first buffer (for plotting)
+          results$buffered_habitat <- map(
+            terra_results_list,
+            ~ .$buffered_habitat
+          )
+          results$patch_id_raster <- map(
+            terra_results_list,
+            ~ .$patch_id_raster
+          )
 
           incProgress(0.4, message = "Summarizing results...")
 
-          # Summarize connectivity for each buffer
+          # Summarise connectivity for each buffer
           results$results_connect_habitat <- map2(
             .x = terra_areas_list,
             .y = buffer_dists,
@@ -212,6 +257,7 @@ server <- function(input, output, session) {
           incProgress(0.9, message = "Finalizing...")
 
           results$ready <- TRUE
+          results$analysis_time <- Sys.time()
         })
 
         removeModal()
@@ -240,11 +286,168 @@ server <- function(input, output, session) {
   })
   outputOptions(output, "results_ready", suspendWhenHidden = FALSE)
 
+  # Output: Analysis Metadata ----
+  output$analysis_species <- renderText({
+    req(results$ready)
+    input$species_name
+  })
+  
+  output$analysis_timestamp <- renderText({
+    req(results$ready)
+    format(results$analysis_time, "%Y-%m-%d %H:%M:%S %Z")
+  })
+  
+  output$analysis_session <- renderText({
+    req(results$ready)
+    paste0("R ", getRversion(), " on ", Sys.info()["sysname"])
+  })
+  
+  output$analysis_buffers <- renderText({
+    req(results$ready)
+    paste(results$buffer_distances, collapse = ", ")
+  })
+  
+  output$analysis_workdir <- renderText({
+    req(results$ready)
+    getwd()
+  })
+
   # Output: Show buffer comparison flag ----
   output$show_buffer_comparison <- reactive({
     results$ready && length(results$buffer_distances) > 1
   })
   outputOptions(output, "show_buffer_comparison", suspendWhenHidden = FALSE)
+
+  # Output: Habitat, Buffered Habitat, and Barrier - Tabbed Plots ----
+  output$plot_barrier_habitat_buffer_tabs <- renderUI({
+    req(results$ready)
+
+    # Create color palette
+    urbio_pal <- scico::scico(n = 11, palette = "tofino")
+    urbio_pal_cut <- urbio_pal[c(6:11)]
+    urbio_cols <- list(
+      habitat = urbio_pal_cut[2],
+      buffer = urbio_pal_cut[5],
+      barrier = "#FFFFFF"
+    )
+
+    # Create tabs for each buffer distance
+    tab_panels <- map2(
+      .x = results$buffered_habitat,
+      .y = results$buffer_distances,
+      .f = function(buffered_habitat, buffer_distance) {
+        nav_panel(
+          title = paste0("Buffer: ", buffer_distance, "m"),
+          plotOutput(
+            outputId = paste0("barrier_habitat_buffer_", buffer_distance),
+            height = "500px"
+          )
+        )
+      }
+    )
+
+    do.call(navset_tab, c(id = "barrier_habitat_tabs", tab_panels))
+  })
+
+  # Render each barrier/habitat/buffer plot dynamically ----
+  observe({
+    req(results$ready)
+
+    urbio_pal <- scico::scico(n = 11, palette = "tofino")
+    urbio_pal_cut <- urbio_pal[c(6:11)]
+    urbio_cols <- list(
+      habitat = urbio_pal_cut[2],
+      buffer = urbio_pal_cut[5],
+      barrier = "#FFFFFF"
+    )
+
+    walk2(
+      .x = results$buffered_habitat,
+      .y = results$buffer_distances,
+      .f = function(buffered_habitat, buffer_distance) {
+        output_name <- paste0("barrier_habitat_buffer_", buffer_distance)
+        local({
+          my_buffered <- buffered_habitat
+          my_distance <- buffer_distance
+          output[[output_name]] <- renderPlot({
+            plot_barrier_habitat_buffer(
+              barrier = results$barrier_raster,
+              buffered = my_buffered,
+              habitat = results$habitat_raster,
+              distance = my_distance,
+              species_name = input$species_name,
+              col_barrier = urbio_cols$barrier,
+              col_buffer = urbio_cols$buffer,
+              col_habitat = urbio_cols$habitat,
+              col_paper = "grey96"
+            )
+          })
+        })
+      }
+    )
+  })
+
+  # Output: Patch ID - Tabbed Plots ----
+  output$plot_patches_tabs <- renderUI({
+    req(results$ready)
+
+    tab_panels <- map2(
+      .x = results$patch_id_raster,
+      .y = results$buffer_distances,
+      .f = function(patch_id, buffer_distance) {
+        nav_panel(
+          title = paste0("Buffer: ", buffer_distance, "m"),
+          plotOutput(
+            outputId = paste0("patch_plot_", buffer_distance),
+            height = "500px"
+          )
+        )
+      }
+    )
+
+    do.call(navset_tab, c(id = "patch_tabs", tab_panels))
+  })
+
+  # Render each patch plot dynamically ----
+  observe({
+    req(results$ready)
+    
+    walk2(
+      .x = results$patch_id_raster,
+      .y = results$buffer_distances,
+      .f = function(patch_id, buffer_distance) {
+        output_name <- paste0("patch_plot_", buffer_distance)
+        local({
+          my_patch_id <- patch_id
+          my_distance <- buffer_distance
+          my_species <- input$species_name
+          output[[output_name]] <- renderPlot({
+            plot_patches(
+              patch_id = my_patch_id, 
+              distance = my_distance,
+              species_name = my_species
+            )
+          })
+        })
+      }
+    )
+  })
+
+  # Output: Area and patch information table (combined from all buffers) ----
+  output$terra_summary_table <- renderDT({
+    req(results$terra_areas_connected)
+
+    results$terra_areas_connected |>
+      setNames(results$buffer_distances) |>
+      bind_rows(.id = "buffer") |>
+      datatable(
+        options = list(
+          pageLength = 10,
+          scrollX = TRUE
+        ),
+        rownames = FALSE
+      )
+  })
 
   # Output: Connectivity summary table ----
   output$results_connect_habitat_table <- renderDT({
@@ -270,103 +473,27 @@ server <- function(input, output, session) {
       )
   })
 
-  # Output: Connected areas table ----
-  output$terra_areas_connected_table <- renderDT({
-    req(results$terra_areas_connected)
+  # Output: Longer format prob connectedness table ----
+  output$results_connect_habitat_longer_table <- renderDT({
+    req(results$results_connect_habitat)
 
-    # Combine all results with buffer distance label
-    all_patches <- map2(
-      results$terra_areas_connected,
-      results$buffer_distances,
-      ~ mutate(.x, buffer_distance = .y)
-    ) |>
-      list_rbind()
-
-    datatable(
-      all_patches,
-      options = list(
-        pageLength = 10,
-        scrollX = TRUE,
-        dom = "tip"
-      ),
-      rownames = FALSE
-    ) |>
-      formatRound(columns = c("area", "area_squared"), digits = 3)
-  })
-
-  # Output: Habitat/Barrier map ----
-  output$map_habitat_barrier <- renderPlot({
-    req(results$habitat, results$barrier)
-
-    ggplot() +
-      geom_sf(
-        data = results$habitat,
-        fill = "#2E7D32",
-        alpha = 0.7,
-        color = NA
-      ) +
-      geom_sf(
-        data = results$barrier,
-        fill = "#D32F2F",
-        alpha = 0.7,
-        color = NA
-      ) +
-      theme_minimal() +
-      labs(
-        title = "Habitat and Barrier Layers",
-        subtitle = paste("Species:", input$species_name)
-      ) +
-      theme(
-        plot.title = element_text(size = 14, face = "bold"),
-        plot.subtitle = element_text(size = 11)
+    results$results_connect_habitat |>
+      pivot_longer(
+        cols = -c(species_name, buffer_distance)
+      ) |>
+      datatable(
+        options = list(
+          pageLength = 8,
+          scrollX = TRUE
+        ),
+        rownames = FALSE
       )
   })
 
-  # Output: Patches map ----
-  output$map_patches <- renderPlot({
-    req(results$terra_areas_connected)
-    req(length(results$terra_areas_connected) > 0)
-
-    # Get the first buffer's results for display
-    first_result <- results$terra_areas_connected[[1]]
-    first_buffer <- results$buffer_distances[1]
-
-    # Create a simple patch visualization
-    patch_summary <- first_result |>
-      arrange(desc(area)) |>
-      mutate(
-        patch_rank = row_number(),
-        patch_category = case_when(
-          patch_rank == 1 ~ "Largest",
-          patch_rank <= 5 ~ "Top 5",
-          TRUE ~ "Other"
-        )
-      )
-
-    ggplot(
-      patch_summary,
-      aes(x = patch_rank, y = area, fill = patch_category)
-    ) +
-      geom_col() +
-      scale_fill_manual(
-        values = c(
-          "Largest" = "#1B5E20",
-          "Top 5" = "#43A047",
-          "Other" = "#81C784"
-        )
-      ) +
-      theme_minimal() +
-      labs(
-        title = "Connected Habitat Patches by Size",
-        subtitle = paste("Buffer distance:", first_buffer, "m"),
-        x = "Patch Rank (by size)",
-        y = "Patch Area (m²)",
-        fill = "Category"
-      ) +
-      theme(
-        plot.title = element_text(size = 14, face = "bold"),
-        plot.subtitle = element_text(size = 11)
-      )
+  # Output: Visualization of connectivity changes ----
+  output$plot_connectivity_output <- renderPlot({
+    req(results$results_connect_habitat)
+    plot_connectivity(results$results_connect_habitat)
   })
 
   # Output: Buffer comparison plot ----
@@ -632,6 +759,35 @@ server <- function(input, output, session) {
 
       print(gridExtra::grid.arrange(p1, p2, p3, p4, ncol = 2))
       dev.off()
+    }
+  )
+
+  # Download connectivity plot (using plot_connectivity function) ----
+  output$download_connectivity_plot <- downloadHandler(
+    filename = function() {
+      paste0(input$species_name, "_connectivity_plot_", Sys.Date(), ".png")
+    },
+    content = function(file) {
+      ggsave(
+        filename = file,
+        plot = plot_connectivity(results$results_connect_habitat),
+        width = 12,
+        height = 10,
+        dpi = 300
+      )
+    }
+  )
+
+  # Download terra areas CSV ----
+  output$download_terra_areas_csv <- downloadHandler(
+    filename = function() {
+      paste0(input$species_name, "_terra_areas_", Sys.Date(), ".csv")
+    },
+    content = function(file) {
+      results$terra_areas_connected |>
+        setNames(results$buffer_distances) |>
+        bind_rows(.id = "buffer") |>
+        write_csv(file)
     }
   )
 }

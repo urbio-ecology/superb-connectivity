@@ -1,6 +1,6 @@
 #' Generate Connectivity Report
 #'
-#' Creates a parameterized Quarto report from connectivity analysis results.
+#' Creates a parameterised Quarto report from connectivity analysis results.
 #'
 #' @param species_name Character. Name of the species being analysed.
 #' @param buffer_distances Numeric vector. Buffer distances used in analysis (in meters).

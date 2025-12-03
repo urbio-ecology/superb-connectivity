@@ -53,3 +53,5 @@ renv/
 
 # ignore wood-bird data
 data/wood-bird
+
+/.quarto/

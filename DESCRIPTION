@@ -15,9 +15,8 @@ Authors@R: c(
         role = c("aut", "cph"),
         email = "hollylkirk@gmail.com",
         comment = c(ORCID = "0000-0002-8724-3210")
-    )
-)
-    
+        )
+    )   
 Description: Analyse and visualise habitat connectivity in urban landscapes,
     accounting for barriers and buffer distances. Includes Shiny app for
     interactive analysis and report generation. Based on methods developed by 

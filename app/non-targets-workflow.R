@@ -112,7 +112,7 @@ terra_areas_connected <- map(
       distance = distances
     )
   }
-) 
+)
 
 # show this output as a DT data table too
 results_connect_habitat <- map(

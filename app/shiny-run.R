@@ -1,10 +1,8 @@
-library(here)
-
-# Enable auto-reload during development
+# enable auto-reload during development
 options(shiny.autoreload = TRUE)
 
-# Run the app from the app directory
+# run the app from the app directory
 shiny::runApp(
-  appDir = here("app"),
+  appDir = here::here("app"),
   launch.browser = TRUE
 )

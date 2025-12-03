@@ -1,9 +1,6 @@
 # Urban Connectivity Color Palette
 # Based on scico tofino palette
 
-library(scico)
-library(bslib)
-
 # Generate urbio palette
 urbio_pal <- scico(n = 11, palette = "tofino")
 urbio_pal_cut <- urbio_pal[c(6:11)]
@@ -41,15 +38,13 @@ urbio_theme <- function() {
     secondary = "#6c757d", # Keep default grey
     success = col_success, # Light green for success states
     info = urbio_pal_cut[6], # Lightest green for info
-    warning = "#f9a825", # Amber for warnings
-    danger = "#d32f2f", # Red for errors
+    warning = "#f9a825", 
+    danger = "#d32f2f",
 
-    # Typography
     base_font = font_google("Inter"),
     heading_font = font_google("Roboto"),
     code_font = font_google("Fira Code"),
 
-    # Base colors
     bg = "#ffffff",
     fg = "#212529",
 

@@ -1,40 +1,7 @@
-library(bslib)
-library(colorspace)
-library(conflicted)
-library(crew)
-library(DT)
-library(fasterize)
-library(fs)
-library(geotargets)
-# library(git2r)
-library(glue)
-library(here)
-library(igraph)
-library(knitr)
-library(marquee)
-library(magick)
-library(prettyunits)
-library(quarto)
-library(raster)
-library(scico)
-library(sf)
-library(stars)
-library(shiny)
-library(stringr)
-library(targets)
-library(tarchetypes)
-library(terra)
-library(tidyterra)
-library(tidyverse)
-library(vctrs)
-library(withr)
-
-
+source(here("app/packages.R"))
+source(here("app/colours.R"))
 # Source all R functions
 lapply(list.files(here("R/"), pattern = "*.R|*.r", full.names = TRUE), source)
-
-# Load color palette
-source("colors.R")
 
 server <- function(input, output, session) {
   # Observer to update species name when example data checkbox is toggled

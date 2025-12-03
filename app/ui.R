@@ -1,13 +1,8 @@
-library(shiny)
-library(bslib)
-library(DT)
-
-# Load colour palette and theme
-source("colours.R")
-
+source(here::here("app/packages.R"))
+source(here::here("app/colours.R"))
 ui <- page_navbar(
   title = "Urban Connectedness",
-  theme = urbio_theme(), # Use the urbio theme function
+  theme = urbio_theme(), 
   fillable = TRUE,
 
   # Setup Tab

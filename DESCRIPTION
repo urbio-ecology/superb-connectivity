@@ -1,12 +1,27 @@
-Package: superb.connectivity
+Package: urbioconnect
 Title: Urban Habitat Connectivity Analysis
-Version: 0.1.0
-Authors@R: 
-    person("Nicholas", "Tierney", , "nicholas.tierney@gmail.com", role = c("aut", "cre"),
-           comment = c(ORCID = "0000-0003-1460-8722"))
-Description: Analyze and visualize habitat connectivity in urban landscapes,
+Version: 0.1.0.9000
+Authors@R: c(
+    person(
+        given = "Nicholas", 
+        family = "Tierney", 
+        role = c("aut", "cre"),
+        email = "nicholas.tierney@gmail.com", 
+        comment = c(ORCID = "0000-0003-1460-8722")
+        ),
+    person(
+        given = "Holly",
+        family = "Kirk",
+        role = c("aut", "cph"),
+        email = "hollylkirk@gmail.com",
+        comment = c(ORCID = "0000-0002-8724-3210")
+    )
+)
+    
+Description: Analyse and visualise habitat connectivity in urban landscapes,
     accounting for barriers and buffer distances. Includes Shiny app for
-    interactive analysis and report generation.
+    interactive analysis and report generation. Based on methods developed by 
+    Kirk et al (2023) <doi:10.1016/j.mex.2022.101989>.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)

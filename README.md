@@ -14,61 +14,22 @@ the overall method being developed by Holly Kirk et al., in [“Ecological
 connectivity as a planning tool for the conservation of wildlife in
 cities”](https://www.sciencedirect.com/science/article/pii/S2215016122003636?via%3Dihub).
 
-# To recreate the analysis
+# Usage
 
-Use `targets` and `capsule` to recreate the paper.
+Currently we have focussed our efforts on developing methods to be used
+in pipelines and in a shiny app. We will provide walkthroughs of using
+the pipeline and the package soon, but for the time being, here are some
+simple directions on how to run the shiny app:
 
-- `targets` is the workflow system that ensures the steps required to
-  complete the paper are completed in the right order.
-- `capsule` locks in the R package versions, including where they were
-  downloaded from (github or CRAN, for example), so that these can be
-  locked in. Under the hood it uses the `renv` R package.
-
-There are three steps to reproduce the analysis
-
-## Step 1: Install `capsule`
+1.  Download this repo
+2.  Ensure you have all the packages listed in `app/packages.R`
+3.  Source the `app/app.R` code:
 
 ``` r
-install.packages('capsule', repos = c('https://milesmcbain.r-universe.dev', 'https://cloud.r-project.org'))
+source("app/app.R")
 ```
 
-## Step 2: Reproduce the libraries used
+This should launch the app.
 
-``` r
-capsule::reproduce_lib()
-```
-
-This recreates all of the R packages used in the analysis on your
-computer. Importantly, this will not change where your existing R
-packages are installed. It is just for this repository. So no need to be
-concerned about this impacting other analyses you run.
-
-## Step 3: Run the target workflow
-
-``` r
-capsule::run(targets::tar_make())
-```
-
-This runs our targets workflow using the R packages specified.
-
-This will check if the targets are written, and if they aren’t, it will
-re-run the necessary ones.
-
-## Step 4: Add new dependencies into “packages.R”?
-
-Run:
-
-``` r
-capsule::recreate("./packages.R")
-```
-
-## Step 5 - ?
-
-Make some changes to the analysis and want to see them? Run the capsule
-again:
-
-``` r
-capsule::run(targets::tar_make())
-```
-
-And the analysis will be recreated.
+In the future we will host the app on shinyapps and potentially on
+shinylive as well.

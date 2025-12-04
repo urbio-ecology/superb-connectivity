@@ -58,7 +58,7 @@ to_sentence <- function(x) {
     str_to_sentence()
 }
 
-plot_patches <- function(patch_id, distance, n_cols = 7) {
+plot_patches <- function(patch_id, distance, species_name = "Species", n_cols = 7) {
   raster_patches <- as.factor(patch_id$patch_id)
 
   n_patches <- patch_id$patch_id |> unique() |> nrow()
@@ -123,7 +123,7 @@ plot_connectivity <- function(results_connect_habitat) {
       labeller = labeller(name = to_sentence)
     ) +
     scale_x_continuous(
-      breaks = buffer_distance,
+      breaks = results_connect_habitat$buffer_distance,
       labels = \(x) glue("{x}m")
     ) +
     scale_y_continuous(

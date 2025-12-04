@@ -15,12 +15,14 @@ tar_option_set(
   controller = controller
 )
 
+source("parameters.R")
+
 ## Assign like regular R, just make sure to pipe into a tar_ operation
 tar_assign({
   barrier_file <- tar_file(here(
-    "data/wood-bird/AllWoodbirdBarriers_CorrCRS.shp"
+    barrier_path
   ))
-  habitat_file <- tar_file(here("data/wood-bird/WoodbirdAllHabitat.shp"))
+  habitat_file <- tar_file(here(habitat_path))
   barrier <- read_geometry(barrier_file) |> st_as_sf() |> tar_target()
   habitat <- read_geometry(habitat_file) |>
     clean() |>
@@ -31,7 +33,7 @@ tar_assign({
   overlay_resolution <- tar_target(500)
   base_resolution <- tar_target(10)
   aggregation_factor <- tar_target(overlay_resolution / base_resolution)
-  buffer_distance <- tar_target(c(100, 250, 400))
+  buffer_distance <- tar_target(buffer_distance_m)
   # ran into error
   # Error storing output: [writeRaster] there are no cell values
   # TODO lodge bug report for geotargets

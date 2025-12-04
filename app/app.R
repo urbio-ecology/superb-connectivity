@@ -1,6 +1,6 @@
-source(here("app/packages.R"))
+source(here::here("app/packages.R"))
 source(here("app/colours.R"))
 source(here("app/ui.R"))
 source(here("app/server.R"))
-
+lapply(list.files(here("R/"), pattern = "*.R", full.names = TRUE), source)
 shinyApp(ui = ui, server = server)

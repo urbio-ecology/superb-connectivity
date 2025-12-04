@@ -8,11 +8,27 @@ server <- function(input, output, session) {
   observeEvent(input$use_example_data, {
     if (input$use_example_data) {
       updateTextInput(session, "species_name", value = "Superb Fairy Wren")
-      # Disable the species name input when using example data
+      # Disable inputs when using example data
       shinyjs::disable("species_name")
+      shinyjs::disable("habitat_file")
+      shinyjs::disable("barrier_file")
+      # Add CSS to grey out the inputs
+      shinyjs::runjs("
+        $('#species_name').closest('.form-group').css('opacity', '0.5');
+        $('#habitat_file').closest('.form-group').css('opacity', '0.5');
+        $('#barrier_file').closest('.form-group').css('opacity', '0.5');
+      ")
     } else {
-      # Enable the species name input when not using example data
+      # Enable inputs when not using example data
       shinyjs::enable("species_name")
+      shinyjs::enable("habitat_file")
+      shinyjs::enable("barrier_file")
+      # Remove greying out
+      shinyjs::runjs("
+        $('#species_name').closest('.form-group').css('opacity', '1');
+        $('#habitat_file').closest('.form-group').css('opacity', '1');
+        $('#barrier_file').closest('.form-group').css('opacity', '1');
+      ")
     }
   })
   # Reactive values to store results ----
@@ -30,8 +46,8 @@ server <- function(input, output, session) {
 
   # Parse buffer distances ----
   buffer_distances_parsed <- reactive({
-    req(input$buffer_distance)
-    distances_text <- input$buffer_distance
+    req(input$buffer_distances)
+    distances_text <- input$buffer_distances
     distances <- as.numeric(unlist(strsplit(distances_text, ",")))
     distances <- distances[!is.na(distances)]
 

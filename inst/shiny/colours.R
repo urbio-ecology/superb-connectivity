@@ -2,7 +2,7 @@
 # Based on scico tofino palette
 
 # Generate urbio palette
-urbio_pal <- scico(n = 11, palette = "tofino")
+urbio_pal <- scico::scico(n = 11, palette = "tofino")
 urbio_pal_cut <- urbio_pal[c(6:11)]
 
 # Define color variables for plotting

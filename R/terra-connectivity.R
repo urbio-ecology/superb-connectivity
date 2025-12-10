@@ -107,21 +107,21 @@ terra_add_patch_area <- function(raster) {
 terra_aggregate_connected_patches <- function(raster) {
   ## This code is to do with finding the actual connectivity calculation
   # FIND PATCH AREAS
-  summed <- tibble(
+  summed <- tibble::tibble(
     patch_id = as.numeric(terra::values(raster$patch_id)),
     area = as.numeric(terra::values(raster$area))
   ) %>%
     dplyr::filter(
       !is.na(patch_id)
     ) %>%
-    group_by(
+    dplyr::group_by(
       patch_id
     ) %>%
-    summarise(
+    dplyr::summarise(
       area = sum(area)
     ) |>
-    mutate(area_squared = area^2) |>
-    mutate(across(starts_with("area"), \(x) round(x, 3)))
+    dplyr::mutate(area_squared = area^2) |>
+    dplyr::mutate(dplyr::across(dplyr::starts_with("area"), \(x) round(x, 3)))
   summed
 }
 

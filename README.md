@@ -21,12 +21,18 @@ in pipelines and in a shiny app. We will provide walkthroughs of using
 the pipeline and the package soon, but for the time being, here are some
 simple directions on how to run the shiny app:
 
-1.  Download this repo
-2.  Ensure you have all the packages listed in `app/packages.R`
-3.  Source the `app/app.R` code:
+1.  Install the package:
 
 ``` r
-source("app/app.R")
+remotes::install_github("urbio-ecology/superb-connectivity")
+```
+
+``` r
+library(urbioconnect)
+```
+
+``` r
+run_connectivity_app()
 ```
 
 This should launch the app.

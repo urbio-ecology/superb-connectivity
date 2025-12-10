@@ -1,13 +1,9 @@
-#' .. content for \description{} (no empty lines) ..
-#'
-#' .. content for \details{} ..
-#'
-#' @title
-#' @param barrier
-#' @param buffer
-#' @param habitat
-#' @param distance
-#' @return
+#' Save barrier habitat buffer plot
+#' @param barrier barrier layer
+#' @param buffer buffer layer
+#' @param habitat habitat layer
+#' @param distance buffer distance
+#' @return saved ggplot and file path
 #' @author njtierney
 #' @export
 plot_save_barrier_habitat_buffer <- function(
@@ -37,7 +33,7 @@ plot_save_barrier_habitat_buffer <- function(
     "doc/plot-barrier-buffer-habitat-{species_name}-buffer-{distance}.png"
   )
 
-  ggsave(filename = plot_barrier_habitat_name, plot = plot_barrier_habitat)
+  ggplot2::ggsave(filename = plot_barrier_habitat_name, plot = plot_barrier_habitat)
 
   setNames(plot_barrier_habitat_name, distance)
 }

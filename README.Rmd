@@ -12,68 +12,31 @@ knitr::opts_chunk$set(
 ```
 
 
-# superb-connectivity
+# urbioconnect
 
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of superb-connectivity is to demonstrate a workflow of connectivity analysis for the superb fairy wren. The code has been lightly adapted from [urbanConnect](https://github.com/urbio-ecology/urbanConnect), with the overall method being developed by Holly Kirk et al., in ["Ecological connectivity as a planning tool for the conservation of wildlife in cities"](https://www.sciencedirect.com/science/article/pii/S2215016122003636?via%3Dihub).
+The goal of urbioconnect is to demonstrate a workflow of connectivity analysis for the superb fairy wren. The code has been lightly adapted from [urbanConnect](https://github.com/urbio-ecology/urbanConnect), with the overall method being developed by Holly Kirk et al., in ["Ecological connectivity as a planning tool for the conservation of wildlife in cities"](https://www.sciencedirect.com/science/article/pii/S2215016122003636?via%3Dihub).
 
-# To recreate the analysis
+# Usage
 
-Use `targets` and `capsule` to recreate the paper.
+Currently we have focussed our efforts on developing methods to be used in pipelines and in a shiny app. We will provide walkthroughs of using the pipeline and the package soon, but for the time being, here are some simple directions on how to run the shiny app:
 
--   `targets` is the workflow system that ensures the steps required to
-    complete the paper are completed in the right order.
--   `capsule` locks in the R package versions, including where they were
-    downloaded from (github or CRAN, for example), so that these can be
-    locked in. Under the hood it uses the `renv` R package.
+1. Install the package:
 
-There are three steps to reproduce the analysis
-
-## Step 1: Install `capsule`
-
-``` r
-install.packages('capsule', repos = c('https://milesmcbain.r-universe.dev', 'https://cloud.r-project.org'))
+```r
+remotes::install_github("urbio-ecology/superb-connectivity")
 ```
 
-## Step 2: Reproduce the libraries used
-
-``` r
-capsule::reproduce_lib()
+```r
+library(urbioconnect)
 ```
 
-This recreates all of the R packages used in the analysis on your
-computer. Importantly, this will not change where your existing R
-packages are installed. It is just for this repository. So no need to be
-concerned about this impacting other analyses you run.
-
-## Step 3: Run the target workflow
-
-``` r
-capsule::run(targets::tar_make())
+```r
+run_connectivity_app()
 ```
 
-This runs our targets workflow using the R packages specified.
+This should launch the app. 
 
-This will check if the targets are written, and if they aren’t, it will
-re-run the necessary ones.
-
-## Step 4: Add new dependencies into "packages.R"?
-
-Run:
-
-``` r
-capsule::recreate("./packages.R")
-```
-
-## Step 5 - ?
-
-Make some changes to the analysis and want to see them? Run the capsule
-again:
-
-``` r
-capsule::run(targets::tar_make())
-```
-
-And the analysis will be recreated.
+In the future we will host the app on shinyapps and potentially on shinylive as well.

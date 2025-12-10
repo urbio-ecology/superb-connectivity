@@ -20,19 +20,19 @@ plot_barrier_habitat_buffer <- function(
   habitat_coloured <- subst(habitat, 1, col_habitat)
 
   # Now plot them in layers (bottom to top)
-  ggplot() +
-    geom_spatraster(data = buffer_coloured) +
-    geom_spatraster(data = barrier_coloured) +
-    geom_spatraster(data = habitat_coloured) +
-    theme_minimal(paper = col_paper) +
-    scale_fill_identity(na.value = NA) +
-    labs(
-      title = marquee_glue(
+  ggplot2::ggplot() +
+    tidyterra::geom_spatraster(data = buffer_coloured) +
+    tidyterra::geom_spatraster(data = barrier_coloured) +
+    tidyterra::geom_spatraster(data = habitat_coloured) +
+    ggplot2::theme_minimal(paper = col_paper) +
+    ggplot2::scale_fill_identity(na.value = NA) +
+    ggplot2::labs(
+      title = marquee::marquee_glue(
         "{.{col_habitat} {species_name} Habitat}, {.{col_buffer} {distance}m buffer}, and barrier (white)"
       )
     ) +
-    theme_sub_plot(
-      title = element_marquee()
+    ggplot2::theme_sub_plot(
+      title = marquee::element_marquee()
     )
 }
 
@@ -54,16 +54,16 @@ show_image_tabs <- function(images, message = NULL) {
 
 to_sentence <- function(x) {
   x |>
-    str_replace_all("_", " ") |>
-    str_to_sentence()
+    stringr::str_replace_all("_", " ") |>
+    stringr::str_to_sentence()
 }
 
-plot_patches <- function(patch_id, distance, n_cols = 7) {
+plot_patches <- function(patch_id, distance, species_name = "Species", n_cols = 7) {
   raster_patches <- as.factor(patch_id$patch_id)
 
   n_patches <- patch_id$patch_id |> unique() |> nrow()
 
-  my_colours <- qualitative_hcl(n = n_cols)
+  my_colours <- colorspace::qualitative_hcl(n = n_cols)
 
   unique_vals <- unique(values(raster_patches))
   unique_vals <- unique_vals[!is.na(unique_vals)]
@@ -73,21 +73,21 @@ plot_patches <- function(patch_id, distance, n_cols = 7) {
   colour_map <- my_colours[colour_indices]
   names(colour_map) <- as.character(unique_vals)
 
-  ggplot() +
-    geom_spatraster(data = raster_patches) +
-    scale_fill_manual(values = colour_map, na.value = NA) +
-    theme_minimal() +
-    theme(legend.position = "none") +
-    theme_sub_panel(
+  ggplot2::ggplot() +
+    tidyterra::geom_spatraster(data = raster_patches) +
+    ggplot2::scale_fill_manual(values = colour_map, na.value = NA) +
+    ggplot2::theme_minimal() +
+    ggplot2::theme(legend.position = "none") +
+    ggplot2::theme_sub_panel(
       border = element_rect(
         colour = "grey85"
       )
     ) +
-    labs(
-      title = glue(
+    ggplot2::labs(
+      title = glue::glue(
         "Patches of {species_name} habitat"
       ),
-      subtitle = glue(
+      subtitle = glue::glue(
         "# patches: {n_patches}\nBuffer size: {distance}m\n{n_cols} colours"
       )
     )
@@ -95,7 +95,7 @@ plot_patches <- function(patch_id, distance, n_cols = 7) {
 
 
 plot_connectivity <- function(results_connect_habitat) {
-  geo_cols <- scico(n = 6, palette = "bukavu") |> as.list()
+  geo_cols <- scico::scico(n = 6, palette = "bukavu") |> as.list()
 
   names(geo_cols) <- c(
     "dark_blue",
@@ -110,36 +110,36 @@ plot_connectivity <- function(results_connect_habitat) {
       species_name:patch_area_total_ha,
       -effective_mesh_ha
     ) |>
-    pivot_longer(
+    tidyr::pivot_longer(
       cols = -c(species_name, buffer_distance)
     ) |>
-    ggplot(aes(x = buffer_distance, y = value)) +
-    geom_point() +
-    geom_line(colour = geo_cols$dark_green) +
-    facet_wrap(
+    ggplot2::ggplot(aes(x = buffer_distance, y = value)) +
+    ggplot2::geom_point() +
+    ggplot2::geom_line(colour = geo_cols$dark_green) +
+    ggplot2::facet_wrap(
       ~name,
       scales = "free",
       ncol = 2,
-      labeller = labeller(name = to_sentence)
+      labeller = ggplot2::labeller(name = to_sentence)
     ) +
-    scale_x_continuous(
-      breaks = buffer_distance,
-      labels = \(x) glue("{x}m")
+    ggplot2::scale_x_continuous(
+      breaks = results_connect_habitat$buffer_distance,
+      labels = \(x) glue::glue("{x}m")
     ) +
-    scale_y_continuous(
+    ggplot2::scale_y_continuous(
       labels = scales::label_number(scale_cut = scales::cut_short_scale())
     ) +
-    labs(
+    ggplot2::labs(
       x = "Buffer distance (m)"
     ) +
-    theme_minimal() +
-    theme_sub_panel(
-      border = element_rect(
+    ggplot2::theme_minimal() +
+    ggplot2::theme_sub_panel(
+      border = ggplot2::element_rect(
         colour = "grey85",
         fill = NA
       )
     ) +
-    theme(
-      text = element_text(size = 14)
+    ggplot2::theme(
+      text = ggplot2::element_text(size = 14)
     )
 }

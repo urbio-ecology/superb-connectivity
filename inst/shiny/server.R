@@ -110,7 +110,6 @@ server <- function(input, output, session) {
 
       # Check if we have the required files
       base_name <- tools::file_path_sans_ext(basename(shp_file))
-      required_extensions <- c(".shp", ".shx", ".dbf")
       present_files <- list.files(
         temp_dir,
         pattern = paste0("^", base_name),
@@ -118,8 +117,9 @@ server <- function(input, output, session) {
       )
 
       if (length(present_files) < 3) {
-        stop(
-          "Shapefile upload incomplete. Please upload all required files (.shp, .shx, .dbf, and optionally .prj)"
+        cli::cli_abort(
+          "Shapefile upload incomplete. Please upload all required files \\
+          (.shp, .shx, .dbf, and optionally .prj)"
         )
       }
 
@@ -134,8 +134,12 @@ server <- function(input, output, session) {
       # Handle GeoJSON files
       data <- st_read(file_input$datapath[1], quiet = TRUE)
     } else {
-      stop(
-        "Unsupported file format. Please upload shapefile (.shp + .shx + .dbf), GeoTIFF (.tif), or GeoJSON (.geojson)"
+      cli::cli_abort(
+        c(
+          "File format must be a shapefile",
+          "i" = "(.shp + .shx + .dbf), GeoTIFF (.tif), or GeoJSON (.geojson)",
+          "We see: {.path {file_input$name}}"
+        )
       )
     }
 
@@ -156,7 +160,7 @@ server <- function(input, output, session) {
       {
         # Read files
         withProgress(message = "Loading data...", value = 0.1, {
-          # Use example data if checkbox is selected, otherwise use uploaded files
+          # Use example data if checkbox selected, otherwise use uploaded files
           if (input$use_example_data) {
             # Use predefined file paths
             habitat_data <- read_geometry(habitat_file_path) |>
@@ -170,8 +174,9 @@ server <- function(input, output, session) {
           } else {
             # Use uploaded files
             if (is.null(input$habitat_file) || is.null(input$barrier_file)) {
-              stop(
-                "Please upload both habitat and barrier files, or check 'Use example data'"
+              cli::cli_abort(
+                "Please upload both habitat and barrier files, or check \\
+                'Use example data'"
               )
             }
             habitat_data <- read_uploaded_file(input$habitat_file)
@@ -225,7 +230,8 @@ server <- function(input, output, session) {
           terra_areas_list <- map(terra_results_list, ~ .$terra_areas_connected)
           results$terra_areas_connected <- terra_areas_list
 
-          # Store buffered_habitat and patch_id for the first buffer (for plotting)
+          # Store buffered_habitat and patch_id for the first buffer
+          # (for plotting)
           results$buffered_habitat <- map(
             terra_results_list,
             ~ .$buffered_habitat

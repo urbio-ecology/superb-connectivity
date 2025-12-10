@@ -33,7 +33,10 @@ plot_save_barrier_habitat_buffer <- function(
     "doc/plot-barrier-buffer-habitat-{species_name}-buffer-{distance}.png"
   )
 
-  ggplot2::ggsave(filename = plot_barrier_habitat_name, plot = plot_barrier_habitat)
+  ggplot2::ggsave(
+    filename = plot_barrier_habitat_name,
+    plot = plot_barrier_habitat
+  )
 
-  setNames(plot_barrier_habitat_name, distance)
+  stats::setNames(plot_barrier_habitat_name, distance)
 }

@@ -1,5 +1,13 @@
-# buffer the habitat by half the threshold distance (the distance past
-# which habitat patches are no longer considered connected)
+#' Buffer habitat by distance
+#'
+#' Creates a buffer around habitat polygons and unions overlapping areas into
+#' a single polygon.
+#'
+#' @param habitat SF object. Habitat spatial data.
+#' @param distance Numeric. Buffer distance in meters.
+#'
+#' @returns SF object with buffered and unioned habitat geometry.
+#' @export
 habitat_buffer <- function(habitat, distance) {
   # buffer by the required distance
   habitat_buffer <- sf::st_buffer(x = habitat, dist = distance, nQuadSegs = 5)
@@ -8,7 +16,16 @@ habitat_buffer <- function(habitat, distance) {
   habitat_union
 }
 
-# create the fragmentation geometry
+#' Fragment habitat along barriers
+#'
+#' Removes barrier areas from buffered habitat and splits the result into
+#' individual polygon fragments.
+#'
+#' @param habitat_buffered SF object. Buffered habitat geometry.
+#' @param barrier SF object. Barrier geometry (e.g., roads).
+#'
+#' @returns SF object with individual habitat fragments, each with a unique ID.
+#' @export
 fragment_habitat <- function(habitat_buffered, barrier) {
   # Remove road polygon areas from buffered habitat polygon, creating gaps
   habitat_buffered_no_roads <- sf::st_difference(habitat_buffered, barrier)
@@ -22,7 +39,16 @@ fragment_habitat <- function(habitat_buffered, barrier) {
   fragmented_geometry
 }
 
-# original habitat patches underneath barriers need to be removed
+#' Remove habitat underneath barriers
+#'
+#' Removes all habitat areas that intersect with barriers and splits
+#' multipolygons into individual patches.
+#'
+#' @param habitat SF object. Original habitat geometry.
+#' @param barrier SF object. Barrier geometry.
+#'
+#' @returns SF object with habitat patches that don't intersect barriers.
+#' @export
 remove_habitat_under_barrier <- function(habitat, barrier) {
   # remove all habitat under barriers
   habitat_no_barriers <- sf::st_difference(habitat, barrier)
@@ -31,8 +57,16 @@ remove_habitat_under_barrier <- function(habitat, barrier) {
   remaining_patches
 }
 
-# identify which of the remaining original habitat patches belong in which
-# connected area
+#' Assign habitat patches to fragment IDs
+#'
+#' Determines which connected fragment each remaining habitat patch belongs to
+#' based on spatial intersection.
+#'
+#' @param remaining SF object. Remaining habitat patches after barrier removal.
+#' @param fragment_id SF object. Fragment geometries with IDs.
+#'
+#' @returns SF object with habitat patches labeled by their fragment ID.
+#' @export
 assign_patches_to_fragments <- function(remaining, fragment_id) {
   intersects <- sf::st_intersects(remaining, fragment_id)
   membership <- sapply(intersects, first)
@@ -41,15 +75,27 @@ assign_patches_to_fragments <- function(remaining, fragment_id) {
   habitat_id
 }
 
-# calculate area of each habitat patch
+#' Add patch area column
+#'
+#' @param patches SF object. Habitat patches.
+#'
+#' @returns SF object with added `area` column in square meters.
+#' @export
 add_patch_area <- function(patches) {
   patches |>
-    dplyr::mutate(
-      area = sf::st_area(patches)
-    )
+    dplyr::mutate(area = sf::st_area(geometry))
 }
-
-# function to group the remaining habitat patches by area
+#' Aggregate connected patch areas
+#'
+#' Groups habitat patches by their connected fragment ID and calculates total
+#' and squared areas for connectivity metrics.
+#'
+#' @param patch_areas SF object. Habitat patches with area column.
+#'
+#' @returns Data frame with `patch_id`, `area_total`, and `area_squared`
+#'   columns.
+#' @export
+#' @export
 aggregate_connected_patches <- function(patch_areas) {
   summed <- patch_areas |>
     sf::st_drop_geometry() |>
@@ -59,10 +105,30 @@ aggregate_connected_patches <- function(patch_areas) {
   summed
 }
 
-# function to run the calculate connectivity functions
-# x = habitat layer
-# y = barrier layer
-# d = distance used as threshold for whether habitat patches are joined or not.
+#' Calculate habitat connectivity
+#'
+#' Performs complete habitat connectivity analysis using vector-based spatial
+#' operations. Buffers habitat, fragments it along barriers, and calculates
+#' areas of connected patches.
+#'
+#' @param habitat SF object. Original habitat spatial data.
+#' @param barrier SF object. Barrier spatial data (e.g., roads, waterways).
+#' @param distance Numeric. Threshold distance in meters for connectivity.
+#'   Habitat patches within this distance are considered connected.
+#'
+#' @returns Data frame with connectivity metrics for each connected patch,
+#'   including `patch_id`, `area_total`, and `area_squared`.
+#'
+#' @examples
+#' \dontrun{
+#' # Load habitat and barrier data
+#' habitat <- sf::st_read("habitat.shp")
+#' roads <- sf::st_read("roads.shp")
+#'
+#' # Calculate connectivity at 100m threshold
+#' connectivity <- habitat_connectivity(habitat, roads, distance = 100)
+#' }
+#' @export
 habitat_connectivity <- function(habitat, barrier, distance) {
   # buffer the habitat layer by the distance
   buffer <- habitat_buffer(habitat, distance)

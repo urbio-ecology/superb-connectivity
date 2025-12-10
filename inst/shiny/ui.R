@@ -14,10 +14,9 @@ ui <- page_navbar(
   title = "Urban Connectedness",
   theme = urbio_theme(), 
   fillable = TRUE,
-  
-  # Initialize shinyjs
-  shinyjs::useShinyjs(),
 
+  header = shinyjs::useShinyjs(), 
+  
   # Inputs Panel
   nav_panel(
     title = "Inputs",

@@ -53,10 +53,12 @@ Imports:
     tidyr,
     tidyterra,
     stats,
-    grDevices
+    grDevices,
+    cli,
+    rlang,
+    scales
 Suggests:
     crew,
-    fasterize,
     geotargets,
     igraph,
     marquee,

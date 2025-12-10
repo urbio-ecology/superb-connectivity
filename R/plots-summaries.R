@@ -9,7 +9,7 @@
 #' col2hex("blue")
 #' @export
 col2hex <- function(color_name) {
-  rgb(t(grDevices::col2rgb(color_name)), maxColorValue = 255)
+  grDevices::rgb(t(grDevices::col2rgb(color_name)), maxColorValue = 255)
 }
 
 #' Plot barrier, habitat, and buffer layers

@@ -1,3 +1,7 @@
+#' @param spatial_data spatial data frame from sf
+#'
+#' @param ... extra options (currently not used)
+#'
 #' @title Clean any spatial data layer (shape file)
 #' @description many shape files contain errors, places where the edges of
 #'  a polygon cross over or polygons which overlap. This helps remove some of

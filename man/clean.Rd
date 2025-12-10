@@ -6,6 +6,11 @@
 \usage{
 clean(spatial_data, ...)
 }
+\arguments{
+\item{spatial_data}{spatial data frame from sf}
+
+\item{...}{extra options (currently not used)}
+}
 \description{
 many shape files contain errors, places where the edges of
 a polygon cross over or polygons which overlap. This helps remove some of

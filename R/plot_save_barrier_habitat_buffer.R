@@ -1,8 +1,15 @@
 #' Save barrier habitat buffer plot
+#'
 #' @param barrier barrier layer
-#' @param buffer buffer layer
 #' @param habitat habitat layer
-#' @param distance buffer distance
+#' @param buffered buffered layer
+#' @param species_name character, species name, e.g., "Superb Fairy Wren"
+#' @param col_barrier colour to colour the barrier layer
+#' @param col_buffer colour to colour the buffer layer
+#' @param col_habitat colour to colour the habitat layer
+#' @param col_paper colour to colour the paper layer of ggplot
+#' @param distance buffer distance, numeric
+#'
 #' @return saved ggplot and file path
 #' @author njtierney
 #' @export

@@ -3,17 +3,22 @@
 #' Creates a parameterised Quarto report from connectivity analysis results.
 #'
 #' @param species_name Character. Name of the species being analysed.
-#' @param buffer_distances Numeric vector. Buffer distances used in analysis (in meters).
+#' @param buffer_distances Numeric vector. Buffer distances used in analysis 
+#' (in meters).
 #' @param results_connect_habitat Data frame. Connectivity summary results.
-#' @param terra_areas_connected List of data frames. Connected patch areas for each buffer distance.
+#' @param terra_areas_connected List of data frames. Connected patch areas for e
+#'   ach buffer distance.
 #' @param habitat SF object. Habitat spatial data (optional, for mapping).
 #' @param barrier SF object. Barrier spatial data (optional, for mapping).
-#' @param habitat_raster Terra SpatRaster. Habitat raster (optional, for mapping).
+#' @param habitat_raster Terra SpatRaster. Habitat raster (optional, for 
+#' mapping).
 #' @param base_resolution Numeric. Base resolution in meters.
 #' @param overlay_resolution Numeric. Overlay resolution in meters.
 #' @param output_file Character. Output filename (without extension).
-#' @param output_format Character. Output format: "html" (default), "pdf", or "both".
-#' @param output_dir Character. Directory to save the report (default: current directory).
+#' @param output_format Character. Output format: "html" (default), "pdf", or  
+#' "both".
+#' @param output_dir Character. Directory to save the report (default: current 
+#' directory).
 #'
 #' @return Character vector of generated report file path(s).
 #' @export
@@ -64,7 +69,7 @@ generate_connectivity_report <- function(
   if (is.null(output_file)) {
     species_slug <- gsub("[^A-Za-z0-9]+", "-", tolower(species_name))
     output_file <- glue::glue(
-      "connectivity-report_{species_slug}_{format(Sys.Date(), '%Y%m%d'}"
+      "connectivity-report_{species_slug}_{format(Sys.Date(), '%Y%m%d')}"
     )
   }
 

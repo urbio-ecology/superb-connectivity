@@ -1,9 +1,20 @@
-source(here("app/packages.R"))
-source(here("app/colours.R"))
-# Source all R functions
-lapply(list.files(here("R/"), pattern = "*.R|*.r", full.names = TRUE), source)
+library(fasterize)
+library(fs)
+library(glue)
+library(sf)
+library(stringr)
+library(terra)
+library(tidyterra)
+library(tidyverse)
+
+conflicts_prefer(dplyr::filter)
+conflicts_prefer(dplyr::select)
 
 server <- function(input, output, session) {
+  # Define file paths
+  data_dir <- system.file("shiny-data/superb-fairy-wren", package = "urbioconnect")
+  habitat_file_path <- file.path(data_dir, "superbHab.shp")
+  barrier_file_path <- file.path(data_dir, "allSFWRoads.shp")
   # Observer to update species name when example data checkbox is toggled
   observeEvent(input$use_example_data, {
     if (input$use_example_data) {
@@ -140,12 +151,12 @@ server <- function(input, output, session) {
         withProgress(message = "Loading data...", value = 0.1, {
           # Use example data if checkbox is selected, otherwise use uploaded files
           if (input$use_example_data) {
-            habitat_file_path <- here("data/superb-fairy-wren/superbHab.shp")
+            # Use predefined file paths
             habitat_data <- read_geometry(habitat_file_path) |>
               clean() |>
               st_as_sf()
 
-            barrier_file_path <- here("data/superb-fairy-wren/allSFWRoads.shp")
+            # File paths already defined at top of server function
             barrier_data <- read_geometry(barrier_file_path) |>
               clean() |>
               st_as_sf()

@@ -44,7 +44,7 @@ summarise_connectivity <- function(
   aggregation_factor,
   species_name
 ) {
-  results <- tibble(
+  results <- tibble::tibble(
     species_name = species_name,
     buffer_distance = buffer_distance,
     n_patches = n_patches(area_total),
@@ -56,11 +56,11 @@ summarise_connectivity <- function(
     base_resolution = base_resolution,
     aggregation_factor = aggregation_factor
   ) |>
-    mutate(
+    dplyr::mutate(
       prob_connectedness = round(prob_connectedness, 6)
     ) |>
-    mutate(
-      across(
+    dplyr::mutate(
+      dplyr::across(
         .cols = c(effective_mesh_ha, patch_area_mean, patch_area_total_ha),
         round
       )

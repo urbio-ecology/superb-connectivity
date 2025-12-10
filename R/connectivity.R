@@ -37,14 +37,14 @@ assign_patches_to_fragments <- function(remaining, fragment_id) {
   intersects <- sf::st_intersects(remaining, fragment_id)
   membership <- sapply(intersects, first)
   habitat_id <- sf::st_sf(geometry = remaining) |>
-    mutate(patch_id = membership)
+    dplyr::mutate(patch_id = membership)
   habitat_id
 }
 
 # calculate area of each habitat patch
 add_patch_area <- function(patches) {
   patches |>
-    mutate(
+    dplyr::mutate(
       area = sf::st_area(patches)
     )
 }

@@ -1,5 +1,15 @@
-source(here::here("app/packages.R"))
-source(here::here("app/colours.R"))
+library(bslib)
+library(colorspace)
+library(conflicted)
+library(DT)
+library(shiny)
+library(shinyjs)
+library(scico)
+library(tidyverse)
+
+conflicts_prefer(dplyr::filter)
+conflicts_prefer(dplyr::select)
+source("colours.R")
 ui <- page_navbar(
   title = "Urban Connectedness",
   theme = urbio_theme(), 

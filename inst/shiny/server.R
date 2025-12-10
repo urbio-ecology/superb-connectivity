@@ -12,7 +12,10 @@ conflicts_prefer(dplyr::select)
 
 server <- function(input, output, session) {
   # Define file paths
-  data_dir <- system.file("shiny-data/superb-fairy-wren", package = "urbioconnect")
+  data_dir <- system.file(
+    "shiny-data/superb-fairy-wren",
+    package = "urbioconnect"
+  )
   habitat_file_path <- file.path(data_dir, "superbHab.shp")
   barrier_file_path <- file.path(data_dir, "allSFWRoads.shp")
   # Observer to update species name when example data checkbox is toggled
@@ -24,22 +27,26 @@ server <- function(input, output, session) {
       shinyjs::disable("habitat_file")
       shinyjs::disable("barrier_file")
       # Add CSS to grey out the inputs
-      shinyjs::runjs("
+      shinyjs::runjs(
+        "
         $('#species_name').closest('.form-group').css('opacity', '0.5');
         $('#habitat_file').closest('.form-group').css('opacity', '0.5');
         $('#barrier_file').closest('.form-group').css('opacity', '0.5');
-      ")
+      "
+      )
     } else {
       # Enable inputs when not using example data
       shinyjs::enable("species_name")
       shinyjs::enable("habitat_file")
       shinyjs::enable("barrier_file")
       # Remove greying out
-      shinyjs::runjs("
+      shinyjs::runjs(
+        "
         $('#species_name').closest('.form-group').css('opacity', '1');
         $('#habitat_file').closest('.form-group').css('opacity', '1');
         $('#barrier_file').closest('.form-group').css('opacity', '1');
-      ")
+      "
+      )
     }
   })
   # Reactive values to store results ----
@@ -285,22 +292,22 @@ server <- function(input, output, session) {
     req(results$ready)
     input$species_name
   })
-  
+
   output$analysis_timestamp <- renderText({
     req(results$ready)
     format(results$analysis_time, "%Y-%m-%d %H:%M:%S %Z")
   })
-  
+
   output$analysis_session <- renderText({
     req(results$ready)
     paste0("R ", getRversion(), " on ", Sys.info()["sysname"])
   })
-  
+
   output$analysis_buffers <- renderText({
     req(results$ready)
     paste(results$buffer_distances, collapse = ", ")
   })
-  
+
   output$analysis_workdir <- renderText({
     req(results$ready)
     getwd()
@@ -405,7 +412,7 @@ server <- function(input, output, session) {
   # Render each patch plot dynamically ----
   observe({
     req(results$ready)
-    
+
     walk2(
       .x = results$patch_id_raster,
       .y = results$buffer_distances,
@@ -417,7 +424,7 @@ server <- function(input, output, session) {
           my_species <- input$species_name
           output[[output_name]] <- renderPlot({
             plot_patches(
-              patch_id = my_patch_id, 
+              patch_id = my_patch_id,
               distance = my_distance,
               species_name = my_species
             )

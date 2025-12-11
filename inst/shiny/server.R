@@ -12,7 +12,10 @@ conflicts_prefer(dplyr::select)
 
 server <- function(input, output, session) {
   # Define file paths
-  data_dir <- system.file("shiny-data/superb-fairy-wren", package = "urbioconnect")
+  data_dir <- system.file(
+    "shiny-data/superb-fairy-wren",
+    package = "urbioconnect"
+  )
   habitat_file_path <- file.path(data_dir, "superbHab.shp")
   barrier_file_path <- file.path(data_dir, "allSFWRoads.shp")
   # Observer to update species name when example data checkbox is toggled
@@ -24,22 +27,26 @@ server <- function(input, output, session) {
       shinyjs::disable("habitat_file")
       shinyjs::disable("barrier_file")
       # Add CSS to grey out the inputs
-      shinyjs::runjs("
+      shinyjs::runjs(
+        "
         $('#species_name').closest('.form-group').css('opacity', '0.5');
         $('#habitat_file').closest('.form-group').css('opacity', '0.5');
         $('#barrier_file').closest('.form-group').css('opacity', '0.5');
-      ")
+      "
+      )
     } else {
       # Enable inputs when not using example data
       shinyjs::enable("species_name")
       shinyjs::enable("habitat_file")
       shinyjs::enable("barrier_file")
       # Remove greying out
-      shinyjs::runjs("
+      shinyjs::runjs(
+        "
         $('#species_name').closest('.form-group').css('opacity', '1');
         $('#habitat_file').closest('.form-group').css('opacity', '1');
         $('#barrier_file').closest('.form-group').css('opacity', '1');
-      ")
+      "
+      )
     }
   })
   # Reactive values to store results ----
@@ -103,7 +110,6 @@ server <- function(input, output, session) {
 
       # Check if we have the required files
       base_name <- tools::file_path_sans_ext(basename(shp_file))
-      required_extensions <- c(".shp", ".shx", ".dbf")
       present_files <- list.files(
         temp_dir,
         pattern = paste0("^", base_name),
@@ -111,8 +117,9 @@ server <- function(input, output, session) {
       )
 
       if (length(present_files) < 3) {
-        stop(
-          "Shapefile upload incomplete. Please upload all required files (.shp, .shx, .dbf, and optionally .prj)"
+        cli::cli_abort(
+          "Shapefile upload incomplete. Please upload all required files \\
+          (.shp, .shx, .dbf, and optionally .prj)"
         )
       }
 
@@ -127,8 +134,12 @@ server <- function(input, output, session) {
       # Handle GeoJSON files
       data <- st_read(file_input$datapath[1], quiet = TRUE)
     } else {
-      stop(
-        "Unsupported file format. Please upload shapefile (.shp + .shx + .dbf), GeoTIFF (.tif), or GeoJSON (.geojson)"
+      cli::cli_abort(
+        c(
+          "File format must be a shapefile",
+          "i" = "(.shp + .shx + .dbf), GeoTIFF (.tif), or GeoJSON (.geojson)",
+          "We see: {.path {file_input$name}}"
+        )
       )
     }
 
@@ -149,7 +160,7 @@ server <- function(input, output, session) {
       {
         # Read files
         withProgress(message = "Loading data...", value = 0.1, {
-          # Use example data if checkbox is selected, otherwise use uploaded files
+          # Use example data if checkbox selected, otherwise use uploaded files
           if (input$use_example_data) {
             # Use predefined file paths
             habitat_data <- read_geometry(habitat_file_path) |>
@@ -163,8 +174,9 @@ server <- function(input, output, session) {
           } else {
             # Use uploaded files
             if (is.null(input$habitat_file) || is.null(input$barrier_file)) {
-              stop(
-                "Please upload both habitat and barrier files, or check 'Use example data'"
+              cli::cli_abort(
+                "Please upload both habitat and barrier files, or check \\
+                'Use example data'"
               )
             }
             habitat_data <- read_uploaded_file(input$habitat_file)
@@ -218,7 +230,8 @@ server <- function(input, output, session) {
           terra_areas_list <- map(terra_results_list, ~ .$terra_areas_connected)
           results$terra_areas_connected <- terra_areas_list
 
-          # Store buffered_habitat and patch_id for the first buffer (for plotting)
+          # Store buffered_habitat and patch_id for the first buffer
+          # (for plotting)
           results$buffered_habitat <- map(
             terra_results_list,
             ~ .$buffered_habitat
@@ -285,22 +298,22 @@ server <- function(input, output, session) {
     req(results$ready)
     input$species_name
   })
-  
+
   output$analysis_timestamp <- renderText({
     req(results$ready)
     format(results$analysis_time, "%Y-%m-%d %H:%M:%S %Z")
   })
-  
+
   output$analysis_session <- renderText({
     req(results$ready)
     paste0("R ", getRversion(), " on ", Sys.info()["sysname"])
   })
-  
+
   output$analysis_buffers <- renderText({
     req(results$ready)
     paste(results$buffer_distances, collapse = ", ")
   })
-  
+
   output$analysis_workdir <- renderText({
     req(results$ready)
     getwd()
@@ -405,7 +418,7 @@ server <- function(input, output, session) {
   # Render each patch plot dynamically ----
   observe({
     req(results$ready)
-    
+
     walk2(
       .x = results$patch_id_raster,
       .y = results$buffer_distances,
@@ -417,7 +430,7 @@ server <- function(input, output, session) {
           my_species <- input$species_name
           output[[output_name]] <- renderPlot({
             plot_patches(
-              patch_id = my_patch_id, 
+              patch_id = my_patch_id,
               distance = my_distance,
               species_name = my_species
             )

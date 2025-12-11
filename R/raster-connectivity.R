@@ -6,7 +6,7 @@ rast_empty_grid <- function(habitat, resolution = 10) {
   grid <- raster::raster(
     x = habitat,
     res = resolution,
-    crs = crs(habitat)
+    crs = raster::crs(habitat)
   )
   grid
 }
@@ -22,7 +22,11 @@ prepare_rasters <- function(
 
   grid <- rast_empty_grid(habitat, resolution = base_resolution)
 
-  habitat_raster <- fasterize::fasterize(habitat, raster = grid, background = NA)
+  habitat_raster <- fasterize::fasterize(
+    habitat,
+    raster = grid,
+    background = NA
+  )
   barrier_raster <- fasterize::fasterize(barrier, raster = grid, background = 0)
 
   # aggregate rasters to make them the size of the overlay raster
@@ -38,7 +42,6 @@ prepare_rasters <- function(
   ## make sure the extent snaps to the right shape
   ## so give it the extent and resolution
   ## with the extent and the resolution, make sure that they snap together
-  ## terra::rast(nrow = ..., ncol = ..., extent)
   habitat_raster_final <- raster::extend(habitat_raster, coarse_template)
   barrier_raster_final <- raster::extend(barrier_raster, coarse_template)
 
@@ -97,7 +100,7 @@ rast_assign_patches_to_fragments <- function(remaining_habitat, fragment) {
 }
 
 rast_add_patch_area <- function(raster) {
-  raster_with_area <- raster::addLayer(raster, area(raster))
+  raster_with_area <- raster::addLayer(raster, raster::area(raster))
   names(raster_with_area) <- c("patch_id", "area") # Name both layers
   raster_with_area
 }
@@ -106,20 +109,20 @@ rast_add_patch_area <- function(raster) {
 rast_aggregate_connected_patches <- function(raster) {
   ## This code is to do with finding the actual connectivity calculation
   # FIND PATCH AREAS
-  summed <- tibble(
-    patch_id = getValues(raster$patch_id),
-    area = getValues(raster$area)
-  ) %>%
+  summed <- tibble::tibble(
+    patch_id = raster::getValues(raster$patch_id),
+    area = raster::getValues(raster$area)
+  ) |>
     dplyr::filter(
       !is.na(patch_id)
-    ) %>%
-    group_by(
+    ) |>
+    dplyr::group_by(
       patch_id
-    ) %>%
-    summarise(
+    ) |>
+    dplyr::summarise(
       area = sum(area)
     ) |>
-    mutate(area_squared = area^2)
+    dplyr::mutate(area_squared = area^2)
   summed
 }
 
@@ -137,6 +140,7 @@ rast_habitat_connectivity <- function(
     )
     res <- quiet_rast_habitat_connectivity(habitat, barrier, distance)
   }
+  res
 }
 
 .rast_habitat_connectivity <- function(habitat, barrier, distance) {
@@ -188,7 +192,10 @@ rast_remove_habitat_cell <- function(
 ) {
   deleted_raster <- coarse_raster + 1
   deleted_raster[i] <- NA
-  deleted_raster_hi_res <- raster::disaggregate(deleted_raster, aggregation_factor)
+  deleted_raster_hi_res <- raster::disaggregate(
+    deleted_raster,
+    aggregation_factor
+  )
   # create the new habitat with a bit deleted
   loo_habitat <- habitat_raster * deleted_raster_hi_res
   loo_habitat

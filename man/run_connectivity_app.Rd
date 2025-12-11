@@ -2,22 +2,15 @@
 % Please edit documentation in R/run-app.R
 \name{run_connectivity_app}
 \alias{run_connectivity_app}
-\title{Run Urban Connectedness Shiny App}
+\title{Launch the Connectivity Shiny App}
 \usage{
-run_connectivity_app(launch.browser = TRUE, port = NULL, host = "127.0.0.1")
-}
-\arguments{
-\item{launch.browser}{Logical. Should the app open in a browser? Default TRUE.}
-
-\item{port}{Integer. Port number for the app. Default NULL (random port).}
-
-\item{host}{Character. Host IP address. Default "127.0.0.1".}
+run_connectivity_app()
 }
 \value{
-Starts the Shiny app
+No return value, called for side effects (launches Shiny app)
 }
 \description{
-Launches the Shiny app for interactive habitat connectivity analysis.
+Launches the connectivity analysis Shiny application.
 }
 \examples{
 \dontrun{

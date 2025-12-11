@@ -12,18 +12,18 @@ conflicts_prefer(dplyr::select)
 source("colours.R")
 ui <- page_navbar(
   title = "Urban Connectedness",
-  theme = urbio_theme(), 
+  theme = urbio_theme(),
   fillable = TRUE,
 
-  header = shinyjs::useShinyjs(), 
-  
+  header = shinyjs::useShinyjs(),
+
   # Inputs Panel
   nav_panel(
     title = "Inputs",
     icon = icon("upload"),
     layout_columns(
       col_widths = c(6, 6),
-      
+
       # Left Column - File Uploads and Species
       card(
         card_header("Data Upload"),
@@ -34,21 +34,41 @@ ui <- page_navbar(
             value = "Superb Fairy Wren",
             placeholder = "Enter species name"
           ),
-          
+
           fileInput(
             inputId = "habitat_file",
             label = "Habitat Layer",
-            accept = c(".shp", ".tif", ".tiff", ".geojson", ".gpkg", ".shx", ".dbf", ".prj", ".cpg"),
+            accept = c(
+              ".shp",
+              ".tif",
+              ".tiff",
+              ".geojson",
+              ".gpkg",
+              ".shx",
+              ".dbf",
+              ".prj",
+              ".cpg"
+            ),
             multiple = TRUE
           ),
-          
+
           fileInput(
             inputId = "barrier_file",
             label = "Barrier Layer",
-            accept = c(".shp", ".tif", ".tiff", ".geojson", ".gpkg", ".shx", ".dbf", ".prj", ".cpg"),
+            accept = c(
+              ".shp",
+              ".tif",
+              ".tiff",
+              ".geojson",
+              ".gpkg",
+              ".shx",
+              ".dbf",
+              ".prj",
+              ".cpg"
+            ),
             multiple = TRUE
           ),
-          
+
           checkboxInput(
             inputId = "use_example_data",
             label = "Use Example Data",
@@ -56,7 +76,7 @@ ui <- page_navbar(
           )
         )
       ),
-      
+
       # Right Column - Analysis Parameters
       card(
         card_header("Analysis Parameters"),
@@ -69,7 +89,7 @@ ui <- page_navbar(
             max = 100,
             step = 1
           ),
-          
+
           numericInput(
             inputId = "overlay_resolution",
             label = "Overlay Resolution (m)",
@@ -78,14 +98,14 @@ ui <- page_navbar(
             max = 1000,
             step = 1
           ),
-          
+
           textInput(
             inputId = "buffer_distances",
             label = "Buffer Distances (m)",
             value = "100",
             placeholder = "e.g., 50, 100, 200"
           ),
-          
+
           helpText(
             "Enter buffer distances as comma-separated values.",
             "These represent the maximum dispersal distances to analyze."
@@ -93,7 +113,7 @@ ui <- page_navbar(
         )
       )
     ),
-    
+
     # Action Button - Full Width
     layout_columns(
       col_widths = 12,
@@ -105,7 +125,7 @@ ui <- page_navbar(
             icon = icon("play"),
             class = "btn-primary btn-lg w-100"
           ),
-          
+
           conditionalPanel(
             condition = "$('html').hasClass('shiny-busy')",
             div(
@@ -328,18 +348,20 @@ ui <- page_navbar(
             tags$li("Upload habitat and barrier raster data"),
             tags$li("Specify species name and buffer distances"),
             tags$li("Run the analysis to calculate connectivity metrics"),
-            tags$li("View results including patch identification and connectivity statistics"),
+            tags$li(
+              "View results including patch identification and connectivity statistics"
+            ),
             tags$li("Download results and reports")
           ),
           hr(),
           h4("File Upload Guide"),
-          
+
           h5("Uploading Shapefiles"),
           p(
-            strong("Important:"), 
+            strong("Important:"),
             "Shapefiles consist of multiple files that work together. You must upload ALL required files:"
           ),
-          
+
           tags$div(
             class = "ms-3",
             h6("Required Files"),
@@ -348,14 +370,14 @@ ui <- page_navbar(
               tags$li(tags$code(".shx"), " - Shape index file"),
               tags$li(tags$code(".dbf"), " - Attribute database file")
             ),
-            
+
             h6("Optional (but recommended)"),
             tags$ul(
               tags$li(tags$code(".prj"), " - Projection information"),
               tags$li(tags$code(".cpg"), " - Character encoding")
             )
           ),
-          
+
           h5("How to Upload in the App"),
           tags$ol(
             tags$li("Click \"Browse\" on the file input"),
@@ -364,18 +386,21 @@ ui <- page_navbar(
               " (hold Ctrl/Cmd to select multiple)",
               tags$ul(
                 tags$li(
-                  "Example: Select ", 
-                  tags$code("habitat.shp"), ", ",
-                  tags$code("habitat.shx"), ", ",
-                  tags$code("habitat.dbf"), ", ",
-                  tags$code("habitat.prj"), 
+                  "Example: Select ",
+                  tags$code("habitat.shp"),
+                  ", ",
+                  tags$code("habitat.shx"),
+                  ", ",
+                  tags$code("habitat.dbf"),
+                  ", ",
+                  tags$code("habitat.prj"),
                   " together"
                 )
               )
             ),
             tags$li("Click \"Open\"")
           ),
-          
+
           h5("Common Errors"),
           tags$div(
             class = "ms-3",
@@ -383,8 +408,14 @@ ui <- page_navbar(
               class = "alert alert-warning",
               strong("Error: \"Cannot open shapefile; source corrupt\""),
               tags$ul(
-                tags$li(strong("Cause:"), " Missing required files (.shx or .dbf)"),
-                tags$li(strong("Solution:"), " Make sure you selected ALL shapefile components when uploading")
+                tags$li(
+                  strong("Cause:"),
+                  " Missing required files (.shx or .dbf)"
+                ),
+                tags$li(
+                  strong("Solution:"),
+                  " Make sure you selected ALL shapefile components when uploading"
+                )
               )
             ),
             tags$div(
@@ -392,36 +423,67 @@ ui <- page_navbar(
               strong("Error: \"Shapefile upload incomplete\""),
               tags$ul(
                 tags$li(strong("Cause:"), " Only one file was uploaded"),
-                tags$li(strong("Solution:"), " Select all files together in the file browser")
+                tags$li(
+                  strong("Solution:"),
+                  " Select all files together in the file browser"
+                )
               )
             )
           ),
-          
+
           h5("Alternative Formats"),
           p("If you have trouble with shapefiles, consider using:"),
           tags$ul(
             tags$li(
-              strong("GeoTIFF"), " (", tags$code(".tif"), ", ", tags$code(".tiff"), ") - Single file, easier to upload"
+              strong("GeoTIFF"),
+              " (",
+              tags$code(".tif"),
+              ", ",
+              tags$code(".tiff"),
+              ") - Single file, easier to upload"
             ),
             tags$li(
-              strong("GeoJSON"), " (", tags$code(".geojson"), ") - Single file, text-based vector format"
+              strong("GeoJSON"),
+              " (",
+              tags$code(".geojson"),
+              ") - Single file, text-based vector format"
             )
           ),
           p("You can convert shapefiles to these formats using:"),
           tags$ul(
             tags$li("QGIS (free, open source)"),
             tags$li("ArcGIS"),
-            tags$li("R: ", tags$code("terra::writeRaster()"), " or ", tags$code("sf::st_write()"))
+            tags$li(
+              "R: ",
+              tags$code("terra::writeRaster()"),
+              " or ",
+              tags$code("sf::st_write()")
+            )
           ),
-          
+
           hr(),
           h4("Metrics Calculated"),
           tags$ul(
-            tags$li(strong("Probability of Connectedness:"), " Overall habitat connectivity"),
-            tags$li(strong("Number of Patches:"), " Count of distinct habitat patches"),
-            tags$li(strong("Effective Mesh Size:"), " Measure of landscape fragmentation"),
-            tags$li(strong("Mean Patch Area:"), " Average size of habitat patches"),
-            tags$li(strong("Total Patch Area:"), " Sum of all habitat patch areas")
+            tags$li(
+              strong("Probability of Connectedness:"),
+              " Overall habitat connectivity"
+            ),
+            tags$li(
+              strong("Number of Patches:"),
+              " Count of distinct habitat patches"
+            ),
+            tags$li(
+              strong("Effective Mesh Size:"),
+              " Measure of landscape fragmentation"
+            ),
+            tags$li(
+              strong("Mean Patch Area:"),
+              " Average size of habitat patches"
+            ),
+            tags$li(
+              strong("Total Patch Area:"),
+              " Sum of all habitat patch areas"
+            )
           ),
           hr(),
           p(

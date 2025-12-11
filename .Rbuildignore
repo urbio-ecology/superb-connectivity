@@ -1,2 +1,12 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
+^README\.Rmd$
+^doc$
+^renv$
+^rsconnect$
+^\.rscignore$
+^data/\.rscignore$
+^inst/targets$
+^\.claude$
+^data-raw$
+^LICENSE\.md$

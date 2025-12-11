@@ -38,7 +38,7 @@ urbio_theme <- function() {
     secondary = "#6c757d", # Keep default grey
     success = col_success, # Light green for success states
     info = urbio_pal_cut[6], # Lightest green for info
-    warning = "#f9a825", 
+    warning = "#f9a825",
     danger = "#d32f2f",
 
     base_font = font_google("Inter"),

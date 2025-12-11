@@ -12,12 +12,12 @@
 #' }
 run_connectivity_app <- function() {
   app_dir <- system.file("shiny", package = "urbioconnect")
-  
+
   if (app_dir == "" || !dir.exists(app_dir)) {
     cli::cli_abort(
       "Shiny app not found. Please reinstall the package."
     )
   }
-  
+
   shiny::runApp(app_dir)
 }

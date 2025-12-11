@@ -1,8 +1,34 @@
-# usage: col2hex("forestgreen")
+#' Convert color name to hexadecimal
+#'
+#' @param color_name Character. Color name recognized by R.
+#'
+#' @returns Character. Hexadecimal color code.
+#'
+#' @examples
+#' col2hex("forestgreen")
+#' col2hex("blue")
+#' @export
 col2hex <- function(color_name) {
-  rgb(t(col2rgb(color_name)), maxColorValue = 255)
+  grDevices::rgb(t(grDevices::col2rgb(color_name)), maxColorValue = 255)
 }
 
+#' Plot barrier, habitat, and buffer layers
+#'
+#' Creates a visualization showing habitat, buffer zone, and barriers using
+#' terra rasters.
+#'
+#' @param barrier Terra SpatRaster. Barrier layer (e.g., roads).
+#' @param buffered Terra SpatRaster. Buffered habitat layer.
+#' @param habitat Terra SpatRaster. Original habitat layer.
+#' @param distance Numeric. Buffer distance in meters.
+#' @param species_name Character. Species name for plot title.
+#' @param col_barrier Character. Color for barrier layer.
+#' @param col_buffer Character. Color for buffer zone.
+#' @param col_habitat Character. Color for habitat patches.
+#' @param col_paper Character. Background color (default: "white").
+#'
+#' @returns A ggplot2 object.
+#' @export
 plot_barrier_habitat_buffer <- function(
   barrier,
   buffered,
@@ -15,9 +41,9 @@ plot_barrier_habitat_buffer <- function(
   col_paper = "white"
 ) {
   # First, reclassify your rasters to assign actual color values
-  barrier_coloured <- subst(barrier, 1, col_barrier)
-  buffer_coloured <- subst(buffered, 1, col_buffer)
-  habitat_coloured <- subst(habitat, 1, col_habitat)
+  barrier_coloured <- terra::subst(barrier, 1, col_barrier)
+  buffer_coloured <- terra::subst(buffered, 1, col_buffer)
+  habitat_coloured <- terra::subst(habitat, 1, col_habitat)
 
   # Now plot them in layers (bottom to top)
   ggplot2::ggplot() +
@@ -28,7 +54,8 @@ plot_barrier_habitat_buffer <- function(
     ggplot2::scale_fill_identity(na.value = NA) +
     ggplot2::labs(
       title = marquee::marquee_glue(
-        "{.{col_habitat} {species_name} Habitat}, {.{col_buffer} {distance}m buffer}, and barrier (white)"
+        "{.{col_habitat} {species_name} Habitat}, \\
+        {.{col_buffer} {distance}m buffer}, and barrier (white)"
       )
     ) +
     ggplot2::theme_sub_plot(
@@ -36,6 +63,16 @@ plot_barrier_habitat_buffer <- function(
     )
 }
 
+#' Display plots in tabs
+#'
+#' Helper function to display a list of plots with tab headers in R Markdown
+#' documents.
+#'
+#' @param the_list Named list. List of plot objects.
+#' @param message Character. Prefix message for each tab heading.
+#'
+#' @returns Invisible NULL. Prints plots with markdown headers.
+#' @export
 show_tabs <- function(the_list, message = NULL) {
   for (iplot in names(the_list)) {
     cat(sprintf("## %s %s\n", message, iplot))
@@ -44,6 +81,16 @@ show_tabs <- function(the_list, message = NULL) {
   }
 }
 
+#' Display images in tabs
+#'
+#' Helper function to display a list of image paths with tab headers in R
+#' Markdown documents.
+#'
+#' @param images Named character vector. Paths to image files.
+#' @param message Character. Prefix message for each tab heading.
+#'
+#' @returns Invisible NULL. Includes images with markdown headers.
+#' @export
 show_image_tabs <- function(images, message = NULL) {
   for (iplot in names(images)) {
     cat(sprintf("## %s %s\n", message, iplot))
@@ -52,20 +99,42 @@ show_image_tabs <- function(images, message = NULL) {
   }
 }
 
+#' Convert snake_case to sentence case
+#'
+#' @param x Character vector. Text in snake_case format.
+#'
+#' @returns Character vector. Text converted to sentence case.
+#' @export
 to_sentence <- function(x) {
   x |>
     stringr::str_replace_all("_", " ") |>
     stringr::str_to_sentence()
 }
 
-plot_patches <- function(patch_id, distance, species_name = "Species", n_cols = 7) {
+#' Plot connected habitat patches
+#'
+#' Visualizes habitat patches colored by their connected fragment ID.
+#'
+#' @param patch_id Terra SpatRaster. Raster with patch IDs.
+#' @param distance Numeric. Buffer distance used (for subtitle).
+#' @param species_name Character. Species name (default: "Species").
+#' @param n_cols Integer. Number of colors to cycle through (default: 7).
+#'
+#' @returns A ggplot2 object showing patches with distinct colors.
+#' @export
+plot_patches <- function(
+  patch_id,
+  distance,
+  species_name = "Species",
+  n_cols = 7
+) {
   raster_patches <- as.factor(patch_id$patch_id)
 
   n_patches <- patch_id$patch_id |> unique() |> nrow()
 
   my_colours <- colorspace::qualitative_hcl(n = n_cols)
 
-  unique_vals <- unique(values(raster_patches))
+  unique_vals <- unique(terra::values(raster_patches))
   unique_vals <- unique_vals[!is.na(unique_vals)]
 
   # assign colours cyclically
@@ -79,7 +148,7 @@ plot_patches <- function(patch_id, distance, species_name = "Species", n_cols = 
     ggplot2::theme_minimal() +
     ggplot2::theme(legend.position = "none") +
     ggplot2::theme_sub_panel(
-      border = element_rect(
+      border = ggplot2::element_rect(
         colour = "grey85"
       )
     ) +
@@ -94,6 +163,17 @@ plot_patches <- function(patch_id, distance, species_name = "Species", n_cols = 
 }
 
 
+#' Plot connectivity metrics across buffer distances
+#'
+#' Creates faceted line plots showing how connectivity metrics change with
+#' different buffer distances.
+#'
+#' @param results_connect_habitat Data frame. Connectivity summary results with
+#'   columns for species_name, buffer_distance, and various metrics.
+#'
+#' @returns A ggplot2 object with faceted plots of connectivity metrics.
+#'
+#' @export
 plot_connectivity <- function(results_connect_habitat) {
   geo_cols <- scico::scico(n = 6, palette = "bukavu") |> as.list()
 
@@ -113,7 +193,7 @@ plot_connectivity <- function(results_connect_habitat) {
     tidyr::pivot_longer(
       cols = -c(species_name, buffer_distance)
     ) |>
-    ggplot2::ggplot(aes(x = buffer_distance, y = value)) +
+    ggplot2::ggplot(ggplot2::aes(x = buffer_distance, y = value)) +
     ggplot2::geom_point() +
     ggplot2::geom_line(colour = geo_cols$dark_green) +
     ggplot2::facet_wrap(

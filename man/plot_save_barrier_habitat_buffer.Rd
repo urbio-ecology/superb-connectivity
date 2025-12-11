@@ -19,11 +19,21 @@ plot_save_barrier_habitat_buffer(
 \arguments{
 \item{barrier}{barrier layer}
 
+\item{buffered}{buffered layer}
+
 \item{habitat}{habitat layer}
 
-\item{distance}{buffer distance}
+\item{distance}{buffer distance, numeric}
 
-\item{buffer}{buffer layer}
+\item{species_name}{character, species name, e.g., "Superb Fairy Wren"}
+
+\item{col_barrier}{colour to colour the barrier layer}
+
+\item{col_buffer}{colour to colour the buffer layer}
+
+\item{col_habitat}{colour to colour the habitat layer}
+
+\item{col_paper}{colour to colour the paper layer of ggplot}
 }
 \value{
 saved ggplot and file path

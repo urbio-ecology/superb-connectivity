@@ -8,8 +8,11 @@ format: html
 source(here::here("packages.R"))
 dir_map(path = "R/", fun = source)
 # baseline total habitat areas needed for comparison (in m2 not Ha)
-barrier <- read_geometry(here("data/superb-fairy-wren/allSFWRoads.shp")) |> st_as_sf()
-habitat <- read_geometry(here("data/superb-fairy-wren/superbHab.shp")) |> clean() |> st_as_sf()
+barrier <- read_geometry(here("data/superb-fairy-wren/allSFWRoads.shp")) |> 
+  st_as_sf()
+habitat <- read_geometry(here("data/superb-fairy-wren/superbHab.shp")) |> 
+  clean() |> 
+  st_as_sf()
 ```
 
 Using `{terra}`

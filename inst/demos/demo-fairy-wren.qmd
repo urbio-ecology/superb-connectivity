@@ -140,6 +140,5 @@ We then summarise these measurements of connectivity:
 # calculation
 results <- summarise_connectivity(connect_habitat)
 results
-
 ```
 

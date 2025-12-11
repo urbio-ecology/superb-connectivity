@@ -52,6 +52,6 @@ renv/
 .Ruserdata
 
 # ignore wood-bird data
-data/wood-bird
+data-raw/wood-bird
 
 /.quarto/

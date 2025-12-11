@@ -3,21 +3,21 @@
 #' Creates a parameterised Quarto report from connectivity analysis results.
 #'
 #' @param species_name Character. Name of the species being analysed.
-#' @param buffer_distances Numeric vector. Buffer distances used in analysis 
+#' @param buffer_distances Numeric vector. Buffer distances used in analysis
 #' (in meters).
 #' @param results_connect_habitat Data frame. Connectivity summary results.
 #' @param terra_areas_connected List of data frames. Connected patch areas for e
 #'   ach buffer distance.
 #' @param habitat SF object. Habitat spatial data (optional, for mapping).
 #' @param barrier SF object. Barrier spatial data (optional, for mapping).
-#' @param habitat_raster Terra SpatRaster. Habitat raster (optional, for 
+#' @param habitat_raster Terra SpatRaster. Habitat raster (optional, for
 #' mapping).
 #' @param base_resolution Numeric. Base resolution in meters.
 #' @param overlay_resolution Numeric. Overlay resolution in meters.
 #' @param output_file Character. Output filename (without extension).
-#' @param output_format Character. Output format: "html" (default), "pdf", or  
+#' @param output_format Character. Output format: "html" (default), "pdf", or
 #' "both".
-#' @param output_dir Character. Directory to save the report (default: current 
+#' @param output_dir Character. Directory to save the report (default: current
 #' directory).
 #'
 #' @return Character vector of generated report file path(s).
@@ -48,7 +48,7 @@ generate_connectivity_report <- function(
   output_dir = getwd()
 ) {
   # Match argument
-  output_format <- match.arg(output_format)
+  output_format <- rlang::arg_match(output_format)
 
   rlang::check_installed("quarto")
 

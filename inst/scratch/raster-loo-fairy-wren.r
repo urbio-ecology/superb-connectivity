@@ -63,6 +63,27 @@ changeConnect <- coarse_raster
 
 barrier_mask <- create_barrier_mask(barrier = barrier_raster)
 
+
+# loo helpers
+
+rast_remove_habitat_cell <- function(
+  habitat_raster,
+  i,
+  coarse_raster,
+  aggregation_factor
+) {
+  deleted_raster <- coarse_raster + 1
+  deleted_raster[i] <- NA
+  deleted_raster_hi_res <- raster::disaggregate(
+    deleted_raster,
+    aggregation_factor
+  )
+  # create the new habitat with a bit deleted
+  loo_habitat <- habitat_raster * deleted_raster_hi_res
+  loo_habitat
+}
+
+
 # loop through coarse raster cells, running the connectivity thingo every time
 # store the connect value in one raster and then
 # for (i in seq_len(ncell(coarse_raster))) {

@@ -14,8 +14,8 @@ habitat <- read_geometry(here("data/superbHab.shp")) |> clean() |> st_as_sf()
 prepared_rasters <- prepare_rasters(
   habitat = habitat,
   barrier = barrier,
-  base_resolution = 10,
-  overlay_resolution = 500
+  data_resolution = 10,
+  target_resolution = 500
 )
 
 habitat_raster <- prepared_rasters$habitat_raster

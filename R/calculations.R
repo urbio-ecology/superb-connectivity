@@ -79,9 +79,9 @@ connectivity_probability <- function(area_squared, area_total) {
 #' @param area_squared Numeric vector. Squared areas of connected patches.
 #' @param area_total Numeric vector. Total areas of connected patches.
 #' @param buffer_distance Numeric. Buffer distance used in analysis (meters).
-#' @param overlay_resolution Numeric. Overlay resolution in meters.
-#' @param base_resolution Numeric. Base resolution in meters.
-#' @param aggregation_factor Numeric. Factor by which base resolution was
+#' @param target_resolution Numeric. Target resolution in meters.
+#' @param data_resolution Numeric. Data resolution in meters.
+#' @param aggregation_factor Numeric. Factor by which Data resolution was
 #'   aggregated.
 #' @param species_name Character. Name of species analysed.
 #'
@@ -93,8 +93,8 @@ summarise_connectivity <- function(
   area_squared,
   area_total,
   buffer_distance,
-  overlay_resolution,
-  base_resolution,
+  target_resolution,
+  data_resolution,
   aggregation_factor,
   species_name
 ) {
@@ -106,8 +106,8 @@ summarise_connectivity <- function(
     effective_mesh_ha = effective_mesh_size(area_squared, area_total),
     patch_area_mean = mean_patch_size(area_total),
     patch_area_total_ha = total_habitat_area(area_total),
-    overlay_resolution = overlay_resolution,
-    base_resolution = base_resolution,
+    target_resolution = target_resolution,
+    data_resolution = data_resolution,
     aggregation_factor = aggregation_factor
   ) |>
     dplyr::mutate(

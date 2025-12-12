@@ -30,14 +30,14 @@ tar_assign({
     tar_target()
 
   species_name <- tar_target("Woodbird")
-  overlay_resolution <- tar_target(500)
-  base_resolution <- tar_target(10)
-  aggregation_factor <- tar_target(overlay_resolution / base_resolution)
+  target_resolution <- tar_target(500)
+  data_resolution <- tar_target(10)
+  aggregation_factor <- tar_target(target_resolution / data_resolution)
   buffer_distance <- tar_target(buffer_distance_m)
   # ran into error
   # Error storing output: [writeRaster] there are no cell values
   # TODO lodge bug report for geotargets
-  # empty_grid <- empty_grid(habitat, resolution = base_resolution) |>
+  # empty_grid <- empty_grid(habitat, resolution = data_resolution) |>
   #   tar_target()
   # this is now going into `terra::rasterize` - but is there another way?
 
@@ -46,7 +46,7 @@ tar_assign({
     habitat,
     terra::rast(
       x = habitat,
-      res = base_resolution,
+      res = data_resolution,
       crs = crs(habitat)
     ),
     background = NA
@@ -57,7 +57,7 @@ tar_assign({
     barrier,
     terra::rast(
       x = habitat,
-      res = base_resolution,
+      res = data_resolution,
       crs = crs(habitat)
     ),
     background = 0
@@ -141,8 +141,8 @@ tar_assign({
     area_squared = areas_connected$area_squared,
     area_total = areas_connected$area,
     buffer_distance = buffer_distance,
-    overlay_resolution = overlay_resolution,
-    base_resolution = base_resolution,
+    target_resolution = target_resolution,
+    data_resolution = data_resolution,
     aggregation_factor = aggregation_factor,
     species_name = species_name
   ) |>

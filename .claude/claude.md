@@ -16,8 +16,8 @@ Inputs and features:
 - Barrier Raster (or vector) data 
 - Buffer distance specification (can be more than 1 number)
 - Input from the user: `species_name <- "Superb Fairy Wren"`
-- input from the user: `overlay_resolution <- 500`
-- input from the user: `base_resolution <- 10`
+- input from the user: `target_resolution <- 500`
+- input from the user: `data_resolution <- 10`
 - input from the user - can be one number, up to 4 numbers: `buffer_distance <- c(100, 250, 400)`
 
 They then get as outputs

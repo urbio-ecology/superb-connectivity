@@ -8,8 +8,8 @@ summarise_connectivity(
   area_squared,
   area_total,
   buffer_distance,
-  overlay_resolution,
-  base_resolution,
+  target_resolution,
+  data_resolution,
   aggregation_factor,
   species_name
 )
@@ -21,11 +21,11 @@ summarise_connectivity(
 
 \item{buffer_distance}{Numeric. Buffer distance used in analysis (meters).}
 
-\item{overlay_resolution}{Numeric. Overlay resolution in meters.}
+\item{target_resolution}{Numeric. Target resolution in meters.}
 
-\item{base_resolution}{Numeric. Base resolution in meters.}
+\item{data_resolution}{Numeric. Data resolution in meters.}
 
-\item{aggregation_factor}{Numeric. Factor by which base resolution was
+\item{aggregation_factor}{Numeric. Factor by which Data resolution was
 aggregated.}
 
 \item{species_name}{Character. Name of species analysed.}

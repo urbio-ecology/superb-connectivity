@@ -22,8 +22,8 @@ Using `{terra}`
 prepared_rasters <- prepare_rasters(
   habitat = habitat,
   barrier = barrier,
-  base_resolution = 10,
-  overlay_resolution = 500
+  data_resolution = 10,
+  target_resolution = 500
 )
 
 habitat_raster <- prepared_rasters$habitat_raster
@@ -48,8 +48,8 @@ summarise_connectivity(
   area_squared = areas_connected$area_squared,
   area_total = areas_connected$area,
   buffer_distance = buffering_dist,
-  overlay_resolution = overlay_res,
-  base_resolution = base_res,
+  target_resolution = overlay_res,
+  data_resolution = base_res,
   aggregation_factor = aggregation_factor,
   species_name = "Superb Fairy Wren"
 )
@@ -64,8 +64,8 @@ Using `{raster}`
 prepared_rasters <- prepare_rasters(
   habitat = habitat,
   barrier = barrier,
-  base_resolution = base_res,
-  overlay_resolution = overlay_res
+  data_resolution = base_res,
+  target_resolution = overlay_res
 )
 
 habitat_raster <- prepared_rasters$habitat_raster
@@ -91,8 +91,8 @@ summarise_connectivity(
   area_squared = rast_areas_connected$area_squared,
   area_total = rast_areas_connected$area,
   buffer_distance = buffering_dist,
-  overlay_resolution = overlay_res,
-  base_resolution = base_res,
+  target_resolution = overlay_res,
+  data_resolution = base_res,
   aggregation_factor = aggregation_factor,
   species_name = "Superb Fairy Wren"
 )

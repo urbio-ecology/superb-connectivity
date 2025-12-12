@@ -12,8 +12,8 @@ generate_connectivity_report(
   habitat = NULL,
   barrier = NULL,
   habitat_raster = NULL,
-  base_resolution = 10,
-  overlay_resolution = 500,
+  data_resolution = 10,
+  target_resolution = 500,
   output_file = NULL,
   output_format = c("html", "pdf", "both"),
   output_dir = getwd()
@@ -37,9 +37,9 @@ ach buffer distance.}
 \item{habitat_raster}{Terra SpatRaster. Habitat raster (optional, for
 mapping).}
 
-\item{base_resolution}{Numeric. Base resolution in meters.}
+\item{data_resolution}{Numeric. Data resolution in meters.}
 
-\item{overlay_resolution}{Numeric. Overlay resolution in meters.}
+\item{target_resolution}{Numeric. Target resolution in meters.}
 
 \item{output_file}{Character. Output filename (without extension).}
 

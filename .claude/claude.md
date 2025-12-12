@@ -23,7 +23,7 @@ Inputs and features:
 They then get as outputs
 
 - A "results" page/tab, that will have the following
-	- terra_areas_connected - a data table of results
+	- areas_connected - a data table of results
 	- `results_connect_habitat` another data table of results
 	- placeholders for
 		- Output map of habitat, buffer, and barrier

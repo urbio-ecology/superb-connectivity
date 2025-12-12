@@ -231,11 +231,11 @@ ui <- page_navbar(
         card(
           card_header("Area and patch information for each buffer"),
           card_body(
-            DTOutput("terra_summary_table")
+            DTOutput("summary_table")
           ),
           card_footer(
             downloadButton(
-              "download_terra_areas_csv",
+              "download_areas_csv",
               "Download CSV",
               class = "btn-sm"
             )

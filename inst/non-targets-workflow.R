@@ -102,10 +102,10 @@ barrier_raster <- terra::extend(barrier_rasterised, coarse_template)
 
 # outputs ----
 # show this output as a DT data table
-terra_areas_connected <- map(
+areas_connected <- map(
   .x = buffer_distance,
   .f = function(distances) {
-    terra_habitat_connectivity(
+    habitat_connectivity(
       habitat = habitat_raster,
       barrier = barrier_raster,
       distance = distances
@@ -115,11 +115,11 @@ terra_areas_connected <- map(
 
 # show this output as a DT data table too
 results_connect_habitat <- map(
-  .x = terra_areas_connected,
-  .f = function(terra_areas_connected) {
+  .x = areas_connected,
+  .f = function(areas_connected) {
     summarise_connectivity(
-      area_squared = terra_areas_connected$area_squared,
-      area_total = terra_areas_connected$area,
+      area_squared = areas_connected$area_squared,
+      area_total = areas_connected$area,
       buffer_distance = buffer_distance,
       overlay_resolution = overlay_resolution,
       base_resolution = base_resolution,

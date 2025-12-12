@@ -6,7 +6,7 @@
 #' @param buffer_distances Numeric vector. Buffer distances used in analysis
 #' (in meters).
 #' @param results_connect_habitat Data frame. Connectivity summary results.
-#' @param terra_areas_connected List of data frames. Connected patch areas for e
+#' @param areas_connected List of data frames. Connected patch areas for e
 #'   ach buffer distance.
 #' @param habitat SF object. Habitat spatial data (optional, for mapping).
 #' @param barrier SF object. Barrier spatial data (optional, for mapping).
@@ -29,7 +29,7 @@
 #'   species_name = "Superb Fairy Wren",
 #'   buffer_distances = c(100, 250, 400),
 #'   results_connect_habitat = results_df,
-#'   terra_areas_connected = patches_list,
+#'   areas_connected = patches_list,
 #'   output_format = "html"
 #' )
 #' }
@@ -37,7 +37,7 @@ generate_connectivity_report <- function(
   species_name,
   buffer_distances,
   results_connect_habitat,
-  terra_areas_connected,
+  areas_connected,
   habitat = NULL,
   barrier = NULL,
   habitat_raster = NULL,
@@ -78,7 +78,7 @@ generate_connectivity_report <- function(
     species_name = species_name,
     buffer_distances = buffer_distances,
     results_connect_habitat = results_connect_habitat,
-    terra_areas_connected = terra_areas_connected,
+    areas_connected = areas_connected,
     habitat = habitat,
     barrier = barrier,
     habitat_raster = habitat_raster,

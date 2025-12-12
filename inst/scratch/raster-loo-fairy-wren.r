@@ -5,7 +5,7 @@ barrier <- read_geometry(here("data/allSFWRoads.shp")) |> st_as_sf()
 habitat <- read_geometry(here("data/superbHab.shp")) |> clean() |> st_as_sf()
 
 
-prepared_rasters <- terra_prepare_rasters(
+prepared_rasters <- prepare_rasters(
   habitat = habitat,
   barrier = barrier,
   base_resolution = 10,
@@ -16,7 +16,7 @@ habitat_raster <- prepared_rasters$habitat_raster
 barrier_raster <- prepared_rasters$barrier_raster
 
 # Calculate connectivity to then use later in the LOO method
-rast_areas_connected <- terra_habitat_connectivity(
+rast_areas_connected <- habitat_connectivity(
   habitat = habitat_raster,
   barrier = barrier_raster,
   distance = 250
@@ -62,6 +62,27 @@ connectivity <- coarse_raster
 changeConnect <- coarse_raster
 
 barrier_mask <- create_barrier_mask(barrier = barrier_raster)
+
+
+# loo helpers
+
+rast_remove_habitat_cell <- function(
+  habitat_raster,
+  i,
+  coarse_raster,
+  aggregation_factor
+) {
+  deleted_raster <- coarse_raster + 1
+  deleted_raster[i] <- NA
+  deleted_raster_hi_res <- raster::disaggregate(
+    deleted_raster,
+    aggregation_factor
+  )
+  # create the new habitat with a bit deleted
+  loo_habitat <- habitat_raster * deleted_raster_hi_res
+  loo_habitat
+}
+
 
 # loop through coarse raster cells, running the connectivity thingo every time
 # store the connect value in one raster and then

@@ -58,7 +58,7 @@ server <- function(input, output, session) {
     patch_id_raster = NULL,
     buffer_distances = NULL,
     results_connect_habitat = NULL,
-    terra_areas_connected = NULL,
+    areas_connected = NULL,
     analysis_time = NULL
   )
 
@@ -196,7 +196,7 @@ server <- function(input, output, session) {
           incProgress(0.2, message = "Preparing rasters...")
 
           # Prepare rasters
-          rasters <- terra_prepare_rasters(
+          rasters <- prepare_rasters(
             habitat = habitat_data,
             barrier = barrier_data,
             base_resolution = base_res,
@@ -210,14 +210,14 @@ server <- function(input, output, session) {
 
           # Run connectivity analysis for each buffer distance
           # Use _full version to get intermediate results for plotting
-          terra_results_list <- map(
+          results_list <- map(
             .x = buffer_dists,
             .f = function(distance) {
               incProgress(
                 0.1 / length(buffer_dists),
                 message = paste("Processing buffer:", distance, "m")
               )
-              terra_habitat_connectivity_full(
+              habitat_connectivity_full(
                 habitat = results$habitat_raster,
                 barrier = results$barrier_raster,
                 distance = distance,
@@ -227,17 +227,17 @@ server <- function(input, output, session) {
           )
 
           # Extract the areas connected for summary
-          terra_areas_list <- map(terra_results_list, ~ .$terra_areas_connected)
-          results$terra_areas_connected <- terra_areas_list
+          areas_list <- map(results_list, ~ .$areas_connected)
+          results$areas_connected <- areas_list
 
           # Store buffered_habitat and patch_id for the first buffer
           # (for plotting)
           results$buffered_habitat <- map(
-            terra_results_list,
+            results_list,
             ~ .$buffered_habitat
           )
           results$patch_id_raster <- map(
-            terra_results_list,
+            results_list,
             ~ .$patch_id_raster
           )
 
@@ -245,12 +245,12 @@ server <- function(input, output, session) {
 
           # Summarise connectivity for each buffer
           results$results_connect_habitat <- map2(
-            .x = terra_areas_list,
+            .x = areas_list,
             .y = buffer_dists,
-            .f = function(terra_areas, dist) {
+            .f = function(areas, dist) {
               summarise_connectivity(
-                area_squared = terra_areas$area_squared,
-                area_total = terra_areas$area,
+                area_squared = areas$area_squared,
+                area_total = areas$area,
                 buffer_distance = dist,
                 overlay_resolution = overlay_res,
                 base_resolution = base_res,
@@ -441,10 +441,10 @@ server <- function(input, output, session) {
   })
 
   # Output: Area and patch information table (combined from all buffers) ----
-  output$terra_summary_table <- renderDT({
-    req(results$terra_areas_connected)
+  output$summary_table <- renderDT({
+    req(results$areas_connected)
 
-    results$terra_areas_connected |>
+    results$areas_connected |>
       setNames(results$buffer_distances) |>
       bind_rows(.id = "buffer") |>
       datatable(
@@ -592,7 +592,7 @@ server <- function(input, output, session) {
     },
     content = function(file) {
       all_patches <- map2(
-        results$terra_areas_connected,
+        results$areas_connected,
         results$buffer_distances,
         ~ mutate(.x, buffer_distance = .y)
       ) |>
@@ -649,7 +649,7 @@ server <- function(input, output, session) {
       paste0("patches_map_", Sys.Date(), ".png")
     },
     content = function(file) {
-      first_result <- results$terra_areas_connected[[1]]
+      first_result <- results$areas_connected[[1]]
       first_buffer <- results$buffer_distances[1]
 
       patch_summary <- first_result |>
@@ -786,12 +786,12 @@ server <- function(input, output, session) {
   )
 
   # Download terra areas CSV ----
-  output$download_terra_areas_csv <- downloadHandler(
+  output$download_areas_csv <- downloadHandler(
     filename = function() {
-      paste0(input$species_name, "_terra_areas_", Sys.Date(), ".csv")
+      paste0(input$species_name, "_areas_", Sys.Date(), ".csv")
     },
     content = function(file) {
-      results$terra_areas_connected |>
+      results$areas_connected |>
         setNames(results$buffer_distances) |>
         bind_rows(.id = "buffer") |>
         write_csv(file)

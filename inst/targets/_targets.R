@@ -37,7 +37,7 @@ tar_assign({
   # ran into error
   # Error storing output: [writeRaster] there are no cell values
   # TODO lodge bug report for geotargets
-  # empty_grid <- terra_empty_grid(habitat, resolution = base_resolution) |>
+  # empty_grid <- empty_grid(habitat, resolution = base_resolution) |>
   #   tar_target()
   # this is now going into `terra::rasterize` - but is there another way?
 
@@ -92,13 +92,13 @@ tar_assign({
   barrier_mask <- create_barrier_mask(barrier = barrier_raster) |>
     tar_terra_rast()
 
-  remaining_habitat <- terra_remove_habitat_under_barrier(
+  remaining_habitat <- remove_habitat_under_barrier(
     habitat = habitat_raster,
     barrier_mask = barrier_mask
   ) |>
     tar_terra_rast()
 
-  buffered_habitat <- terra_habitat_buffer(
+  buffered_habitat <- habitat_buffer(
     habitat = remaining_habitat,
     distance = buffer_distance
   ) |>
@@ -107,7 +107,7 @@ tar_assign({
     )
 
   # apply barriers to get the fragmentation
-  fragmentation_raster <- terra_fragment_habitat(
+  fragmentation_raster <- fragment_habitat(
     buffered_habitat = buffered_habitat,
     barrier_mask = barrier_mask
   ) |>
@@ -117,17 +117,17 @@ tar_assign({
 
   # get IDs of connected areas
   # intersect with habitat to get area IDs of habitat patches
-  patch_id_raster <- terra_assign_patches_to_fragments(
+  patch_id_raster <- assign_patches_to_fragments(
     remaining_habitat = remaining_habitat,
     fragment = fragmentation_raster
   ) |>
-    terra_add_patch_area() |>
+    add_patch_area() |>
     tar_terra_rast(
       pattern = map(fragmentation_raster)
     )
 
   # or as one step
-  terra_areas_connected <- terra_habitat_connectivity(
+  areas_connected <- habitat_connectivity(
     habitat = habitat_raster,
     barrier = barrier_raster,
     distance = buffer_distance
@@ -138,8 +138,8 @@ tar_assign({
     )
 
   results_connect_habitat <- summarise_connectivity(
-    area_squared = terra_areas_connected$area_squared,
-    area_total = terra_areas_connected$area,
+    area_squared = areas_connected$area_squared,
+    area_total = areas_connected$area,
     buffer_distance = buffer_distance,
     overlay_resolution = overlay_resolution,
     base_resolution = base_resolution,
@@ -147,7 +147,7 @@ tar_assign({
     species_name = species_name
   ) |>
     tar_target(
-      pattern = map(terra_areas_connected, buffer_distance)
+      pattern = map(areas_connected, buffer_distance)
     )
 
   # some of the palettes that we liked:

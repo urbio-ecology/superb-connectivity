@@ -8,7 +8,7 @@ generate_connectivity_report(
   species_name,
   buffer_distances,
   results_connect_habitat,
-  terra_areas_connected,
+  areas_connected,
   habitat = NULL,
   barrier = NULL,
   habitat_raster = NULL,
@@ -27,7 +27,7 @@ generate_connectivity_report(
 
 \item{results_connect_habitat}{Data frame. Connectivity summary results.}
 
-\item{terra_areas_connected}{List of data frames. Connected patch areas for e
+\item{areas_connected}{List of data frames. Connected patch areas for e
 ach buffer distance.}
 
 \item{habitat}{SF object. Habitat spatial data (optional, for mapping).}
@@ -61,7 +61,7 @@ report_path <- generate_connectivity_report(
   species_name = "Superb Fairy Wren",
   buffer_distances = c(100, 250, 400),
   results_connect_habitat = results_df,
-  terra_areas_connected = patches_list,
+  areas_connected = patches_list,
   output_format = "html"
 )
 }

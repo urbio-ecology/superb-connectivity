@@ -8,6 +8,13 @@
 \description{
 Analyse and visualise habitat connectivity in urban landscapes, accounting for barriers and buffer distances. Includes Shiny app for interactive analysis and report generation. Based on methods developed by Kirk et al (2023) \doi{10.1016/j.mex.2022.101989}.
 }
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://urbio-ecology.r-universe.dev/urbioconnect}
+}
+
+}
 \author{
 \strong{Maintainer}: Nicholas Tierney \email{nicholas.tierney@gmail.com} (\href{https://orcid.org/0000-0003-1460-8722}{ORCID})
 

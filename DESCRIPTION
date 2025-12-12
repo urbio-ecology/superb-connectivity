@@ -22,6 +22,7 @@ Description: Analyse and visualise habitat connectivity in urban landscapes,
     interactive analysis and report generation. Based on methods developed by 
     Kirk et al (2023) <doi:10.1016/j.mex.2022.101989>.
 License: GPL (>= 3)
+URL: https://urbio-ecology.r-universe.dev/urbioconnect
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.3

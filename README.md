@@ -6,6 +6,8 @@
 <!-- badges: start -->
 
 [![R-CMD-check](https://github.com/urbio-ecology/urbioconnect/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/urbio-ecology/urbioconnect/actions/workflows/R-CMD-check.yaml)
+[![R-universe
+version](https://urbio-ecology.r-universe.dev/urbioconnect/badges/version)](https://urbio-ecology.r-universe.dev/urbioconnect)
 <!-- badges: end -->
 
 The goal of urbioconnect is to demonstrate a workflow of connectivity
@@ -25,18 +27,33 @@ simple directions on how to run the shiny app:
 1.  Install the package:
 
 ``` r
+install.packages('urbioconnect', repos = c('https://urbio-ecology.r-universe.dev', 'https://cloud.r-project.org'))
+```
+
+(or if that doesn’t work, try using `{remotes}`)
+
+``` r
+# install.packages("remotes")
 remotes::install_github("urbio-ecology/urbioconnect")
 ```
+
+2.  Load the package:
 
 ``` r
 library(urbioconnect)
 ```
 
+3.  Launch the app:
+
 ``` r
 run_connectivity_app()
 ```
 
-This should launch the app.
-
 In the future we will host the app on shinyapps and potentially on
 shinylive as well.
+
+## Example usage
+
+There are many functions in `urbioconnect` that power the shiny app,
+which you can use in your own work. As the package is still under
+construction, we are still fine-tuning things. Stay tuned!

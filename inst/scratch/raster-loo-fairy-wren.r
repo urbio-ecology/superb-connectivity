@@ -5,7 +5,7 @@ barrier <- read_geometry(here("data/allSFWRoads.shp")) |> st_as_sf()
 habitat <- read_geometry(here("data/superbHab.shp")) |> clean() |> st_as_sf()
 
 
-prepared_rasters <- terra_prepare_rasters(
+prepared_rasters <- prepare_rasters(
   habitat = habitat,
   barrier = barrier,
   base_resolution = 10,
@@ -16,7 +16,7 @@ habitat_raster <- prepared_rasters$habitat_raster
 barrier_raster <- prepared_rasters$barrier_raster
 
 # Calculate connectivity to then use later in the LOO method
-rast_areas_connected <- terra_habitat_connectivity(
+rast_areas_connected <- habitat_connectivity(
   habitat = habitat_raster,
   barrier = barrier_raster,
   distance = 250

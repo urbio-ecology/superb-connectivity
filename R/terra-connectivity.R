@@ -9,7 +9,7 @@
 #' @param resolution Numeric. Cell size in meters (default: 10).
 #' @returns Terra SpatRaster. Empty raster grid.
 #' @export
-terra_empty_grid <- function(habitat, resolution = 10) {
+empty_grid <- function(habitat, resolution = 10) {
   grid <- terra::rast(
     x = habitat,
     res = resolution,
@@ -26,7 +26,7 @@ terra_empty_grid <- function(habitat, resolution = 10) {
 #' @param overlay_resolution Numeric. Coarse resolution in meters. Default, 500.
 #' @returns List with `habitat_raster` and `barrier_raster` elements.
 #' @export
-terra_prepare_rasters <- function(
+prepare_rasters <- function(
   habitat,
   barrier,
   base_resolution = 10,
@@ -34,7 +34,7 @@ terra_prepare_rasters <- function(
 ) {
   aggregation_factor <- overlay_resolution / base_resolution
 
-  grid <- terra_empty_grid(habitat, resolution = base_resolution)
+  grid <- empty_grid(habitat, resolution = base_resolution)
 
   # convert the vector format into a raster
   habitat_raster <- terra::rasterize(habitat, grid, background = NA)
@@ -63,7 +63,7 @@ terra_prepare_rasters <- function(
 #' @param distance Numeric. Buffer distance in meters.
 #' @returns Terra SpatRaster with buffered habitat.
 #' @export
-terra_habitat_buffer <- function(habitat, distance) {
+habitat_buffer <- function(habitat, distance) {
   buffer_window <- terra::focalMat(
     x = habitat,
     d = distance,
@@ -100,7 +100,7 @@ create_barrier_mask <- function(barrier) {
 #' @param barrier_mask Terra SpatRaster. Barrier mask.
 #' @returns Terra SpatRaster with habitat remaining after barrier removal.
 #' @export
-terra_remove_habitat_under_barrier <- function(habitat, barrier_mask) {
+remove_habitat_under_barrier <- function(habitat, barrier_mask) {
   habitat_no_barriers <- terra::mask(habitat, barrier_mask)
   habitat_no_barriers
 }
@@ -111,7 +111,7 @@ terra_remove_habitat_under_barrier <- function(habitat, barrier_mask) {
 #' @param barrier_mask Terra SpatRaster. Barrier mask.
 #' @returns Terra SpatRaster with fragmented habitat.
 #' @export
-terra_fragment_habitat <- function(buffered_habitat, barrier_mask) {
+fragment_habitat <- function(buffered_habitat, barrier_mask) {
   buffered_habitat * barrier_mask
 }
 
@@ -121,7 +121,7 @@ terra_fragment_habitat <- function(buffered_habitat, barrier_mask) {
 #' @param fragment Terra SpatRaster. Fragment geometry.
 #' @returns Terra SpatRaster with patch IDs.
 #' @export
-terra_assign_patches_to_fragments <- function(remaining_habitat, fragment) {
+assign_patches_to_fragments <- function(remaining_habitat, fragment) {
   patch_id_raster <- terra::patches(fragment)
   patch_id_raster <- remaining_habitat * patch_id_raster
   patch_id_raster
@@ -132,7 +132,7 @@ terra_assign_patches_to_fragments <- function(remaining_habitat, fragment) {
 #' @param raster Terra SpatRaster. Patch ID raster.
 #' @returns Terra SpatRaster with two layers: patch_id and area.
 #' @export
-terra_add_patch_area <- function(raster) {
+add_patch_area <- function(raster) {
   raster_with_area <- c(raster, terra::cellSize(raster))
   names(raster_with_area) <- c("patch_id", "area")
   raster_with_area
@@ -144,7 +144,7 @@ terra_add_patch_area <- function(raster) {
 #' @param raster Terra SpatRaster. Raster with patch_id and area layers.
 #' @returns Data frame with patch areas and areas squared.
 #' @export
-terra_aggregate_connected_patches <- function(raster) {
+aggregate_connected_patches <- function(raster) {
   summed <- tibble::tibble(
     patch_id = as.numeric(terra::values(raster$patch_id)),
     area = as.numeric(terra::values(raster$area))
@@ -171,23 +171,23 @@ terra_aggregate_connected_patches <- function(raster) {
 #' @param verbose Logical. Display progress messages (default: TRUE).
 #' @returns Data frame with connectivity metrics per patch.
 #' @export
-terra_habitat_connectivity <- function(
+habitat_connectivity <- function(
   habitat,
   barrier,
   distance,
   verbose = TRUE
 ) {
   if (verbose) {
-    habitat_connectivity <- .terra_habitat_connectivity(
+    habitat_connectivity <- .habitat_connectivity(
       habitat,
       barrier,
       distance
     )
   } else {
-    quiet_terra_habitat_connectivity <- purrr::quietly(
-      .terra_habitat_connectivity
+    quiet_habitat_connectivity <- purrr::quietly(
+      .habitat_connectivity
     )
-    habitat_connectivity <- quiet_terra_habitat_connectivity(
+    habitat_connectivity <- quiet_habitat_connectivity(
       habitat,
       barrier,
       distance
@@ -197,98 +197,98 @@ terra_habitat_connectivity <- function(
 }
 
 #' @noRd
-.terra_habitat_connectivity <- function(habitat, barrier, distance) {
+.habitat_connectivity <- function(habitat, barrier, distance) {
   cli::cli_progress_step("Creating barrier mask")
   barrier_mask <- create_barrier_mask(barrier = barrier)
 
   cli::cli_progress_step("Removing habitat underneath barrier")
-  remaining_habitat <- terra_remove_habitat_under_barrier(
+  remaining_habitat <- remove_habitat_under_barrier(
     habitat = habitat,
     barrier_mask = barrier_mask
   )
 
   cli::cli_progress_step("Adding buffer of {distance}m to habitat layer")
-  buffered_habitat <- terra_habitat_buffer(
+  buffered_habitat <- habitat_buffer(
     habitat = remaining_habitat,
     distance = distance
   )
 
   cli::cli_progress_step("Fragmenting habitat layer along barrier intersection")
-  fragmentation_raster <- terra_fragment_habitat(
+  fragmentation_raster <- fragment_habitat(
     buffered_habitat,
     barrier_mask
   )
 
   cli::cli_progress_step("Assigning patches ID to fragments")
-  patch_id_raster <- terra_assign_patches_to_fragments(
+  patch_id_raster <- assign_patches_to_fragments(
     remaining_habitat = remaining_habitat,
     fragment = fragmentation_raster
   ) |>
-    terra_add_patch_area()
+    add_patch_area()
 
   cli::cli_progress_step("Summarising area in each patch")
-  terra_areas_connected <- terra_aggregate_connected_patches(patch_id_raster)
-  terra_areas_connected
+  areas_connected <- aggregate_connected_patches(patch_id_raster)
+  areas_connected
 }
 
 #' Calculate habitat connectivity with visualization data
 #'
-#' @inheritParams terra_habitat_connectivity
+#' @inheritParams habitat_connectivity
 #' @returns List with intermediate rasters and connectivity metrics.
 #' @export
-terra_habitat_connectivity_full <- function(
+habitat_connectivity_full <- function(
   habitat,
   barrier,
   distance,
   verbose = TRUE
 ) {
   if (!verbose) {
-    quiet_fun <- purrr::quietly(.terra_habitat_connectivity_full)
+    quiet_fun <- purrr::quietly(.habitat_connectivity_full)
     res <- quiet_fun(habitat, barrier, distance)
     return(res$result)
   }
 
-  .terra_habitat_connectivity_full(habitat, barrier, distance)
+  .habitat_connectivity_full(habitat, barrier, distance)
 }
 
 #' @noRd
-.terra_habitat_connectivity_full <- function(habitat, barrier, distance) {
+.habitat_connectivity_full <- function(habitat, barrier, distance) {
   cli::cli_progress_step("Creating barrier mask")
   barrier_mask <- create_barrier_mask(barrier = barrier)
 
   cli::cli_progress_step("Removing habitat underneath barrier")
-  remaining_habitat <- terra_remove_habitat_under_barrier(
+  remaining_habitat <- remove_habitat_under_barrier(
     habitat = habitat,
     barrier_mask = barrier_mask
   )
 
   cli::cli_progress_step("Adding buffer of {distance}m to habitat layer")
-  buffered_habitat <- terra_habitat_buffer(
+  buffered_habitat <- habitat_buffer(
     habitat = remaining_habitat,
     distance = distance
   )
 
   cli::cli_progress_step("Fragmenting habitat layer along barrier intersection")
-  fragmentation_raster <- terra_fragment_habitat(
+  fragmentation_raster <- fragment_habitat(
     buffered_habitat,
     barrier_mask
   )
 
   cli::cli_progress_step("Assigning patches ID to fragments")
-  patch_id_raster <- terra_assign_patches_to_fragments(
+  patch_id_raster <- assign_patches_to_fragments(
     remaining_habitat = remaining_habitat,
     fragment = fragmentation_raster
   ) |>
-    terra_add_patch_area()
+    add_patch_area()
 
   cli::cli_progress_step("Summarising area in each patch")
-  terra_areas_connected <- terra_aggregate_connected_patches(patch_id_raster)
+  areas_connected <- aggregate_connected_patches(patch_id_raster)
 
   # Return all intermediate results
   list(
     buffered_habitat = buffered_habitat,
     patch_id_raster = patch_id_raster,
-    terra_areas_connected = terra_areas_connected,
+    areas_connected = areas_connected,
     barrier_mask = barrier_mask,
     remaining_habitat = remaining_habitat
   )

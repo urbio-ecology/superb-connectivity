@@ -8,7 +8,7 @@
 #'
 #' @returns SF object with buffered and unioned habitat geometry.
 #' @export
-habitat_buffer <- function(habitat, distance) {
+sf_habitat_buffer <- function(habitat, distance) {
   # buffer by the required distance
   habitat_buffer <- sf::st_buffer(x = habitat, dist = distance, nQuadSegs = 5)
   # union creates one large polygon rather than multiple small ones
@@ -26,7 +26,7 @@ habitat_buffer <- function(habitat, distance) {
 #'
 #' @returns SF object with individual habitat fragments, each with a unique ID.
 #' @export
-fragment_habitat <- function(habitat_buffered, barrier) {
+sf_fragment_habitat <- function(habitat_buffered, barrier) {
   # Remove road polygon areas from buffered habitat polygon, creating gaps
   habitat_buffered_no_roads <- sf::st_difference(habitat_buffered, barrier)
   # creates individual polygons, rather than one mega polygon
@@ -49,7 +49,7 @@ fragment_habitat <- function(habitat_buffered, barrier) {
 #'
 #' @returns SF object with habitat patches that don't intersect barriers.
 #' @export
-remove_habitat_under_barrier <- function(habitat, barrier) {
+sf_remove_habitat_under_barrier <- function(habitat, barrier) {
   # remove all habitat under barriers
   habitat_no_barriers <- sf::st_difference(habitat, barrier)
   # split multipolygon into the original number of separate polygons
@@ -67,7 +67,7 @@ remove_habitat_under_barrier <- function(habitat, barrier) {
 #'
 #' @returns SF object with habitat patches labeled by their fragment ID.
 #' @export
-assign_patches_to_fragments <- function(remaining, fragment_id) {
+sf_assign_patches_to_fragments <- function(remaining, fragment_id) {
   intersects <- sf::st_intersects(remaining, fragment_id)
   membership <- sapply(intersects, dplyr::first)
   habitat_id <- sf::st_sf(geometry = remaining) |>
@@ -81,7 +81,7 @@ assign_patches_to_fragments <- function(remaining, fragment_id) {
 #'
 #' @returns SF object with added `area` column in square meters.
 #' @export
-add_patch_area <- function(patches) {
+sf_add_patch_area <- function(patches) {
   patches |>
     dplyr::mutate(area = sf::st_area(geometry))
 }
@@ -96,7 +96,7 @@ add_patch_area <- function(patches) {
 #'   columns.
 #' @export
 #' @export
-aggregate_connected_patches <- function(patch_areas) {
+sf_aggregate_connected_patches <- function(patch_areas) {
   summed <- patch_areas |>
     sf::st_drop_geometry() |>
     dplyr::group_by(patch_id) |>
@@ -129,21 +129,21 @@ aggregate_connected_patches <- function(patch_areas) {
 #' connectivity <- habitat_connectivity(habitat, roads, distance = 100)
 #' }
 #' @export
-habitat_connectivity <- function(habitat, barrier, distance) {
+sf_habitat_connectivity <- function(habitat, barrier, distance) {
   # buffer the habitat layer by the distance
-  buffer <- habitat_buffer(habitat, distance)
+  buffer <- sf_habitat_buffer(habitat, distance)
   # create fragmentation geometry
-  fragment <- fragment_habitat(buffer, barrier)
+  fragment <- sf_fragment_habitat(buffer, barrier)
   # remove all habitat under barriers
-  habitat_remaining <- remove_habitat_under_barrier(habitat, barrier)
+  habitat_remaining <- sf_remove_habitat_under_barrier(habitat, barrier)
   # identify remaining habitat patches according to their connected area
-  habitat_remaining_id <- assign_patches_to_fragments(
+  habitat_remaining_id <- sf_assign_patches_to_fragments(
     habitat_remaining,
     fragment
   ) |>
     # calculate area of each habitat patch
-    add_patch_area()
+    sf_add_patch_area()
   # group the patches by connected area ID
-  areas_connected <- aggregate_connected_patches(habitat_remaining_id)
+  areas_connected <- sf_aggregate_connected_patches(habitat_remaining_id)
   areas_connected
 }

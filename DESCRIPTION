@@ -21,7 +21,7 @@ Description: Analyse and visualise habitat connectivity in urban landscapes,
     accounting for barriers and buffer distances. Includes Shiny app for
     interactive analysis and report generation. Based on methods developed by 
     Kirk et al (2023) <doi:10.1016/j.mex.2022.101989>.
-License: MIT + file LICENSE
+License: GPL (>= 3)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.3

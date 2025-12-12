@@ -50,7 +50,7 @@ library(urbioconnect)
 run_connectivity_app()
 ```
 
-In the future we will host the app on shinyapps and potentially on shinylive as well.
+You can see the shiny app in action at: https://njtierney.shinyapps.io/urbioconnect/
 
 ## Example usage
 

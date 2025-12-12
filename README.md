@@ -5,7 +5,7 @@
 
 <!-- badges: start -->
 
-[![R-CMD-check](https://github.com/urbio-ecology/superb-connectivity/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/urbio-ecology/superb-connectivity/actions/workflows/R-CMD-check.yaml)
+[![R-CMD-check](https://github.com/urbio-ecology/urbioconnect/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/urbio-ecology/urbioconnect/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 The goal of urbioconnect is to demonstrate a workflow of connectivity
@@ -25,7 +25,7 @@ simple directions on how to run the shiny app:
 1.  Install the package:
 
 ``` r
-remotes::install_github("urbio-ecology/superb-connectivity")
+remotes::install_github("urbio-ecology/urbioconnect")
 ```
 
 ``` r

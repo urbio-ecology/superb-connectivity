@@ -82,8 +82,8 @@ ui <- page_navbar(
         card_header("Analysis Parameters"),
         card_body(
           numericInput(
-            inputId = "base_resolution",
-            label = "Base Resolution (m)",
+            inputId = "data_resolution",
+            label = "Data resolution (m)",
             value = 10,
             min = 1,
             max = 100,
@@ -91,8 +91,8 @@ ui <- page_navbar(
           ),
 
           numericInput(
-            inputId = "overlay_resolution",
-            label = "Overlay Resolution (m)",
+            inputId = "target_resolution",
+            label = "Target resolution (m)",
             value = 500,
             min = 1,
             max = 1000,

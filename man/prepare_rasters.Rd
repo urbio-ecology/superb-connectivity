@@ -7,8 +7,8 @@
 prepare_rasters(
   habitat,
   barrier,
-  base_resolution = 10,
-  overlay_resolution = 500
+  data_resolution = 10,
+  target_resolution = 500
 )
 }
 \arguments{
@@ -16,9 +16,9 @@ prepare_rasters(
 
 \item{barrier}{SF object. Barrier spatial data.}
 
-\item{base_resolution}{Numeric. Fine resolution in meters. Default, 10.}
+\item{data_resolution}{Numeric. Fine resolution in meters. Default, 10.}
 
-\item{overlay_resolution}{Numeric. Coarse resolution in meters. Default, 500.}
+\item{target_resolution}{Numeric. Coarse resolution in meters. Default, 500.}
 }
 \value{
 List with \code{habitat_raster} and \code{barrier_raster} elements.

@@ -22,19 +22,19 @@ empty_grid <- function(habitat, resolution = 10) {
 #'
 #' @param habitat SF object. Habitat spatial data.
 #' @param barrier SF object. Barrier spatial data.
-#' @param base_resolution Numeric. Fine resolution in meters. Default, 10.
-#' @param overlay_resolution Numeric. Coarse resolution in meters. Default, 500.
+#' @param data_resolution Numeric. Fine resolution in meters. Default, 10.
+#' @param target_resolution Numeric. Coarse resolution in meters. Default, 500.
 #' @returns List with `habitat_raster` and `barrier_raster` elements.
 #' @export
 prepare_rasters <- function(
   habitat,
   barrier,
-  base_resolution = 10,
-  overlay_resolution = 500
+  data_resolution = 10,
+  target_resolution = 500
 ) {
-  aggregation_factor <- overlay_resolution / base_resolution
+  aggregation_factor <- target_resolution / data_resolution
 
-  grid <- empty_grid(habitat, resolution = base_resolution)
+  grid <- empty_grid(habitat, resolution = data_resolution)
 
   # convert the vector format into a raster
   habitat_raster <- terra::rasterize(habitat, grid, background = NA)

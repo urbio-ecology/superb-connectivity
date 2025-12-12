@@ -45,12 +45,12 @@ habitat <- read_geometry(habitat_file) |>
 # input for the user - text
 species_name <- "Superb Fairy Wren"
 # input for the user - one number,
-overlay_resolution <- 500
+target_resolution <- 500
 # input for the user - one number
-base_resolution <- 10
+data_resolution <- 10
 
 # determined from user input
-aggregation_factor <- overlay_resolution / base_resolution
+aggregation_factor <- target_resolution / data_resolution
 
 # input from the user - can be one number, up to 4 numbers
 # e.g., buffer_distance <- c(100, 250, 400)
@@ -63,7 +63,7 @@ habitat_rasterised <- terra::rasterize(
   habitat,
   terra::rast(
     x = habitat,
-    res = base_resolution,
+    res = data_resolution,
     crs = crs(habitat)
   ),
   background = NA
@@ -73,7 +73,7 @@ barrier_rasterised <- terra::rasterize(
   barrier,
   terra::rast(
     x = habitat,
-    res = base_resolution,
+    res = data_resolution,
     crs = crs(habitat)
   ),
   background = 0
@@ -121,8 +121,8 @@ results_connect_habitat <- map(
       area_squared = areas_connected$area_squared,
       area_total = areas_connected$area,
       buffer_distance = buffer_distance,
-      overlay_resolution = overlay_resolution,
-      base_resolution = base_resolution,
+      target_resolution = target_resolution,
+      data_resolution = data_resolution,
       aggregation_factor = aggregation_factor,
       species_name = species_name
     )

@@ -15,12 +15,12 @@ rast_empty_grid <- function(habitat, resolution = 10) {
 prepare_rasters <- function(
   habitat,
   barrier,
-  base_resolution = 10,
-  overlay_resolution = 500
+  data_resolution = 10,
+  target_resolution = 500
 ) {
-  aggregation_factor <- overlay_resolution / base_resolution
+  aggregation_factor <- target_resolution / data_resolution
 
-  grid <- rast_empty_grid(habitat, resolution = base_resolution)
+  grid <- rast_empty_grid(habitat, resolution = data_resolution)
 
   habitat_raster <- fasterize::fasterize(
     habitat,

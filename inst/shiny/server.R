@@ -188,8 +188,8 @@ server <- function(input, output, session) {
           results$barrier <- barrier_data
 
           # Get parameters
-          base_res <- input$base_resolution
-          overlay_res <- input$overlay_resolution
+          base_res <- input$data_resolution
+          overlay_res <- input$target_resolution
           buffer_dists <- buffer_distances_parsed()
           results$buffer_distances <- buffer_dists
 
@@ -199,8 +199,8 @@ server <- function(input, output, session) {
           rasters <- prepare_rasters(
             habitat = habitat_data,
             barrier = barrier_data,
-            base_resolution = base_res,
-            overlay_resolution = overlay_res
+            data_resolution = base_res,
+            target_resolution = overlay_res
           )
 
           results$habitat_raster <- rasters$habitat_raster
@@ -252,8 +252,8 @@ server <- function(input, output, session) {
                 area_squared = areas$area_squared,
                 area_total = areas$area,
                 buffer_distance = dist,
-                overlay_resolution = overlay_res,
-                base_resolution = base_res,
+                target_resolution = overlay_res,
+                data_resolution = base_res,
                 aggregation_factor = overlay_res / base_res,
                 species_name = input$species_name
               )

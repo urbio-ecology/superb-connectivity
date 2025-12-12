@@ -8,8 +8,8 @@ habitat <- read_geometry(here("data/superbHab.shp")) |> clean() |> st_as_sf()
 prepared_rasters <- prepare_rasters(
   habitat = habitat,
   barrier = barrier,
-  base_resolution = 10,
-  overlay_resolution = 500
+  data_resolution = 10,
+  target_resolution = 500
 )
 
 habitat_raster <- prepared_rasters$habitat_raster
@@ -30,13 +30,13 @@ connectivity_summary <- summarise_connectivity(
 # this is used later
 total_patch_area_hectares <- connectivity_summary$patch_area_total_ha
 
-base_resolution <- 10
-overlay_resolution <- 500
+data_resolution <- 10
+target_resolution <- 500
 prepared_rasters <- prepare_rasters(
   habitat = habitat,
   barrier = barrier,
-  base_resolution = base_resolution,
-  overlay_resolution = overlay_resolution
+  data_resolution = data_resolution,
+  target_resolution = target_resolution
 )
 
 habitat_raster <- prepared_rasters$habitat_raster
@@ -44,7 +44,7 @@ barrier_raster <- prepared_rasters$barrier_raster
 
 # Leave One Out ----
 
-aggregation_factor <- overlay_resolution / base_resolution
+aggregation_factor <- target_resolution / data_resolution
 
 # aggregate rasters to make them the size of the overlay raster
 coarse_raster <- aggregate(barrier_raster * 0, aggregation_factor)

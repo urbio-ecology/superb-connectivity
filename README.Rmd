@@ -16,6 +16,7 @@ knitr::opts_chunk$set(
 
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/urbio-ecology/urbioconnect/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/urbio-ecology/urbioconnect/actions/workflows/R-CMD-check.yaml)
+[![R-universe version](https://urbio-ecology.r-universe.dev/urbioconnect/badges/version)](https://urbio-ecology.r-universe.dev/urbioconnect)
 <!-- badges: end -->
 
 The goal of urbioconnect is to demonstrate a workflow of connectivity analysis for the superb fairy wren. The code has been lightly adapted from [urbanConnect](https://github.com/urbio-ecology/urbanConnect), with the overall method being developed by Holly Kirk et al., in ["Ecological connectivity as a planning tool for the conservation of wildlife in cities"](https://www.sciencedirect.com/science/article/pii/S2215016122003636?via%3Dihub).
@@ -27,17 +28,32 @@ Currently we have focussed our efforts on developing methods to be used in pipel
 1. Install the package:
 
 ```r
+install.packages('urbioconnect', repos = c('https://urbio-ecology.r-universe.dev', 'https://cloud.r-project.org'))
+```
+
+(or if that doesn't work, try using `{remotes}`)
+
+```r
+# install.packages("remotes")
 remotes::install_github("urbio-ecology/urbioconnect")
 ```
+
+2. Load the package:
 
 ```r
 library(urbioconnect)
 ```
 
+3. Launch the app:
+
 ```r
 run_connectivity_app()
 ```
 
-This should launch the app. 
-
 In the future we will host the app on shinyapps and potentially on shinylive as well.
+
+## Example usage
+
+There are many functions in `urbioconnect` that power the shiny app, which you
+can use in your own work. As the package is still under construction, we are
+still fine-tuning things. Stay tuned!

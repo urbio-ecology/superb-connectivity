@@ -28,7 +28,7 @@ barrier_mask <- create_barrier_mask(barrier = barrier_raster)
 
 plot(barrier_mask)
 
-remaining_habitat <- remove_habitat_under_barrier(
+remaining_habitat <- drop_habitat_under_barrier(
   habitat = habitat_raster,
   barrier_mask = barrier_mask
 )
@@ -65,19 +65,3 @@ areas_connected2 <- habitat_connectivity(
   barrier = barrier_raster,
   distance = 250
 )
-# and as one step
-# rast_areas_connected2 <- rast_habitat_connectivity(
-#   habitat = habitat_raster,
-#   barrier = barrier_raster,
-#   distance = 250
-# )
-# # these values are the same
-# summarise_connectivity(
-#   area_squared = rast_areas_connected$area_squared,
-#   area_total = rast_areas_connected$area
-# )
-#
-# summarise_connectivity(
-#   area_squared = rast_areas_connected2$area_squared,
-#   area_total = rast_areas_connected2$area
-# )

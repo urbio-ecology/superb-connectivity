@@ -1,5 +1,4 @@
 library(fasterize)
-library(fs)
 library(glue)
 library(sf)
 library(stringr)
@@ -327,7 +326,7 @@ server <- function(input, output, session) {
   outputOptions(output, "show_buffer_comparison", suspendWhenHidden = FALSE)
 
   # Output: Habitat, Buffered Habitat, and Barrier - Tabbed Plots ----
-  output$plot_barrier_habitat_buffer_tabs <- renderUI({
+  output$gg_barrier_habitat_buffer_tabs <- renderUI({
     req(results$ready)
 
     # Create color palette
@@ -378,7 +377,7 @@ server <- function(input, output, session) {
           my_buffered <- buffered_habitat
           my_distance <- buffer_distance
           output[[output_name]] <- renderPlot({
-            plot_barrier_habitat_buffer(
+            gg_barrier_habitat_buffer(
               barrier = results$barrier_raster,
               buffered = my_buffered,
               habitat = results$habitat_raster,

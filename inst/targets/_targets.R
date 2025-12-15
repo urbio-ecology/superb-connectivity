@@ -34,12 +34,6 @@ tar_assign({
   data_resolution <- tar_target(10)
   aggregation_factor <- tar_target(target_resolution / data_resolution)
   buffer_distance <- tar_target(buffer_distance_m)
-  # ran into error
-  # Error storing output: [writeRaster] there are no cell values
-  # TODO lodge bug report for geotargets
-  # empty_grid <- empty_grid(habitat, resolution = data_resolution) |>
-  #   tar_target()
-  # this is now going into `terra::rasterize` - but is there another way?
 
   # convert the vector format into a raster
   habitat_rasterised <- terra::rasterize(
@@ -92,7 +86,7 @@ tar_assign({
   barrier_mask <- create_barrier_mask(barrier = barrier_raster) |>
     tar_terra_rast()
 
-  remaining_habitat <- remove_habitat_under_barrier(
+  remaining_habitat <- drop_habitat_under_barrier(
     habitat = habitat_raster,
     barrier_mask = barrier_mask
   ) |>
@@ -172,7 +166,7 @@ tar_assign({
   ) |>
     tar_target()
 
-  saved_spatraster <- plot_save_barrier_habitat_buffer(
+  saved_spatraster <- plot_barrier_habitat_buffer(
     barrier = barrier_raster,
     buffered = buffered_habitat,
     habitat = habitat_raster,
@@ -186,20 +180,6 @@ tar_assign({
     tar_file(
       pattern = map(buffered_habitat, buffer_distance)
     )
-
-  # <- map2(
-  #   .x = buffered_habitat,
-  #   .y = buffer_distance,
-  #   .f = function(buffer, distance) {
-  #     plot_barrier_habitat_buffer(
-  #       barrier = barrier_raster,
-  #       buffer = buffer,
-  #       habitat = habitat_raster,
-  #       distance = distance
-  #     )
-  #   }
-  # ) |>
-  #   setNames(buffer_distance)
 
   ## TODO query this from @mdsumner
   ## how connected is your landscape?

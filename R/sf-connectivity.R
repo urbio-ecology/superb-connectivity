@@ -49,7 +49,7 @@ sf_fragment_habitat <- function(habitat_buffered, barrier) {
 #'
 #' @returns SF object with habitat patches that don't intersect barriers.
 #' @export
-sf_remove_habitat_under_barrier <- function(habitat, barrier) {
+sf_drop_habitat_under_barrier <- function(habitat, barrier) {
   # remove all habitat under barriers
   habitat_no_barriers <- sf::st_difference(habitat, barrier)
   # split multipolygon into the original number of separate polygons
@@ -69,7 +69,7 @@ sf_remove_habitat_under_barrier <- function(habitat, barrier) {
 #' @export
 sf_assign_patches_to_fragments <- function(remaining, fragment_id) {
   intersects <- sf::st_intersects(remaining, fragment_id)
-  membership <- sapply(intersects, dplyr::first)
+  membership <- vapply(intersects, dplyr::first, FUN.VALUE = numeric(1))
   habitat_id <- sf::st_sf(geometry = remaining) |>
     dplyr::mutate(patch_id = membership)
   habitat_id
@@ -135,7 +135,7 @@ sf_habitat_connectivity <- function(habitat, barrier, distance) {
   # create fragmentation geometry
   fragment <- sf_fragment_habitat(buffer, barrier)
   # remove all habitat under barriers
-  habitat_remaining <- sf_remove_habitat_under_barrier(habitat, barrier)
+  habitat_remaining <- sf_drop_habitat_under_barrier(habitat, barrier)
   # identify remaining habitat patches according to their connected area
   habitat_remaining_id <- sf_assign_patches_to_fragments(
     habitat_remaining,

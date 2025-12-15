@@ -11,7 +11,6 @@ rast_empty_grid <- function(habitat, resolution = 10) {
   grid
 }
 
-# TODO work out if there is a way to separate this out into two steps?
 prepare_rasters <- function(
   habitat,
   barrier,
@@ -80,7 +79,7 @@ create_barrier_mask <- function(barrier) {
   barrier_multiplier
 }
 
-rast_remove_habitat_under_barrier <- function(habitat, barrier_mask) {
+rast_drop_habitat_under_barrier <- function(habitat, barrier_mask) {
   # mask out the barrier bits from habitat_raster
   habitat_no_barriers <- raster::mask(habitat, barrier_mask)
   habitat_no_barriers
@@ -148,7 +147,7 @@ rast_habitat_connectivity <- function(
   barrier_mask <- create_barrier_mask(barrier = barrier)
 
   cli::cli_progress_step("Removing habitat underneath barrier")
-  remaining_habitat <- rast_remove_habitat_under_barrier(
+  remaining_habitat <- rast_drop_habitat_under_barrier(
     habitat = habitat,
     barrier_mask = barrier_mask
   )

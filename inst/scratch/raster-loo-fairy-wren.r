@@ -59,7 +59,7 @@ coarse_raster <- aggregate(barrier_raster * 0, aggregation_factor)
 # make a copy of the coarse overlay raster to store effective mesh size
 connectivity <- coarse_raster
 # make a copy to store the CHANGE in connectivity
-changeConnect <- coarse_raster
+change_in_connectivity <- coarse_raster
 
 barrier_mask <- create_barrier_mask(barrier = barrier_raster)
 
@@ -96,7 +96,7 @@ for (i in seq_len(5)) {
   )
 
   # mask out the barrier bits from habitat_raster
-  loo_remaining_habitat <- rast_remove_habitat_under_barrier(
+  loo_remaining_habitat <- rast_drop_habitat_under_barrier(
     habitat = loo_habitat,
     barrier_mask = barrier_mask
   )
@@ -137,7 +137,7 @@ for (i in seq_len(5)) {
   # store in rasters
   connectivity[i] <- loo_effective_mesh_ha
   # difference between effective mesh calculated above
-  changeConnect[i] <- connectivity_summary$effective_mesh_ha -
+  change_in_connectivity[i] <- connectivity_summary$effective_mesh_ha -
     loo_effective_mesh_ha
 }
 

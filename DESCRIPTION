@@ -22,32 +22,24 @@ Description: Analyse and visualise habitat connectivity in urban landscapes,
     interactive analysis and report generation. Based on methods developed by 
     Kirk et al (2023) <doi:10.1016/j.mex.2022.101989>.
 License: GPL (>= 3)
-URL: https://urbio-ecology.r-universe.dev/urbioconnect
+URL: https://urbio-ecology.r-universe.dev/urbioconnect, https://github.com/urbio-ecology/urbioconnect
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.3
 Depends:
   R (>= 4.2.0)
 Imports:
-    bslib,
     colorspace,
-    conflicted,
-    DT,
     dplyr,
-    fasterize,
-    fs,
     ggplot2,
     glue,
-    gridExtra,
     here,
     knitr,
-    memoise,
     purrr,
     quarto,
     scico,
     sf,
     shiny,
-    shinyjs,
     stringr,
     terra,
     tibble,
@@ -59,13 +51,19 @@ Imports:
     rlang,
     scales
 Suggests:
+    bslib,
+    conflicted,
     crew,
+    DT,
+    fasterize,
     geotargets,
+    gridExtra,
     igraph,
     marquee,
     magick,
     prettyunits,
     raster,
+    shinyjs,
     stars,
     targets,
     tarchetypes,
@@ -73,3 +71,4 @@ Suggests:
     vctrs,
     withr
 Config/testthat/edition: 3
+BugReports: https://github.com/urbio-ecology/urbioconnect/issues

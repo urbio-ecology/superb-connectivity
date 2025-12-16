@@ -210,7 +210,7 @@ ui <- page_navbar(
         card(
           card_header("Habitat, Buffered Habitat, and Barrier"),
           card_body(
-            uiOutput("plot_barrier_habitat_buffer_tabs")
+            uiOutput("gg_barrier_habitat_buffer_tabs")
           )
         )
       ),
@@ -339,8 +339,10 @@ ui <- page_navbar(
         card_body(
           h4("Overview"),
           p(
-            "This application analyzes habitat connectivity for urban biodiversity.",
-            "It calculates how habitat patches are connected across different buffer distances,",
+            "This application analyzes habitat connectivity for urban \\
+            biodiversity.",
+            "It calculates how habitat patches are connected across different \\
+            buffer distances,",
             "accounting for barriers like roads and urban infrastructure."
           ),
           hr(),
@@ -350,7 +352,7 @@ ui <- page_navbar(
             tags$li("Specify species name and buffer distances"),
             tags$li("Run the analysis to calculate connectivity metrics"),
             tags$li(
-              "View results including patch identification and connectivity statistics"
+              "View results including patch ID and connectivity statistics"
             ),
             tags$li("Download results and reports")
           ),
@@ -360,7 +362,7 @@ ui <- page_navbar(
           h5("Uploading Shapefiles"),
           p(
             strong("Important:"),
-            "Shapefiles consist of multiple files that work together. You must upload ALL required files:"
+            "Shapefiles consist of multiple files; upload all required files:"
           ),
 
           tags$div(
@@ -415,7 +417,7 @@ ui <- page_navbar(
                 ),
                 tags$li(
                   strong("Solution:"),
-                  " Make sure you selected ALL shapefile components when uploading"
+                  " Make sure you selected ALL shapefiles when uploading"
                 )
               )
             ),

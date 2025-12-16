@@ -62,7 +62,7 @@ buffer_barrier_plots <- map2(
   .x = buffered_habitat,
   .y = buffer_distance,
   .f = function(buffered_habitat, buffer_distance) {
-plot_barrier_habitat_buffer(
+gg_barrier_habitat_buffer(
   barrier = barrier_raster,
   buffered = buffered_habitat,
   habitat = habitat_raster,

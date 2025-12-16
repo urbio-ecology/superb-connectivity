@@ -100,7 +100,7 @@ create_barrier_mask <- function(barrier) {
 #' @param barrier_mask Terra SpatRaster. Barrier mask.
 #' @returns Terra SpatRaster with habitat remaining after barrier removal.
 #' @export
-remove_habitat_under_barrier <- function(habitat, barrier_mask) {
+drop_habitat_under_barrier <- function(habitat, barrier_mask) {
   habitat_no_barriers <- terra::mask(habitat, barrier_mask)
   habitat_no_barriers
 }
@@ -202,7 +202,7 @@ habitat_connectivity <- function(
   barrier_mask <- create_barrier_mask(barrier = barrier)
 
   cli::cli_progress_step("Removing habitat underneath barrier")
-  remaining_habitat <- remove_habitat_under_barrier(
+  remaining_habitat <- drop_habitat_under_barrier(
     habitat = habitat,
     barrier_mask = barrier_mask
   )
@@ -257,7 +257,7 @@ habitat_connectivity_full <- function(
   barrier_mask <- create_barrier_mask(barrier = barrier)
 
   cli::cli_progress_step("Removing habitat underneath barrier")
-  remaining_habitat <- remove_habitat_under_barrier(
+  remaining_habitat <- drop_habitat_under_barrier(
     habitat = habitat,
     barrier_mask = barrier_mask
   )

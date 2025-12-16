@@ -29,7 +29,7 @@ col2hex <- function(color_name) {
 #'
 #' @returns A ggplot2 object.
 #' @export
-plot_barrier_habitat_buffer <- function(
+gg_barrier_habitat_buffer <- function(
   barrier,
   buffered,
   habitat,

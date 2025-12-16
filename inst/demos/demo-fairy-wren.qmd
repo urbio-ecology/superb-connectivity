@@ -100,7 +100,7 @@ Then we remove all habitat that lies under the barriers, and identify the patche
 
 ```{r}
 # remove all habitat under barriers
-remaining_habitat <- remove_habitat_under_barrier(habitat, barrier = barrier)
+remaining_habitat <- drop_habitat_under_barrier(habitat, barrier = barrier)
 
 # identify remaining habitat patches according to which connected area they
 # belong to

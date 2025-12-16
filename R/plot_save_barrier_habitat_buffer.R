@@ -13,7 +13,7 @@
 #' @return saved ggplot and file path
 #' @author njtierney
 #' @export
-plot_save_barrier_habitat_buffer <- function(
+plot_barrier_habitat_buffer <- function(
   barrier,
   buffered,
   habitat,
@@ -24,7 +24,7 @@ plot_save_barrier_habitat_buffer <- function(
   col_habitat,
   col_paper
 ) {
-  plot_barrier_habitat <- plot_barrier_habitat_buffer(
+  plot_barrier_habitat <- gg_barrier_habitat_buffer(
     barrier = barrier,
     habitat = habitat,
     buffered = buffered,

@@ -9,6 +9,10 @@
 #' @param resolution Numeric. Cell size in meters (default: 10).
 #' @returns Terra SpatRaster. Empty raster grid.
 #' @export
+#' @examples
+#' barrier <- example_barrier()
+#' habitat <- example_habitat()
+#' empty_grid(habitat)
 empty_grid <- function(habitat, resolution = 10) {
   grid <- terra::rast(
     x = habitat,

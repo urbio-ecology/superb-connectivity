@@ -5,12 +5,12 @@ format: html
 
 ```{r include=FALSE}
 #| label: setup
-source(here::here("packages.R"))
-dir_map(path = "R/", fun = source)
+library(urbioconnect)
 # baseline total habitat areas needed for comparison (in m2 not Ha)
-barrier <- read_geometry(here("data/superb-fairy-wren/allSFWRoads.shp")) |> 
+barrier <- read_geometry(here::here("data-raw/superb-fairy-wren/allSFWRoads.shp")) |> 
   st_as_sf()
-habitat <- read_geometry(here("data/superb-fairy-wren/superbHab.shp")) |> 
+
+habitat <- read_geometry(here::here("data-raw/superb-fairy-wren/superbHab.shp")) |>
   clean() |> 
   st_as_sf()
 ```

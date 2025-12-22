@@ -32,9 +32,9 @@ conflicts_prefer(dplyr::select)
 lapply(list.files("R/", pattern = "*.R|*.r", full.names = TRUE), source)
 
 # shapefile inputs from user
-barrier_file <- here("data/superb-fairy-wren/allSFWRoads.shp")
+barrier_file <- here("data-raw/superb-fairy-wren/allSFWRoads.shp")
 # shapefile inputs from user
-habitat_file <- here("data/superb-fairy-wren/superbHab.shp")
+habitat_file <- here("data-raw/superb-fairy-wren/superbHab.shp")
 # our custom function to read in data
 barrier <- read_geometry(barrier_file) |> st_as_sf()
 habitat <- read_geometry(habitat_file) |>

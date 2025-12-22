@@ -17,3 +17,8 @@ Terra SpatRaster. Empty raster grid.
 \description{
 Create empty terra raster grid
 }
+\examples{
+barrier <- example_barrier()
+habitat <- example_habitat()
+empty_grid(habitat)
+}

@@ -2,8 +2,8 @@ library(terra)
 library(tidyterra)
 library(tidyverse)
 
-habitat_file <- system.file("ex/lizard_habitat.tif", package = "urbioconnect")
-barrier_file <- system.file("ex/lizard_barrier.shp", package = "urbioconnect")
+habitat_file <- file.path("ex/lizard_habitat.tif")
+barrier_file <- file.path("ex/lizard_barrier.shp")
 
 lizard_habitat <- terra::rast(habitat_file)
 
@@ -22,10 +22,6 @@ lizard_barrier <- terra::rasterize(
   background = 0
 )
 
-# fix corrupted CRS to proper MGA zone 55
-terra::crs(lizard_habitat) <- sf::st_crs(28355)$wkt
-terra::crs(lizard_barrier) <- sf::st_crs(28355)$wkt
-
 # coarser resolution for computational efficiency (metres)
 target_resolution <- 2
 
@@ -43,6 +39,7 @@ lizard_habitat_raster <- terra::resample(
   target_grid,
   method = "near"
 )
+
 lizard_barrier_raster <- terra::resample(
   lizard_barrier,
   target_grid,
@@ -60,6 +57,7 @@ all.equal(
   terra::ncell(lizard_barrier_raster)
 )
 
+
 terra::writeRaster(
   x = lizard_habitat_raster,
   filename = "ex/lizard_habitat_raster.tif",
@@ -72,6 +70,3 @@ terra::writeRaster(
   filetype = "COG",
   overwrite = TRUE
 )
-
-# but now when we read this back in we get an invalid CRS?
-terra::rast("ex/lizard_barrier_raster.tif") |> crs()

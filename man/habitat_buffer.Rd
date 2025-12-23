@@ -15,5 +15,12 @@ habitat_buffer(habitat, distance)
 Terra SpatRaster with buffered habitat.
 }
 \description{
-Buffer habitat raster
+Buffer around the habitat a given distance in metres using \code{\link[terra:focal]{terra::focal()}}.
+We recommend you buffer the habitat by half the threshold distance (the
+distance past which habitat patches are no longer considered connected).
+}
+\examples{
+lizard_habitat <- example_habitat()
+# run with a small buffer distance
+habitat_buffer(lizard_habitat, 5)
 }

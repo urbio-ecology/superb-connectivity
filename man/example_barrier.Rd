@@ -11,7 +11,7 @@ Read a raster of lizard barrier data in Australia
 }
 \examples{
 library(terra)
-lizard_barrier <- read_lizard_barrier()
+lizard_barrier <- example_barrier()
 plot(lizard_barrier)
 }
 \keyword{datasets}

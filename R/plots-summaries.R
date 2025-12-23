@@ -29,6 +29,22 @@ col2hex <- function(color_name) {
 #'
 #' @returns A ggplot2 object.
 #' @export
+#' @examples
+#' lizard_habitat <- example_habitat()
+#' lizard_barrier <- example_barrier()
+#' lizard_buffered <- habitat_buffer(lizard_habitat, 10)
+#' gg_bar_hab_buf <- gg_barrier_habitat_buffer(
+#'   barrier = lizard_barrier,
+#'   buffered = lizard_buffered,
+#'   habitat = lizard_habitat,
+#'   distance = 10,
+#'   species_name = "Blue Tongue Lizard",
+#'   col_barrier = "white",
+#'   col_buffer = "lightgreen",
+#'   col_habitat = "seagreen",
+#'   col_paper = "grey50"
+#' )
+#' gg_bar_hab_buf
 gg_barrier_habitat_buffer <- function(
   barrier,
   buffered,
@@ -63,6 +79,7 @@ gg_barrier_habitat_buffer <- function(
     )
 }
 
+# TODO this might only be needed as an internal function
 #' Display plots in tabs
 #'
 #' Helper function to display a list of plots with tab headers in R Markdown
@@ -81,6 +98,7 @@ show_tabs <- function(the_list, message = NULL) {
   }
 }
 
+# TODO this might only be needed as an internal function
 #' Display images in tabs
 #'
 #' Helper function to display a list of image paths with tab headers in R
@@ -122,6 +140,21 @@ to_sentence <- function(x) {
 #'
 #' @returns A ggplot2 object showing patches with distinct colors.
 #' @export
+#' @examples
+#' lizard_habitat <- example_habitat()
+#' lizard_barrier <- example_barrier()
+#' buffered_habitat <- habitat_buffer(lizard_habitat, 5)
+#' barrier_mask <- create_barrier_mask(lizard_barrier)
+#' fragmented <- fragment_habitat(buffered_habitat, barrier_mask)
+#' remaining_habitat <- drop_habitat_under_barrier(
+#'   habitat = lizard_habitat,
+#'   barrier = lizard_barrier
+#'   )
+#' fragment_patches <- assign_patches_to_fragments(
+#'   remaining_habitat = remaining_habitat,
+#'   fragment = fragmented
+#'   ) |> add_patch_area()
+#' plot_patches(fragment_patches)
 plot_patches <- function(
   patch_id,
   distance,
@@ -166,7 +199,8 @@ plot_patches <- function(
 #' Plot connectivity metrics across buffer distances
 #'
 #' Creates faceted line plots showing how connectivity metrics change with
-#' different buffer distances.
+#' different buffer distances. This works best when you have multiple buffer
+#' distances, otherwise it will just be a plot with one point.
 #'
 #' @param results_connect_habitat Data frame. Connectivity summary results with
 #'   columns for species_name, buffer_distance, and various metrics.

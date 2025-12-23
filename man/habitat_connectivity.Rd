@@ -11,7 +11,7 @@ habitat_connectivity(habitat, barrier, distance, verbose = TRUE)
 
 \item{barrier}{Terra SpatRaster. Barrier raster.}
 
-\item{distance}{Numeric. Threshold distance in meters.}
+\item{distance}{Numeric. Buffer distance in meters.}
 
 \item{verbose}{Logical. Display progress messages (default: TRUE).}
 }
@@ -19,5 +19,24 @@ habitat_connectivity(habitat, barrier, distance, verbose = TRUE)
 Data frame with connectivity metrics per patch.
 }
 \description{
-Calculate habitat connectivity using terra
+This performs the entire connectivity workflow, returning a dataframe output.
+The steps are:
+\itemize{
+\item \code{\link[=create_barrier_mask]{create_barrier_mask()}}: Creating barrier mask.
+\item \code{\link[=drop_habitat_under_barrier]{drop_habitat_under_barrier()}}: Removes Habitat underneath barrier.
+\item \code{\link[=habitat_buffer]{habitat_buffer()}}: Adds buffer of distance (m) to habitat layer.
+\item \code{\link[=fragment_habitat]{fragment_habitat()}}: Fragments habitat layer along barrier intersection.
+\item \code{\link[=assign_patches_to_fragments]{assign_patches_to_fragments()}}: Assign patch ID to fragments.
+\item \code{\link[=aggregate_connected_patches]{aggregate_connected_patches()}}: Summarise area in each patch.
+}
+}
+\examples{
+lizard_habitat <- example_habitat()
+lizard_barrier <- example_barrier()
+connectivity <- habitat_connectivity(
+    habitat = lizard_habitat,
+    barrier = lizard_barrier,
+    distance = 10
+  )
+connectivity
 }

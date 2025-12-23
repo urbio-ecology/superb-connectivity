@@ -10,7 +10,6 @@ example_barrier_shp()
 Read a shapefile of lizard habitat data in Australia as an SF object
 }
 \examples{
-library(terra)
 lizard_barrier_shp <- example_barrier_shp()
 plot(lizard_barrier_shp)
 }

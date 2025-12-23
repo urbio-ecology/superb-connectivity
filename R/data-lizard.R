@@ -5,9 +5,8 @@
 #'
 #' @keywords datasets
 #' @examples
-#' library(terra)
 #' lizard_habitat <- example_habitat()
-#' plot(lizard_habitat)
+#' image(lizard_habitat)
 #' @export
 example_habitat <- function() {
   habitat_file <- system.file(
@@ -24,7 +23,6 @@ example_habitat <- function() {
 #'
 #' @keywords datasets
 #' @examples
-#' library(terra)
 #' lizard_barrier_shp <- example_barrier_shp()
 #' plot(lizard_barrier_shp)
 #' @export
@@ -45,7 +43,7 @@ example_barrier_shp <- function() {
 #' @keywords datasets
 #' @examples
 #' library(terra)
-#' lizard_barrier <- read_lizard_barrier()
+#' lizard_barrier <- example_barrier()
 #' plot(lizard_barrier)
 #' @export
 example_barrier <- function() {

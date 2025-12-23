@@ -11,8 +11,7 @@ Read an example raster (tif) of lizard habitat data in Australia using
 \link[terra:rast]{terra::rast}.
 }
 \examples{
-library(terra)
 lizard_habitat <- example_habitat()
-plot(lizard_habitat)
+image(lizard_habitat)
 }
 \keyword{datasets}

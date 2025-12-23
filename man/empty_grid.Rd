@@ -2,7 +2,7 @@
 % Please edit documentation in R/terra-connectivity.R
 \name{empty_grid}
 \alias{empty_grid}
-\title{Create empty terra raster grid}
+\title{Create Empty terra raster grid}
 \usage{
 empty_grid(habitat, resolution = 10)
 }
@@ -15,10 +15,5 @@ empty_grid(habitat, resolution = 10)
 Terra SpatRaster. Empty raster grid.
 }
 \description{
-Create empty terra raster grid
-}
-\examples{
-barrier <- example_barrier()
-habitat <- example_habitat()
-empty_grid(habitat)
+Create Empty terra raster grid
 }

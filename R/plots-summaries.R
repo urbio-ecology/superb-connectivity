@@ -143,7 +143,8 @@ to_sentence <- function(x) {
 #' @examples
 #' lizard_habitat <- example_habitat()
 #' lizard_barrier <- example_barrier()
-#' buffered_habitat <- habitat_buffer(lizard_habitat, 5)
+#' buffer_dist <- 5
+#' buffered_habitat <- habitat_buffer(lizard_habitat, buffer_dist)
 #' barrier_mask <- create_barrier_mask(lizard_barrier)
 #' fragmented <- fragment_habitat(buffered_habitat, barrier_mask)
 #' remaining_habitat <- drop_habitat_under_barrier(
@@ -154,7 +155,7 @@ to_sentence <- function(x) {
 #'   remaining_habitat = remaining_habitat,
 #'   fragment = fragmented
 #'   ) |> add_patch_area()
-#' plot_patches(fragment_patches)
+#' plot_patches(fragment_patches, distance = buffer_dist)
 plot_patches <- function(
   patch_id,
   distance,
@@ -175,8 +176,10 @@ plot_patches <- function(
   colour_map <- my_colours[colour_indices]
   names(colour_map) <- unique_vals
 
+  patch_raster <- terra::as.factor(patch_id$patch_id)
+
   ggplot2::ggplot() +
-    tidyterra::geom_spatraster(data = patch_id$patch_id) +
+    tidyterra::geom_spatraster(data = patch_raster) +
     ggplot2::scale_fill_manual(values = colour_map, na.value = NA) +
     ggplot2::theme_minimal() +
     ggplot2::theme(legend.position = "none") +

@@ -7,11 +7,22 @@
 create_barrier_mask(barrier)
 }
 \arguments{
-\item{barrier}{Terra SpatRaster. Barrier layer.}
+\item{barrier}{Terra SpatRaster. Barrier layer with 1 = barrier,
+NA = no barrier.}
 }
 \value{
-Terra SpatRaster. Mask with NA where barriers exist.
+Terra SpatRaster. Mask with 1 where movement is allowed, NA where
+barriers exist.
 }
 \description{
-Create barrier mask
+Converts a barrier layer into a multiplier mask for connectivity analysis.
+Takes a raster where barriers are coded as 1 (and non-barriers as NA), and
+inverts it to produce a mask with NA values where barriers exist and 1
+elsewhere. This format allows barriers to be applied by multiplying the
+mask with connectivity surfaces, effectively blocking movement through
+barrier cells.
+}
+\examples{
+lizard_barrier <- example_barrier()
+create_barrier_mask(lizard_barrier)
 }

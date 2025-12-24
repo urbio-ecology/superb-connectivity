@@ -17,3 +17,12 @@ Terra SpatRaster with habitat remaining after barrier removal.
 \description{
 Remove habitat under barriers
 }
+\examples{
+lizard_habitat <- example_habitat()
+lizard_barrier <- example_barrier()
+barrier_mask <- create_barrier_mask(lizard_barrier)
+remaining_habitat <- drop_habitat_under_barrier(
+  habitat = lizard_habitat,
+  barrier = lizard_barrier
+  )
+}

@@ -15,5 +15,6 @@ A ggplot2 object with faceted plots of connectivity metrics.
 }
 \description{
 Creates faceted line plots showing how connectivity metrics change with
-different buffer distances.
+different buffer distances. This works best when you have multiple buffer
+distances, otherwise it will just be a plot with one point.
 }

@@ -11,7 +11,7 @@ habitat_connectivity_full(habitat, barrier, distance, verbose = TRUE)
 
 \item{barrier}{Terra SpatRaster. Barrier raster.}
 
-\item{distance}{Numeric. Threshold distance in meters.}
+\item{distance}{Numeric. Buffer distance in meters.}
 
 \item{verbose}{Logical. Display progress messages (default: TRUE).}
 }

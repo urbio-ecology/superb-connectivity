@@ -3,7 +3,7 @@
 # create an empty raster grid of the correct dimensions, resolution
 # set the CRS to the same as the habitat layer
 
-#' Create empty terra raster grid
+#' Create Empty terra raster grid
 #'
 #' @param habitat SF object or terra SpatRaster.
 #' @param resolution Numeric. Cell size in meters (default: 10).
@@ -54,15 +54,20 @@ prepare_rasters <- function(
 }
 
 
-# buffer the habitat by half the threshold distance (the distance past
-# which habitat patches are no longer considered connected)
-
 #' Buffer habitat raster
+#'
+#' Buffer around the habitat a given distance in metres using [terra::focal()].
+#'  We recommend you buffer the habitat by half the threshold distance (the
+#'  distance past which habitat patches are no longer considered connected).
 #'
 #' @param habitat Terra SpatRaster. Habitat raster.
 #' @param distance Numeric. Buffer distance in meters.
 #' @returns Terra SpatRaster with buffered habitat.
 #' @export
+#' @examples
+#' lizard_habitat <- example_habitat()
+#' # run with a small buffer distance
+#' habitat_buffer(lizard_habitat, 5)
 habitat_buffer <- function(habitat, distance) {
   buffer_window <- terra::focalMat(
     x = habitat,
@@ -82,9 +87,21 @@ habitat_buffer <- function(habitat, distance) {
 
 #' Create barrier mask
 #'
-#' @param barrier Terra SpatRaster. Barrier layer.
-#' @returns Terra SpatRaster. Mask with NA where barriers exist.
+#' Converts a barrier layer into a multiplier mask for connectivity analysis.
+#'   Takes a raster where barriers are coded as 1 (and non-barriers as NA), and
+#'   inverts it to produce a mask with NA values where barriers exist and 1
+#'   elsewhere. This format allows barriers to be applied by multiplying the
+#'   mask with connectivity surfaces, effectively blocking movement through
+#'   barrier cells.
+#'
+#' @param barrier Terra SpatRaster. Barrier layer with 1 = barrier,
+#'   NA = no barrier.
+#' @returns Terra SpatRaster. Mask with 1 where movement is allowed, NA where
+#'   barriers exist.
 #' @export
+#' @examples
+#' lizard_barrier <- example_barrier()
+#' create_barrier_mask(lizard_barrier)
 create_barrier_mask <- function(barrier) {
   # convert barrier layer (1s and NAs) to a multiplier (NA where barrier is)
   barrier_multiplier <- barrier
@@ -100,6 +117,14 @@ create_barrier_mask <- function(barrier) {
 #' @param barrier_mask Terra SpatRaster. Barrier mask.
 #' @returns Terra SpatRaster with habitat remaining after barrier removal.
 #' @export
+#' @examples
+#' lizard_habitat <- example_habitat()
+#' lizard_barrier <- example_barrier()
+#' barrier_mask <- create_barrier_mask(lizard_barrier)
+#' remaining_habitat <- drop_habitat_under_barrier(
+#'   habitat = lizard_habitat,
+#'   barrier = lizard_barrier
+#'   )
 drop_habitat_under_barrier <- function(habitat, barrier_mask) {
   habitat_no_barriers <- terra::mask(habitat, barrier_mask)
   habitat_no_barriers
@@ -111,6 +136,12 @@ drop_habitat_under_barrier <- function(habitat, barrier_mask) {
 #' @param barrier_mask Terra SpatRaster. Barrier mask.
 #' @returns Terra SpatRaster with fragmented habitat.
 #' @export
+#' @examples
+#' lizard_habitat <- example_habitat()
+#' lizard_barrier <- example_barrier()
+#' buffered_habitat <- habitat_buffer(lizard_habitat, 5)
+#' barrier_mask <- create_barrier_mask(lizard_barrier)
+#' fragmented <- fragment_habitat(buffered_habitat, barrier_mask)
 fragment_habitat <- function(buffered_habitat, barrier_mask) {
   buffered_habitat * barrier_mask
 }
@@ -121,6 +152,22 @@ fragment_habitat <- function(buffered_habitat, barrier_mask) {
 #' @param fragment Terra SpatRaster. Fragment geometry.
 #' @returns Terra SpatRaster with patch IDs.
 #' @export
+#' @examples
+#' lizard_habitat <- example_habitat()
+#' lizard_barrier <- example_barrier()
+#' buffered_habitat <- habitat_buffer(lizard_habitat, 5)
+#' barrier_mask <- create_barrier_mask(lizard_barrier)
+#' fragmented <- fragment_habitat(buffered_habitat, barrier_mask)
+#' remaining_habitat <- drop_habitat_under_barrier(
+#'   habitat = lizard_habitat,
+#'   barrier = lizard_barrier
+#'   )
+#' fragment_patches <- assign_patches_to_fragments(
+#'   remaining_habitat = remaining_habitat,
+#'   fragment = fragmented
+#'   )
+#' library(terra)
+#' plot(fragment_patches)
 assign_patches_to_fragments <- function(remaining_habitat, fragment) {
   patch_id_raster <- terra::patches(fragment)
   patch_id_raster <- remaining_habitat * patch_id_raster
@@ -129,9 +176,25 @@ assign_patches_to_fragments <- function(remaining_habitat, fragment) {
 
 #' Add patch area layer
 #'
-#' @param raster Terra SpatRaster. Patch ID raster.
+#' @param raster Terra SpatRaster. In the workflow, this is the patch ID raster.
 #' @returns Terra SpatRaster with two layers: patch_id and area.
 #' @export
+#' @examples
+#' lizard_habitat <- example_habitat()
+#' lizard_barrier <- example_barrier()
+#' buffered_habitat <- habitat_buffer(lizard_habitat, 5)
+#' barrier_mask <- create_barrier_mask(lizard_barrier)
+#' fragmented <- fragment_habitat(buffered_habitat, barrier_mask)
+#' remaining_habitat <- drop_habitat_under_barrier(
+#'   habitat = lizard_habitat,
+#'   barrier = lizard_barrier
+#'   )
+#' fragment_patches <- assign_patches_to_fragments(
+#'   remaining_habitat = remaining_habitat,
+#'   fragment = fragmented
+#'   )
+#' library(terra)
+#' add_patch_area(fragment_patches)
 add_patch_area <- function(raster) {
   raster_with_area <- c(raster, terra::cellSize(raster))
   names(raster_with_area) <- c("patch_id", "area")
@@ -144,7 +207,25 @@ add_patch_area <- function(raster) {
 #' @param raster Terra SpatRaster. Raster with patch_id and area layers.
 #' @returns Data frame with patch areas and areas squared.
 #' @export
+#' @examples
+#' lizard_habitat <- example_habitat()
+#' lizard_barrier <- example_barrier()
+#' buffered_habitat <- habitat_buffer(lizard_habitat, 5)
+#' barrier_mask <- create_barrier_mask(lizard_barrier)
+#' fragmented <- fragment_habitat(buffered_habitat, barrier_mask)
+#' remaining_habitat <- drop_habitat_under_barrier(
+#'   habitat = lizard_habitat,
+#'   barrier = lizard_barrier
+#'   )
+#' fragment_patches <- assign_patches_to_fragments(
+#'   remaining_habitat = remaining_habitat,
+#'   fragment = fragmented
+#'   )
+#' library(terra)
+#' patch_areas <- add_patch_area(fragment_patches)
+#' aggregate_connected_patches(patch_areas)
 aggregate_connected_patches <- function(raster) {
+  ## TODO check that this raster has the correct names
   summed <- tibble::tibble(
     patch_id = as.numeric(terra::values(raster$patch_id)),
     area = as.numeric(terra::values(raster$area))
@@ -165,12 +246,30 @@ aggregate_connected_patches <- function(raster) {
 
 #' Calculate habitat connectivity using terra
 #'
+#' This performs the entire connectivity workflow, returning a dataframe output.
+#'   The steps are:
+#'   * [create_barrier_mask()]: Creating barrier mask.
+#'   * [drop_habitat_under_barrier()]: Removes Habitat underneath barrier.
+#'   * [habitat_buffer()]: Adds buffer of distance (m) to habitat layer.
+#'   * [fragment_habitat()]: Fragments habitat layer along barrier intersection.
+#'   * [assign_patches_to_fragments()]: Assign patch ID to fragments.
+#'   * [aggregate_connected_patches()]: Summarise area in each patch.
+#'
 #' @param habitat Terra SpatRaster. Habitat raster.
 #' @param barrier Terra SpatRaster. Barrier raster.
-#' @param distance Numeric. Threshold distance in meters.
+#' @param distance Numeric. Buffer distance in meters.
 #' @param verbose Logical. Display progress messages (default: TRUE).
 #' @returns Data frame with connectivity metrics per patch.
 #' @export
+#' @examples
+#' lizard_habitat <- example_habitat()
+#' lizard_barrier <- example_barrier()
+#' connectivity <- habitat_connectivity(
+#'     habitat = lizard_habitat,
+#'     barrier = lizard_barrier,
+#'     distance = 10
+#'   )
+#' connectivity
 habitat_connectivity <- function(
   habitat,
   barrier,
@@ -231,6 +330,7 @@ habitat_connectivity <- function(
   areas_connected
 }
 
+# TODO revist this - is this needed for the shiny app?
 #' Calculate habitat connectivity with visualization data
 #'
 #' @inheritParams habitat_connectivity

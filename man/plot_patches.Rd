@@ -21,3 +21,20 @@ A ggplot2 object showing patches with distinct colors.
 \description{
 Visualizes habitat patches colored by their connected fragment ID.
 }
+\examples{
+lizard_habitat <- example_habitat()
+lizard_barrier <- example_barrier()
+buffer_dist <- 5
+buffered_habitat <- habitat_buffer(lizard_habitat, buffer_dist)
+barrier_mask <- create_barrier_mask(lizard_barrier)
+fragmented <- fragment_habitat(buffered_habitat, barrier_mask)
+remaining_habitat <- drop_habitat_under_barrier(
+  habitat = lizard_habitat,
+  barrier = lizard_barrier
+  )
+fragment_patches <- assign_patches_to_fragments(
+  remaining_habitat = remaining_habitat,
+  fragment = fragmented
+  ) |> add_patch_area()
+plot_patches(fragment_patches, distance = buffer_dist)
+}

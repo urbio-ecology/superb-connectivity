@@ -42,3 +42,20 @@ A ggplot2 object.
 Creates a visualization showing habitat, buffer zone, and barriers using
 terra rasters.
 }
+\examples{
+lizard_habitat <- example_habitat()
+lizard_barrier <- example_barrier()
+lizard_buffered <- habitat_buffer(lizard_habitat, 10)
+gg_bar_hab_buf <- gg_barrier_habitat_buffer(
+  barrier = lizard_barrier,
+  buffered = lizard_buffered,
+  habitat = lizard_habitat,
+  distance = 10,
+  species_name = "Blue Tongue Lizard",
+  col_barrier = "white",
+  col_buffer = "lightgreen",
+  col_habitat = "seagreen",
+  col_paper = "grey50"
+)
+gg_bar_hab_buf
+}

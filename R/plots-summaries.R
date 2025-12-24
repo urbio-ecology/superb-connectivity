@@ -29,6 +29,22 @@ col2hex <- function(color_name) {
 #'
 #' @returns A ggplot2 object.
 #' @export
+#' @examples
+#' lizard_habitat <- example_habitat()
+#' lizard_barrier <- example_barrier()
+#' lizard_buffered <- habitat_buffer(lizard_habitat, 10)
+#' gg_bar_hab_buf <- gg_barrier_habitat_buffer(
+#'   barrier = lizard_barrier,
+#'   buffered = lizard_buffered,
+#'   habitat = lizard_habitat,
+#'   distance = 10,
+#'   species_name = "Blue Tongue Lizard",
+#'   col_barrier = "white",
+#'   col_buffer = "lightgreen",
+#'   col_habitat = "seagreen",
+#'   col_paper = "grey50"
+#' )
+#' gg_bar_hab_buf
 gg_barrier_habitat_buffer <- function(
   barrier,
   buffered,
@@ -63,6 +79,7 @@ gg_barrier_habitat_buffer <- function(
     )
 }
 
+# TODO this might only be needed as an internal function
 #' Display plots in tabs
 #'
 #' Helper function to display a list of plots with tab headers in R Markdown
@@ -81,6 +98,7 @@ show_tabs <- function(the_list, message = NULL) {
   }
 }
 
+# TODO this might only be needed as an internal function
 #' Display images in tabs
 #'
 #' Helper function to display a list of image paths with tab headers in R
@@ -122,28 +140,46 @@ to_sentence <- function(x) {
 #'
 #' @returns A ggplot2 object showing patches with distinct colors.
 #' @export
+#' @examples
+#' lizard_habitat <- example_habitat()
+#' lizard_barrier <- example_barrier()
+#' buffer_dist <- 5
+#' buffered_habitat <- habitat_buffer(lizard_habitat, buffer_dist)
+#' barrier_mask <- create_barrier_mask(lizard_barrier)
+#' fragmented <- fragment_habitat(buffered_habitat, barrier_mask)
+#' remaining_habitat <- drop_habitat_under_barrier(
+#'   habitat = lizard_habitat,
+#'   barrier = lizard_barrier
+#'   )
+#' fragment_patches <- assign_patches_to_fragments(
+#'   remaining_habitat = remaining_habitat,
+#'   fragment = fragmented
+#'   ) |> add_patch_area()
+#' plot_patches(fragment_patches, distance = buffer_dist)
 plot_patches <- function(
   patch_id,
   distance,
   species_name = "Species",
   n_cols = 7
 ) {
-  raster_patches <- as.factor(patch_id$patch_id)
+  raster_patches <- patch_id$patch_id |> terra::values()
 
-  n_patches <- patch_id$patch_id |> unique() |> nrow()
+  n_patches <- patch_id$patch_id |> terra::values() |> unique() |> nrow()
 
   my_colours <- colorspace::qualitative_hcl(n = n_cols)
 
-  unique_vals <- unique(terra::values(raster_patches))
+  unique_vals <- unique(raster_patches)
   unique_vals <- unique_vals[!is.na(unique_vals)]
 
   # assign colours cyclically
   colour_indices <- ((unique_vals - 1) %% n_cols) + 1
   colour_map <- my_colours[colour_indices]
-  names(colour_map) <- as.character(unique_vals)
+  names(colour_map) <- unique_vals
+
+  patch_raster <- terra::as.factor(patch_id$patch_id)
 
   ggplot2::ggplot() +
-    tidyterra::geom_spatraster(data = raster_patches) +
+    tidyterra::geom_spatraster(data = patch_raster) +
     ggplot2::scale_fill_manual(values = colour_map, na.value = NA) +
     ggplot2::theme_minimal() +
     ggplot2::theme(legend.position = "none") +
@@ -166,7 +202,8 @@ plot_patches <- function(
 #' Plot connectivity metrics across buffer distances
 #'
 #' Creates faceted line plots showing how connectivity metrics change with
-#' different buffer distances.
+#' different buffer distances. This works best when you have multiple buffer
+#' distances, otherwise it will just be a plot with one point.
 #'
 #' @param results_connect_habitat Data frame. Connectivity summary results with
 #'   columns for species_name, buffer_distance, and various metrics.

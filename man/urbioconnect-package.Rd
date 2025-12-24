@@ -12,6 +12,8 @@ Analyse and visualise habitat connectivity in urban landscapes, accounting for b
 Useful links:
 \itemize{
   \item \url{https://urbio-ecology.r-universe.dev/urbioconnect}
+  \item \url{https://github.com/urbio-ecology/urbioconnect}
+  \item Report bugs at \url{https://github.com/urbio-ecology/urbioconnect/issues}
 }
 
 }

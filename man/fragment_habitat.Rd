@@ -17,3 +17,10 @@ Terra SpatRaster with fragmented habitat.
 \description{
 Fragment habitat
 }
+\examples{
+lizard_habitat <- example_habitat()
+lizard_barrier <- example_barrier()
+buffered_habitat <- habitat_buffer(lizard_habitat, 5)
+barrier_mask <- create_barrier_mask(lizard_barrier)
+fragmented <- fragment_habitat(buffered_habitat, barrier_mask)
+}

@@ -67,16 +67,38 @@ gg_barrier_habitat_buffer <- function(
     tidyterra::geom_spatraster(data = barrier_coloured) +
     tidyterra::geom_spatraster(data = habitat_coloured) +
     ggplot2::theme_minimal(paper = col_paper) +
-    ggplot2::scale_fill_identity(na.value = NA) +
-    ggplot2::labs(
-      title = marquee::marquee_glue(
-        "{.{col_habitat} {species_name} Habitat}, \\
-        {.{col_buffer} {distance}m buffer}, and barrier (white)"
-      )
+    ggplot2::scale_fill_identity(
+      name = "",
+      guide = "legend",
+      labels = c(
+        stats::setNames("Habitat", col_habitat),
+        stats::setNames("Buffer", col_buffer),
+        stats::setNames("Barrier",col_barrier)
+      ),
+      breaks = c(
+        col_habitat,
+        col_buffer,
+        col_barrier
+      ),
+      na.value = NA,
+      na.translate = FALSE
     ) +
+    ggplot2::labs(
+      title = glue::glue("{species_name} Habitat"),
+      subtitle = glue::glue("With a {distance}m buffer, and barrier shown")
+     ) +
     ggplot2::theme_sub_plot(
       title = marquee::element_marquee()
+    ) +
+    ggplot2::theme_sub_axis(
+      text = ggplot2::element_blank(),
+      ticks = ggplot2::element_blank()
+    ) +
+    ggplot2::theme_sub_panel(
+      grid.major = ggplot2::element_blank(),
+      grid.minor = ggplot2::element_blank()
     )
+
 }
 
 # TODO this might only be needed as an internal function

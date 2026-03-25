@@ -19,6 +19,7 @@ server <- function(input, output, session) {
   habitat_file_path <- file.path(data_dir, "superbHab.shp")
   barrier_file_path <- file.path(data_dir, "allSFWRoads.shp")
   # Observer to update species name when example data checkbox is toggled
+  ## review: Should probably use eventReactive here
   observeEvent(input$use_example_data, {
     if (input$use_example_data) {
       updateTextInput(session, "species_name", value = "Superb Fairy Wren")
@@ -161,6 +162,8 @@ server <- function(input, output, session) {
         # Read files
         withProgress(message = "Loading data...", value = 0.1, {
           # Use example data if checkbox selected, otherwise use uploaded files
+          # review: be careful with avoiding reuse of read_geometry() and then
+          # replace with read_uploaded_file()
           if (input$use_example_data) {
             # Use predefined file paths
             habitat_data <- read_geometry(habitat_file_path) |>
@@ -377,6 +380,7 @@ server <- function(input, output, session) {
           my_buffered <- buffered_habitat
           my_distance <- buffer_distance
           output[[output_name]] <- renderPlot({
+            # review: this is the re-use section, set up module
             gg_barrier_habitat_buffer(
               barrier = results$barrier_raster,
               buffered = my_buffered,

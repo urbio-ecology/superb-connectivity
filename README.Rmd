@@ -54,6 +54,4 @@ You can see the shiny app in action at: https://njtierney.shinyapps.io/urbioconn
 
 ## Example usage
 
-There are many functions in `urbioconnect` that power the shiny app, which you
-can use in your own work. As the package is still under construction, we are
-still fine-tuning things. Stay tuned!
+You can see example usage of the package, using a targets worfklow at https://github.com/urbio-ecology/urbio-eco-targets.

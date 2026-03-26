@@ -6,7 +6,6 @@
 ^rsconnect$
 ^\.rscignore$
 ^data/\.rscignore$
-^inst/targets$
 ^\.claude$
 ^data-raw$
 ^LICENSE\.md$

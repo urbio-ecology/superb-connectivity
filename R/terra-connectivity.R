@@ -11,11 +11,31 @@
 #' @export
 empty_grid <- function(habitat, resolution = 10) {
   grid <- terra::rast(
-    x = habitat,
+    x = terra::ext(habitat),
     res = resolution,
     crs = terra::crs(habitat)
   )
   grid
+}
+
+#' Align a raster to a template grid
+#'
+#' Resamples `x` to match the grid of `template` if their geometries differ.
+#' No-op if they already match.
+#'
+#' @param x Terra SpatRaster to align.
+#' @param template Terra SpatRaster to align to.
+#' @param method Resampling method passed to [terra::resample()]. Default
+#'   `"near"` is appropriate for categorical/mask rasters.
+#' @returns Terra SpatRaster aligned to `template`.
+#' @noRd
+align_to <- function(x, template, method = "near") {
+  already_aligned <- terra::compareGeom(x, template, stopOnError = FALSE)
+  if (!already_aligned) {
+    terra::resample(x, template, method = method)
+  } else {
+    x
+  }
 }
 
 #' Prepare habitat and barrier rasters
@@ -126,6 +146,7 @@ create_barrier_mask <- function(barrier) {
 #'   barrier = lizard_barrier
 #'   )
 drop_habitat_under_barrier <- function(habitat, barrier_mask) {
+  barrier_mask <- align_to(barrier_mask, habitat)
   habitat_no_barriers <- terra::mask(habitat, barrier_mask)
   habitat_no_barriers
 }
@@ -143,6 +164,7 @@ drop_habitat_under_barrier <- function(habitat, barrier_mask) {
 #' barrier_mask <- create_barrier_mask(lizard_barrier)
 #' fragmented <- fragment_habitat(buffered_habitat, barrier_mask)
 fragment_habitat <- function(buffered_habitat, barrier_mask) {
+  barrier_mask <- align_to(barrier_mask, buffered_habitat)
   buffered_habitat * barrier_mask
 }
 
@@ -170,6 +192,7 @@ fragment_habitat <- function(buffered_habitat, barrier_mask) {
 #' plot(fragment_patches)
 assign_patches_to_fragments <- function(remaining_habitat, fragment) {
   patch_id_raster <- terra::patches(fragment)
+  patch_id_raster <- align_to(patch_id_raster, remaining_habitat)
   patch_id_raster <- remaining_habitat * patch_id_raster
   patch_id_raster
 }

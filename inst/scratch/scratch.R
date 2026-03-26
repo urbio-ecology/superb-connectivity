@@ -36,9 +36,3 @@ toc()
 # 23 seconds
 
 simplified
-
-barrier <- read_geometry(barrier_file) |> st_as_sf() |> tar_target()
-habitat <- read_geometry(habitat_file) |>
-  clean() |>
-  st_as_sf() |>
-  tar_target()

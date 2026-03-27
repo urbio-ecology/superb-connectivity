@@ -19,7 +19,7 @@ A terra raster object or sf object depending on the function called
 \description{
 We provide Habitat and Barrier data on various lizard species (nominally,
 Blue-tongued Lizard). The data was collected from Darebin Creek in
-Melbourne, which runs between Preson and West Heidelberg. For analysis
+Melbourne, which runs between Preston and West Heidelberg. For analysis
 purposes, a buffer  travel distance of 200 metres is recommended for
 lizard connectivity  assessments.
 }

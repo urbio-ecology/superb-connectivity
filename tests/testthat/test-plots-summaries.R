@@ -1,0 +1,146 @@
+lizard_habitat <- example_habitat()
+lizard_barrier <- example_barrier()
+buffer_dist <- 10
+buffered <- habitat_buffer(lizard_habitat, buffer_dist)
+barrier_mask <- create_barrier_mask(lizard_barrier)
+fragmented <- fragment_habitat(buffered, barrier_mask)
+remaining <- drop_habitat_under_barrier(lizard_habitat, barrier_mask)
+patch_id_raster <- assign_patches_to_fragments(remaining, fragmented) |>
+  add_patch_area()
+
+# Small rasters for results_connect — plot_connectivity only needs summary
+# stats, not realistic habitat geometry
+small_habitat <- terra::rast(
+  nrows = 20,
+  ncols = 20,
+  extent = terra::ext(0, 2000, 0, 2000),
+  crs = terra::crs(lizard_habitat),
+  vals = 1
+)
+small_barrier <- terra::rast(
+  nrows = 20,
+  ncols = 20,
+  extent = terra::ext(0, 2000, 0, 2000),
+  crs = terra::crs(lizard_habitat),
+  vals = NA
+)
+small_barrier[10, 10] <- 1
+
+results_connect <- purrr::map(
+  c(100, 200),
+  function(d) {
+    full <- habitat_connectivity_full(
+      small_habitat,
+      small_barrier,
+      distance = d,
+      verbose = FALSE
+    )
+    summarise_connectivity(
+      area_squared = full$areas_connected$area_squared,
+      area_total = full$areas_connected$area,
+      buffer_distance = d,
+      target_resolution = 500,
+      data_resolution = 10,
+      aggregation_factor = 50,
+      species_name = "Lizard"
+    )
+  }
+) |>
+  purrr::list_rbind()
+
+# col2hex ---------------------------------------------------------------
+
+test_that("col2hex converts colour name to hex", {
+  expect_snapshot(col2hex("forestgreen"))
+  expect_snapshot(col2hex("blue"))
+})
+
+# to_sentence -----------------------------------------------------------
+
+test_that("to_sentence converts snake_case to sentence case", {
+  expect_snapshot(to_sentence("prob_connectedness"))
+  expect_snapshot(to_sentence(c("n_patches", "patch_area_mean")))
+})
+
+# show_tabs -------------------------------------------------------------
+
+test_that("show_tabs outputs markdown headers and calls print", {
+  plots <- list(
+    "100m" = ggplot2::ggplot(),
+    "200m" = ggplot2::ggplot()
+  )
+  expect_output(
+    show_tabs(plots, message = "Buffer"),
+    "## Buffer 100m"
+  )
+})
+
+# show_image_tabs -------------------------------------------------------
+
+test_that("show_image_tabs outputs markdown headers", {
+  tmp <- withr::local_tempfile(fileext = ".png")
+  png(tmp)
+  plot(1)
+  dev.off()
+  images <- c("100m" = tmp)
+  suppressWarnings(
+    expect_output(
+      show_image_tabs(images, message = "Buffer"),
+      "## Buffer 100m"
+    )
+  )
+})
+
+# gg_barrier_habitat_buffer ---------------------------------------------
+
+gg_buffer_plot <- gg_barrier_habitat_buffer(
+  barrier = lizard_barrier,
+  buffered = buffered,
+  habitat = lizard_habitat,
+  distance = buffer_dist,
+  species_name = "Blue Tongue Lizard",
+  col_barrier = "white",
+  col_buffer = "lightgreen",
+  col_habitat = "seagreen",
+  col_paper = "grey50"
+)
+
+test_that("gg_barrier_habitat_buffer returns a ggplot", {
+  expect_s3_class(gg_buffer_plot, "ggplot")
+})
+
+test_that("gg_barrier_habitat_buffer renders correctly", {
+  vdiffr::expect_doppelganger("gg-barrier-habitat-buffer", gg_buffer_plot)
+})
+
+# plot_patches ----------------------------------------------------------
+
+test_that("plot_patches returns a ggplot", {
+  result <- plot_patches(patch_id_raster, distance = buffer_dist)
+  expect_s3_class(result, "ggplot")
+})
+
+test_that("plot_patches renders correctly", {
+  vdiffr::expect_doppelganger(
+    "plot-patches",
+    plot_patches(
+      patch_id_raster,
+      distance = buffer_dist,
+      species_name = "Blue Tongue Lizard"
+    )
+  )
+})
+
+# plot_connectivity -----------------------------------------------------
+
+test_that("plot_connectivity returns a ggplot", {
+  result <- plot_connectivity(results_connect)
+  expect_s3_class(result, "ggplot")
+})
+
+test_that("plot_connectivity renders correctly", {
+  vdiffr::expect_doppelganger(
+    "plot-connectivity",
+    plot_connectivity(results_connect)
+  )
+})

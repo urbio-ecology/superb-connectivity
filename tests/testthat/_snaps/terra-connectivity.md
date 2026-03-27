@@ -15,14 +15,14 @@
 # habitat_connectivity returns a data frame with expected columns
 
     Code
-      names(result$result)
+      names(hc_quiet)
     Output
       [1] "patch_id"     "area"         "area_squared"
 
 # habitat_connectivity_full returns list with expected elements
 
     Code
-      names(result)
+      names(hcf_quiet)
     Output
       [1] "buffered_habitat"  "patch_id_raster"   "areas_connected"  
       [4] "barrier_mask"      "remaining_habitat"

@@ -3,7 +3,7 @@ small_rast <- function(nrows = 5, ncols = 5, val = NA) {
   terra::rast(nrows = nrows, ncols = ncols, vals = val)
 }
 
-# determine the flattened index from the
+# Determine the flattened index from row/col in a row-major raster
 index_from_ij <- function(mat, i, j) {
   (ncol(mat) * (i - 1)) + j
 }
@@ -17,11 +17,6 @@ create_index_mat <- function(mat) {
   i <- nrow(mat)
   j <- ncol(mat)
   index_mat(i, j)
-}
-
-lookup_mat <- function(i, j, idx_i, idx_j) {
-  idx_mat <- index_mat(i, j)
-  idx_mat[idx_i, idx_j]
 }
 
 
@@ -95,12 +90,24 @@ test_that("fragment_habitat cuts buffer at barrier cells", {
 lizard_habitat <- example_habitat()
 lizard_barrier <- example_barrier()
 
-buffered <- habitat_buffer(lizard_habitat, distance = 50)
-barrier_mask <- create_barrier_mask(lizard_barrier)
+# Run the full pipeline once on real lizard data; extract components so that
+# habitat_buffer (the slow step) only runs once across the whole file
+hcf_quiet <- habitat_connectivity_full(
+  lizard_habitat,
+  lizard_barrier,
+  distance = 50,
+  verbose = FALSE
+)
+hc_quiet <- hcf_quiet$areas_connected
+buffered <- hcf_quiet$buffered_habitat
+barrier_mask <- hcf_quiet$barrier_mask
+remaining <- hcf_quiet$remaining_habitat
+patch_areas <- hcf_quiet$patch_id_raster
+
+# fragment_habitat and assign_patches_to_fragments are fast (<1s) so we
+# recompute them from the already-extracted components
 fragmented <- fragment_habitat(buffered, barrier_mask)
-remaining <- drop_habitat_under_barrier(lizard_habitat, barrier_mask)
 patches <- assign_patches_to_fragments(remaining, fragmented)
-patch_areas <- add_patch_area(patches)
 
 test_that("habitat_buffer expands non-NA habitat area", {
   n_before <- sum(!is.na(terra::values(lizard_habitat)))
@@ -128,29 +135,77 @@ test_that("aggregate_connected_patches area_squared equals area squared", {
   expect_equal(res_con_patch$area_squared, round(res_con_patch$area^2, 3))
 })
 
-test_that("habitat_connectivity returns a data frame with expected columns", {
-  result <- habitat_connectivity(
-    lizard_habitat,
-    lizard_barrier,
-    distance = 50,
-    verbose = FALSE
-  )
+# Small projected raster for fast coverage of verbose=TRUE code paths
+small_habitat <- terra::rast(
+  nrows = 20,
+  ncols = 20,
+  extent = terra::ext(0, 2000, 0, 2000),
+  crs = terra::crs(lizard_habitat),
+  vals = 1
+)
+small_barrier <- terra::rast(
+  nrows = 20,
+  ncols = 20,
+  extent = terra::ext(0, 2000, 0, 2000),
+  crs = terra::crs(lizard_habitat),
+  vals = NA
+)
+small_barrier[10, 10] <- 1
 
-  expect_s3_class(result$result, "data.frame")
-  expect_snapshot(names(result$result))
-  expect_gt(nrow(result$result), 0)
+hc_verbose <- habitat_connectivity(
+  small_habitat,
+  small_barrier,
+  distance = 100,
+  verbose = TRUE
+)
+
+test_that("habitat_connectivity verbose=TRUE returns a data frame", {
+  expect_s3_class(hc_verbose, "data.frame")
+})
+
+test_that("habitat_connectivity returns a data frame with expected columns", {
+  expect_s3_class(hc_quiet, "data.frame")
+  expect_snapshot(names(hc_quiet))
+  expect_gt(nrow(hc_quiet), 0)
+})
+
+test_that("align_to resamples rasters with mismatched geometry", {
+  # Fine-resolution habitat, coarse-resolution barrier
+  habitat <- terra::rast(
+    nrows = 100,
+    ncols = 100,
+    extent = terra::ext(0, 1000, 0, 1000),
+    vals = 1
+  )
+  barrier <- terra::rast(
+    nrows = 50,
+    ncols = 50,
+    extent = terra::ext(0, 1000, 0, 1000),
+    vals = NA
+  )
+  barrier[25, 25] <- 1
+  barrier_mask <- create_barrier_mask(barrier)
+
+  # drop_habitat_under_barrier calls align_to internally when geometries differ
+  result <- drop_habitat_under_barrier(habitat, barrier_mask)
+  expect_true(inherits(result, "SpatRaster"))
+  expect_true(terra::compareGeom(result, habitat, stopOnError = FALSE))
+})
+
+hcf_verbose <- habitat_connectivity_full(
+  small_habitat,
+  small_barrier,
+  distance = 100,
+  verbose = TRUE
+)
+
+test_that("habitat_connectivity_full verbose=TRUE returns a list", {
+  expect_type(hcf_verbose, "list")
 })
 
 test_that("habitat_connectivity_full returns list with expected elements", {
-  result <- habitat_connectivity_full(
-    lizard_habitat,
-    lizard_barrier,
-    distance = 50,
-    verbose = FALSE
-  )
-
-  expect_type(result, "list")
-  expect_snapshot(names(result))
-  expect_s3_class(result$areas_connected, "data.frame")
-  expect_s4_class(result$buffered_habitat, "SpatRaster")
+  expect_type(hcf_quiet, "list")
+  expect_snapshot(names(hcf_quiet))
+  expect_s3_class(hcf_quiet$areas_connected, "data.frame")
+  expect_s4_class(hcf_quiet$buffered_habitat, "SpatRaster")
 })

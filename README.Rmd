@@ -17,6 +17,7 @@ knitr::opts_chunk$set(
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/urbio-ecology/urbioconnect/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/urbio-ecology/urbioconnect/actions/workflows/R-CMD-check.yaml)
 [![R-universe version](https://urbio-ecology.r-universe.dev/urbioconnect/badges/version)](https://urbio-ecology.r-universe.dev/urbioconnect)
+[![Codecov test coverage](https://codecov.io/gh/urbio-ecology/urbioconnect/graph/badge.svg)](https://app.codecov.io/gh/urbio-ecology/urbioconnect)
 <!-- badges: end -->
 
 The goal of urbioconnect is to demonstrate a workflow of connectivity analysis for the superb fairy wren. The code has been lightly adapted from [urbanConnect](https://github.com/urbio-ecology/urbanConnect), with the overall method being developed by Holly Kirk et al., in ["Ecological connectivity as a planning tool for the conservation of wildlife in cities"](https://www.sciencedirect.com/science/article/pii/S2215016122003636?via%3Dihub).

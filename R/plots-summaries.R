@@ -73,7 +73,7 @@ gg_barrier_habitat_buffer <- function(
       labels = c(
         stats::setNames("Habitat", col_habitat),
         stats::setNames("Buffer", col_buffer),
-        stats::setNames("Barrier",col_barrier)
+        stats::setNames("Barrier", col_barrier)
       ),
       breaks = c(
         col_habitat,
@@ -86,7 +86,7 @@ gg_barrier_habitat_buffer <- function(
     ggplot2::labs(
       title = glue::glue("{species_name} Habitat"),
       subtitle = glue::glue("With a {distance}m buffer, and barrier shown")
-     ) +
+    ) +
     ggplot2::theme_sub_plot(
       title = marquee::element_marquee()
     ) +
@@ -98,7 +98,6 @@ gg_barrier_habitat_buffer <- function(
       grid.major = ggplot2::element_blank(),
       grid.minor = ggplot2::element_blank()
     )
-
 }
 
 # TODO this might only be needed as an internal function

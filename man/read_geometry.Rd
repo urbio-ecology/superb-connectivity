@@ -2,12 +2,18 @@
 % Please edit documentation in R/read_geometry.R
 \name{read_geometry}
 \alias{read_geometry}
+\alias{read_geometry.sf}
+\alias{read_geometry.default}
 \title{Read shapefile geometry}
 \usage{
 read_geometry(shapefile)
+
+\method{read_geometry}{sf}(shapefile)
+
+\method{read_geometry}{default}(shapefile)
 }
 \arguments{
-\item{shapefile}{Character. File path to a shapefile or an SF object.}
+\item{shapefile}{Character. File path to a shapefile, or an SF object.}
 }
 \value{
 An \code{sfc} object containing only the spatial geometry.
@@ -17,13 +23,12 @@ Reads a shapefile and extracts only the spatial geometry, discarding
 attribute data.
 }
 \examples{
-\dontrun{
-# Read geometry from shapefile
-habitat_geom <- read_geometry("data/habitat.shp")
+# Read geometry from a file path
+barrier_path <- system.file("ex/lizard_barrier.shp", package = "urbioconnect")
+barrier_geom <- read_geometry(barrier_path)
 
 # Can also pass an existing SF object
-habitat_sf <- sf::st_read("data/habitat.shp")
-habitat_geom <- read_geometry(habitat_sf)
-}
+barrier_sf <- sf::st_read(barrier_path, quiet = TRUE)
+barrier_geom <- read_geometry(barrier_sf)
 
 }

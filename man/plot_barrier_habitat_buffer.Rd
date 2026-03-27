@@ -36,11 +36,27 @@ plot_barrier_habitat_buffer(
 \item{col_paper}{colour to colour the paper layer of ggplot}
 }
 \value{
-saved ggplot and file path
+Named character vector. The file path, named by the buffer distance.
 }
 \description{
 Save barrier habitat buffer plot
 }
-\author{
-njtierney
+\examples{
+\dontrun{
+lizard_habitat <- example_habitat()
+lizard_barrier <- example_barrier()
+buffered <- habitat_buffer(lizard_habitat, distance = 50)
+# Creates doc/plot-barrier-buffer-habitat-*.png in the working directory
+plot_barrier_habitat_buffer(
+  barrier = lizard_barrier,
+  buffered = buffered,
+  habitat = lizard_habitat,
+  distance = 50,
+  species_name = "Blue-tongued Lizard",
+  col_barrier = "white",
+  col_buffer = "lightgreen",
+  col_habitat = "seagreen",
+  col_paper = "grey50"
+)
+}
 }

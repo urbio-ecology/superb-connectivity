@@ -16,8 +16,22 @@ habitat_connectivity_full(habitat, barrier, distance, verbose = TRUE)
 \item{verbose}{Logical. Display progress messages (default: TRUE).}
 }
 \value{
-List with intermediate rasters and connectivity metrics.
+Named list with elements: \code{buffered_habitat}, \code{patch_id_raster},
+\code{areas_connected}, \code{barrier_mask}, \code{remaining_habitat}.
 }
 \description{
-Calculate habitat connectivity with visualization data
+Like \code{\link[=habitat_connectivity]{habitat_connectivity()}}, but also returns the intermediate rasters
+(buffered habitat, patch ID raster, barrier mask, remaining habitat) useful
+for mapping and reporting.
+}
+\examples{
+lizard_habitat <- example_habitat()
+lizard_barrier <- example_barrier()
+result <- habitat_connectivity_full(
+  lizard_habitat,
+  lizard_barrier,
+  distance = 50,
+  verbose = FALSE
+)
+names(result)
 }

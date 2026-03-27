@@ -18,3 +18,7 @@ Invisible NULL. Prints plots with markdown headers.
 Helper function to display a list of plots with tab headers in R Markdown
 documents.
 }
+\examples{
+plots <- list("100m" = ggplot2::ggplot(), "200m" = ggplot2::ggplot())
+show_tabs(plots, message = "Buffer distance")
+}

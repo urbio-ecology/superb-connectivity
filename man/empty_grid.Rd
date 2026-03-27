@@ -17,3 +17,7 @@ Terra SpatRaster. Empty raster grid.
 \description{
 Create Empty terra raster grid
 }
+\examples{
+lizard_barrier_shp <- example_barrier_shp()
+empty_grid(lizard_barrier_shp, resolution = 10)
+}

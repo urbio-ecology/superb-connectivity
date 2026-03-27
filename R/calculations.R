@@ -10,8 +10,7 @@
 #' @returns Numeric. Effective mesh size in hectares.
 #'
 #' @examples
-#' areas <- c(100, 200, 150)
-#' effective_mesh_size(areas^2, areas)
+#' effective_mesh_size(lizard_areas_connected$area_squared, lizard_areas_connected$area)
 #' @export
 effective_mesh_size <- function(area_squared, area_total) {
   effective_mesh <- sum(area_squared) / sum(area_total)
@@ -24,6 +23,8 @@ effective_mesh_size <- function(area_squared, area_total) {
 #' @param area_total Numeric vector. Total areas of habitat patches.
 #'
 #' @returns Numeric. Mean patch size.
+#' @examples
+#' mean_patch_size(lizard_areas_connected$area)
 #' @export
 mean_patch_size <- function(area_total) {
   mean_size <- mean(area_total)
@@ -35,6 +36,8 @@ mean_patch_size <- function(area_total) {
 #' @param area_total Numeric vector. Total areas of habitat patches.
 #'
 #' @returns Integer. Number of patches.
+#' @examples
+#' n_patches(lizard_areas_connected$area)
 #' @export
 n_patches <- function(area_total) {
   n_areas <- length(area_total)
@@ -47,6 +50,8 @@ n_patches <- function(area_total) {
 #'   meters.
 #'
 #' @returns Numeric. Total habitat area in hectares.
+#' @examples
+#' total_habitat_area(lizard_areas_connected$area)
 #' @export
 total_habitat_area <- function(area_total) {
   total <- sum(area_total)
@@ -63,6 +68,8 @@ total_habitat_area <- function(area_total) {
 #' @param area_total Numeric vector. Total areas of connected patches.
 #'
 #' @returns Numeric. Probability of connectedness (0-1).
+#' @examples
+#' connectivity_probability(lizard_areas_connected$area_squared, lizard_areas_connected$area)
 #' @export
 connectivity_probability <- function(area_squared, area_total) {
   total_habitat <- sum(area_total)
@@ -88,6 +95,16 @@ connectivity_probability <- function(area_squared, area_total) {
 #' @returns A tibble with connectivity metrics including number of patches,
 #'   probability of connectedness, effective mesh size, mean and total patch
 #'   areas.
+#' @examples
+#' summarise_connectivity(
+#'   area_squared = lizard_areas_connected$area_squared,
+#'   area_total = lizard_areas_connected$area,
+#'   buffer_distance = 50,
+#'   target_resolution = 500,
+#'   data_resolution = 10,
+#'   aggregation_factor = 50,
+#'   species_name = "Blue-tongued Lizard"
+#' )
 #' @export
 summarise_connectivity <- function(
   area_squared,

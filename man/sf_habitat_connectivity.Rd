@@ -24,12 +24,9 @@ operations. Buffers habitat, fragments it along barriers, and calculates
 areas of connected patches.
 }
 \examples{
-\dontrun{
-# Load habitat and barrier data
-habitat <- sf::st_read("habitat.shp")
-roads <- sf::st_read("roads.shp")
-
-# Calculate connectivity at 100m threshold
-connectivity <- habitat_connectivity(habitat, roads, distance = 100)
-}
+lizard_barrier_shp <- example_barrier_shp()
+lizard_habitat_sf <- terra::as.polygons(example_habitat(), dissolve = TRUE) |>
+  sf::st_as_sf()
+result <- sf_habitat_connectivity(lizard_habitat_sf, lizard_barrier_shp, distance = 50)
+result
 }

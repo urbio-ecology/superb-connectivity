@@ -7,6 +7,10 @@
 #' @param distance Numeric. Buffer distance in meters.
 #'
 #' @returns SF object with buffered and unioned habitat geometry.
+#' @examples
+#' lizard_habitat_sf <- terra::as.polygons(example_habitat(), dissolve = TRUE) |>
+#'   sf::st_as_sf()
+#' sf_habitat_buffer(lizard_habitat_sf, distance = 50)
 #' @export
 sf_habitat_buffer <- function(habitat, distance) {
   # buffer by the required distance
@@ -25,6 +29,12 @@ sf_habitat_buffer <- function(habitat, distance) {
 #' @param barrier SF object. Barrier geometry (e.g., roads).
 #'
 #' @returns SF object with individual habitat fragments, each with a unique ID.
+#' @examples
+#' lizard_habitat_sf <- terra::as.polygons(example_habitat(), dissolve = TRUE) |>
+#'   sf::st_as_sf()
+#' lizard_barrier_shp <- example_barrier_shp()
+#' buffered <- sf_habitat_buffer(lizard_habitat_sf, distance = 50)
+#' sf_fragment_habitat(buffered, lizard_barrier_shp)
 #' @export
 sf_fragment_habitat <- function(habitat_buffered, barrier) {
   # Remove road polygon areas from buffered habitat polygon, creating gaps
@@ -48,6 +58,11 @@ sf_fragment_habitat <- function(habitat_buffered, barrier) {
 #' @param barrier SF object. Barrier geometry.
 #'
 #' @returns SF object with habitat patches that don't intersect barriers.
+#' @examples
+#' lizard_habitat_sf <- terra::as.polygons(example_habitat(), dissolve = TRUE) |>
+#'   sf::st_as_sf()
+#' lizard_barrier_shp <- example_barrier_shp()
+#' sf_drop_habitat_under_barrier(lizard_habitat_sf, lizard_barrier_shp)
 #' @export
 sf_drop_habitat_under_barrier <- function(habitat, barrier) {
   # remove all habitat under barriers
@@ -66,6 +81,14 @@ sf_drop_habitat_under_barrier <- function(habitat, barrier) {
 #' @param fragment_id SF object. Fragment geometries with IDs.
 #'
 #' @returns SF object with habitat patches labeled by their fragment ID.
+#' @examples
+#' lizard_habitat_sf <- terra::as.polygons(example_habitat(), dissolve = TRUE) |>
+#'   sf::st_as_sf()
+#' lizard_barrier_shp <- example_barrier_shp()
+#' buffered <- sf_habitat_buffer(lizard_habitat_sf, distance = 50)
+#' fragments <- sf_fragment_habitat(buffered, lizard_barrier_shp)
+#' remaining <- sf_drop_habitat_under_barrier(lizard_habitat_sf, lizard_barrier_shp)
+#' sf_assign_patches_to_fragments(remaining, fragments)
 #' @export
 sf_assign_patches_to_fragments <- function(remaining, fragment_id) {
   intersects <- sf::st_intersects(remaining, fragment_id)
@@ -80,6 +103,15 @@ sf_assign_patches_to_fragments <- function(remaining, fragment_id) {
 #' @param patches SF object. Habitat patches.
 #'
 #' @returns SF object with added `area` column in square meters.
+#' @examples
+#' lizard_habitat_sf <- terra::as.polygons(example_habitat(), dissolve = TRUE) |>
+#'   sf::st_as_sf()
+#' lizard_barrier_shp <- example_barrier_shp()
+#' buffered <- sf_habitat_buffer(lizard_habitat_sf, distance = 50)
+#' fragments <- sf_fragment_habitat(buffered, lizard_barrier_shp)
+#' remaining <- sf_drop_habitat_under_barrier(lizard_habitat_sf, lizard_barrier_shp)
+#' patches <- sf_assign_patches_to_fragments(remaining, fragments)
+#' sf_add_patch_area(patches)
 #' @export
 sf_add_patch_area <- function(patches) {
   patches |>
@@ -94,7 +126,16 @@ sf_add_patch_area <- function(patches) {
 #'
 #' @returns Data frame with `patch_id`, `area_total`, and `area_squared`
 #'   columns.
-#' @export
+#' @examples
+#' lizard_habitat_sf <- terra::as.polygons(example_habitat(), dissolve = TRUE) |>
+#'   sf::st_as_sf()
+#' lizard_barrier_shp <- example_barrier_shp()
+#' buffered <- sf_habitat_buffer(lizard_habitat_sf, distance = 50)
+#' fragments <- sf_fragment_habitat(buffered, lizard_barrier_shp)
+#' remaining <- sf_drop_habitat_under_barrier(lizard_habitat_sf, lizard_barrier_shp)
+#' patches <- sf_assign_patches_to_fragments(remaining, fragments) |>
+#'   sf_add_patch_area()
+#' sf_aggregate_connected_patches(patches)
 #' @export
 sf_aggregate_connected_patches <- function(patch_areas) {
   summed <- patch_areas |>
@@ -120,14 +161,11 @@ sf_aggregate_connected_patches <- function(patch_areas) {
 #'   including `patch_id`, `area_total`, and `area_squared`.
 #'
 #' @examples
-#' \dontrun{
-#' # Load habitat and barrier data
-#' habitat <- sf::st_read("habitat.shp")
-#' roads <- sf::st_read("roads.shp")
-#'
-#' # Calculate connectivity at 100m threshold
-#' connectivity <- habitat_connectivity(habitat, roads, distance = 100)
-#' }
+#' lizard_barrier_shp <- example_barrier_shp()
+#' lizard_habitat_sf <- terra::as.polygons(example_habitat(), dissolve = TRUE) |>
+#'   sf::st_as_sf()
+#' result <- sf_habitat_connectivity(lizard_habitat_sf, lizard_barrier_shp, distance = 50)
+#' result
 #' @export
 sf_habitat_connectivity <- function(habitat, barrier, distance) {
   # buffer the habitat layer by the distance

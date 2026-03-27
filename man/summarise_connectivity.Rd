@@ -39,3 +39,14 @@ areas.
 Calculates a comprehensive set of habitat connectivity metrics including
 effective mesh size, probability of connectedness, and patch statistics.
 }
+\examples{
+summarise_connectivity(
+  area_squared = lizard_areas_connected$area_squared,
+  area_total = lizard_areas_connected$area,
+  buffer_distance = 50,
+  target_resolution = 500,
+  data_resolution = 10,
+  aggregation_factor = 50,
+  species_name = "Blue-tongued Lizard"
+)
+}

@@ -8,14 +8,9 @@
 #' @returns An `sfc` object containing only the spatial geometry.
 #'
 #' @examples
-#' \dontrun{
-#' # Read geometry from shapefile
-#' habitat_geom <- read_geometry("data/habitat.shp")
-#'
-#' # Can also pass an existing SF object
-#' habitat_sf <- sf::st_read("data/habitat.shp")
-#' habitat_geom <- read_geometry(habitat_sf)
-#' }
+#' # Read geometry from a shapefile path
+#' barrier_path <- system.file("ex/lizard_barrier.shp", package = "urbioconnect")
+#' barrier_geom <- read_geometry(barrier_path)
 #'
 #' @export
 read_geometry <- function(shapefile) {

@@ -323,7 +323,7 @@ habitat_connectivity <- function(
       distance
     )
   }
-  habitat_connectivity
+  habitat_connectivity$result
 }
 
 #' @noRd

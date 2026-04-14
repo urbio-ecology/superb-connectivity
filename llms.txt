@@ -1,0 +1,243 @@
+# urbioconnect
+
+`urbioconnect` quantifies how connected habitats are in urban
+landscapes. This is done by providing **habitat** and **barrier**
+information. For example, raster grid data on blue tongued-lizard
+**habitat**, how far their roaming range is (say, 100 metres) and raster
+grid data on road and buildings (**barriers**). It then computes
+connected habitat patches and a set of landscape-level metrics:
+
+- effective mesh size
+- probability of connectedness
+- number of patches,
+- total patch area and
+- mean patch area
+
+Note that you can use **vector** or **raster** data for habitat and
+barrier formats.
+
+This method is described in:
+
+> Kirk, H., Soanes, K., Amati, M., Bekessy, S., Harrison, L., Parris,
+> K., Ramalho, C., van de Ree, R., & Threlfall, C. (2023). Ecological
+> connectivity as a planning tool for the conservation of wildlife in
+> cities. *MethodsX*, 10, 101989.
+> <https://doi.org/10.1016/j.mex.2022.101989>
+
+We include a Shiny app for interactive analysis and report generation.
+These are powered by a set of R functions, so you can implement your own
+methods or approaches to pipelines.
+
+## Installation
+
+Install from R-universe:
+
+``` r
+install.packages(
+  "urbioconnect",
+  repos = c("https://urbio-ecology.r-universe.dev", "https://cloud.r-project.org")
+)
+```
+
+Or install the development version from GitHub:
+
+``` r
+# install.packages("pak")
+pak::pak("urbio-ecology/urbioconnect")
+```
+
+## Get started
+
+``` r
+library(urbioconnect)
+
+# load example habitat and barrier rasters
+habitat <- example_habitat()
+barrier <- example_barrier()
+
+# run the full raster pipeline at a 100 m buffer distance
+areas <- habitat_connectivity(
+  habitat  = habitat,
+  barrier  = barrier,
+  distance = 10,
+  verbose  = FALSE
+)
+
+head(areas)
+#> # A tibble: 6 × 3
+#>   patch_id   area area_squared
+#>      <dbl>  <dbl>        <dbl>
+#> 1        1 97878. 9580104085. 
+#> 2       15  2416.    5837832. 
+#> 3       18  1304.    1700646. 
+#> 4       32  1592.    2534763. 
+#> 5       37     4          16.0
+#> 6       39  3332.   11103470.
+```
+
+Summarise the connectivity metrics:
+
+``` r
+summarise_connectivity(
+  area_squared     = areas$area_squared,
+  area_total       = areas$area,
+  buffer_distance  = 100,
+  target_resolution = 500,
+  data_resolution  = 10,
+  aggregation_factor = 50,
+  species_name     = "Blue-tongued Lizard"
+)
+#> # A tibble: 1 × 10
+#>   species_name    buffer_distance n_patches prob_connectedness effective_mesh_ha
+#>   <chr>                     <dbl>     <int>              <dbl>             <dbl>
+#> 1 Blue-tongued L…             100       163           0.000017                 4
+#> # ℹ 5 more variables: patch_area_mean <dbl>, patch_area_total_ha <dbl>,
+#> #   target_resolution <dbl>, data_resolution <dbl>, aggregation_factor <dbl>
+```
+
+## Shiny app
+
+Launch the interactive Shiny app:
+
+``` r
+run_connectivity_app()
+```
+
+A hosted version is available at:
+<https://njtierney.shinyapps.io/urbioconnect/>
+
+## Two pipelines: raster and vector
+
+`urbioconnect` provides two complete analysis pipelines:
+
+|               | Raster pipeline                                                                                            | Vector pipeline                                                                                                  |
+|---------------|------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------|
+| Input format  | `terra` SpatRaster                                                                                         | `sf` polygons                                                                                                    |
+| Main function | [`habitat_connectivity()`](https://urbio-ecology.github.io/urbioconnect/reference/habitat_connectivity.md) | [`sf_habitat_connectivity()`](https://urbio-ecology.github.io/urbioconnect/reference/sf_habitat_connectivity.md) |
+| Best for      | Large study areas, GeoTIFF output                                                                          | Small precise study areas, exact polygon boundaries                                                              |
+
+You can see the vignette, “raster-vs-vector” for a side-by-side
+comparison and guidance on which to choose with
+
+``` r
+vignette("raster-vs-vector")
+```
+
+Other vignettes include:
+
+- [`vignette("getting-started")`](https://urbio-ecology.github.io/urbioconnect/articles/getting-started.md)
+  — step-by-step raster workflow with example data
+- [`vignette("targets-pipeline")`](https://urbio-ecology.github.io/urbioconnect/articles/targets-pipeline.md)
+  — using `urbioconnect` in a `targets` reproducible pipeline
+
+## Example targets workflow
+
+For a complete, production-ready `targets` pipeline with real species
+data and report generation, see:
+
+You can see example usage of the package, using a targets workflow at
+<https://github.com/urbio-ecology/urbio-eco-targets>.
+
+# Acknowledgements
+
+We would like to thank Kylie Soanes, Marco Amati, Sarah Bekessy, Lee
+Harrison, Kirsten Parris, Cristina Ramalho, Rodney van de Ree, and
+Caragh Threlfall for their work on the original paper this work is based
+upon. We would also like to thank Hugh Stanford, Nadine Gaskell, Kerryn
+Kneebone, and Nicholas Golding for their comments and insight during the
+development of the methods and software.
+**<https://github.com/urbio-ecology/urbio-eco-targets>**
+
+# Package index
+
+## All functions
+
+- [`add_patch_area()`](https://urbio-ecology.github.io/urbioconnect/reference/add_patch_area.md)
+  : Add patch area layer
+- [`aggregate_connected_patches()`](https://urbio-ecology.github.io/urbioconnect/reference/aggregate_connected_patches.md)
+  : Aggregate connected patch areas
+- [`assign_patches_to_fragments()`](https://urbio-ecology.github.io/urbioconnect/reference/assign_patches_to_fragments.md)
+  : Assign patches to fragments
+- [`clean()`](https://urbio-ecology.github.io/urbioconnect/reference/clean.md)
+  : Clean any spatial data layer (shape file)
+- [`col2hex()`](https://urbio-ecology.github.io/urbioconnect/reference/col2hex.md)
+  : Convert color name to hexadecimal
+- [`connectivity_probability()`](https://urbio-ecology.github.io/urbioconnect/reference/connectivity_probability.md)
+  : Calculate connectivity probability
+- [`create_barrier_mask()`](https://urbio-ecology.github.io/urbioconnect/reference/create_barrier_mask.md)
+  : Create barrier mask
+- [`drop_habitat_under_barrier()`](https://urbio-ecology.github.io/urbioconnect/reference/drop_habitat_under_barrier.md)
+  : Remove habitat under barriers
+- [`effective_mesh_size()`](https://urbio-ecology.github.io/urbioconnect/reference/effective_mesh_size.md)
+  : Calculate effective mesh size
+- [`empty_grid()`](https://urbio-ecology.github.io/urbioconnect/reference/empty_grid.md)
+  : Create Empty terra raster grid
+- [`example_habitat()`](https://urbio-ecology.github.io/urbioconnect/reference/example-lizard-data.md)
+  [`example_barrier_shp()`](https://urbio-ecology.github.io/urbioconnect/reference/example-lizard-data.md)
+  [`example_barrier()`](https://urbio-ecology.github.io/urbioconnect/reference/example-lizard-data.md)
+  : Lizard Habitat and Barrier Data from Melbourne.
+- [`fragment_habitat()`](https://urbio-ecology.github.io/urbioconnect/reference/fragment_habitat.md)
+  : Fragment habitat
+- [`generate_connectivity_report()`](https://urbio-ecology.github.io/urbioconnect/reference/generate_connectivity_report.md)
+  : Generate Connectivity Report
+- [`gg_barrier_habitat_buffer()`](https://urbio-ecology.github.io/urbioconnect/reference/gg_barrier_habitat_buffer.md)
+  : Plot barrier, habitat, and buffer layers
+- [`habitat_buffer()`](https://urbio-ecology.github.io/urbioconnect/reference/habitat_buffer.md)
+  : Buffer habitat raster
+- [`habitat_connectivity()`](https://urbio-ecology.github.io/urbioconnect/reference/habitat_connectivity.md)
+  : Calculate habitat connectivity using terra
+- [`habitat_connectivity_full()`](https://urbio-ecology.github.io/urbioconnect/reference/habitat_connectivity_full.md)
+  : Calculate habitat connectivity with visualization data
+- [`lizard_areas_connected`](https://urbio-ecology.github.io/urbioconnect/reference/lizard_areas_connected.md)
+  : Connected habitat patch areas for Blue-tongued Lizard
+- [`mean_patch_size()`](https://urbio-ecology.github.io/urbioconnect/reference/mean_patch_size.md)
+  : Calculate mean patch size
+- [`n_patches()`](https://urbio-ecology.github.io/urbioconnect/reference/n_patches.md)
+  : Count number of habitat patches
+- [`plot_barrier_habitat_buffer()`](https://urbio-ecology.github.io/urbioconnect/reference/plot_barrier_habitat_buffer.md)
+  : Save barrier habitat buffer plot
+- [`plot_connectivity()`](https://urbio-ecology.github.io/urbioconnect/reference/plot_connectivity.md)
+  : Plot connectivity metrics across buffer distances
+- [`plot_patches()`](https://urbio-ecology.github.io/urbioconnect/reference/plot_patches.md)
+  : Plot connected habitat patches
+- [`prepare_rasters()`](https://urbio-ecology.github.io/urbioconnect/reference/prepare_rasters.md)
+  : Prepare habitat and barrier rasters
+- [`read_geometry()`](https://urbio-ecology.github.io/urbioconnect/reference/read_geometry.md)
+  : Read shapefile geometry
+- [`run_connectivity_app()`](https://urbio-ecology.github.io/urbioconnect/reference/run_connectivity_app.md)
+  : Launch the Connectivity Shiny App
+- [`sf_add_patch_area()`](https://urbio-ecology.github.io/urbioconnect/reference/sf_add_patch_area.md)
+  : Add patch area column
+- [`sf_aggregate_connected_patches()`](https://urbio-ecology.github.io/urbioconnect/reference/sf_aggregate_connected_patches.md)
+  : Aggregate connected patch areas
+- [`sf_assign_patches_to_fragments()`](https://urbio-ecology.github.io/urbioconnect/reference/sf_assign_patches_to_fragments.md)
+  : Assign habitat patches to fragment IDs
+- [`sf_drop_habitat_under_barrier()`](https://urbio-ecology.github.io/urbioconnect/reference/sf_drop_habitat_under_barrier.md)
+  : Remove habitat underneath barriers
+- [`sf_fragment_habitat()`](https://urbio-ecology.github.io/urbioconnect/reference/sf_fragment_habitat.md)
+  : Fragment habitat along barriers
+- [`sf_habitat_buffer()`](https://urbio-ecology.github.io/urbioconnect/reference/sf_habitat_buffer.md)
+  : Buffer habitat by distance
+- [`sf_habitat_connectivity()`](https://urbio-ecology.github.io/urbioconnect/reference/sf_habitat_connectivity.md)
+  : Calculate habitat connectivity
+- [`show_image_tabs()`](https://urbio-ecology.github.io/urbioconnect/reference/show_image_tabs.md)
+  : Display images in tabs
+- [`show_tabs()`](https://urbio-ecology.github.io/urbioconnect/reference/show_tabs.md)
+  : Display plots in tabs
+- [`summarise_connectivity()`](https://urbio-ecology.github.io/urbioconnect/reference/summarise_connectivity.md)
+  : Summarise connectivity metrics
+- [`to_sentence()`](https://urbio-ecology.github.io/urbioconnect/reference/to_sentence.md)
+  : Convert snake_case to sentence case
+- [`total_habitat_area()`](https://urbio-ecology.github.io/urbioconnect/reference/total_habitat_area.md)
+  : Calculate total habitat area
+
+# Articles
+
+### All vignettes
+
+- [Getting
+  started](https://urbio-ecology.github.io/urbioconnect/articles/getting-started.md):
+- [Using raster vs
+  vector](https://urbio-ecology.github.io/urbioconnect/articles/raster-vs-vector.md):
+- [Using urbioconnect in a targets
+  pipeline](https://urbio-ecology.github.io/urbioconnect/articles/targets-pipeline.md):

@@ -1,0 +1,75 @@
+# Prepare habitat and barrier rasters
+
+Prepare habitat and barrier rasters
+
+## Usage
+
+``` r
+prepare_rasters(
+  habitat,
+  barrier,
+  data_resolution = 10,
+  target_resolution = 500
+)
+```
+
+## Arguments
+
+- habitat:
+
+  SF object. Habitat spatial data.
+
+- barrier:
+
+  SF object. Barrier spatial data.
+
+- data_resolution:
+
+  Numeric. Fine resolution in meters. Default, 10.
+
+- target_resolution:
+
+  Numeric. Coarse resolution in meters. Default, 500.
+
+## Value
+
+List with `habitat_raster` and `barrier_raster` elements.
+
+## Examples
+
+``` r
+lizard_habitat_sf <- terra::as.polygons(example_habitat(), dissolve = TRUE) |>
+  sf::st_as_sf()
+lizard_barrier_shp <- example_barrier_shp()
+#> Reading layer `lizard_barrier' from data source 
+#>   `/home/runner/work/_temp/Library/urbioconnect/ex/lizard_barrier.shp' 
+#>   using driver `ESRI Shapefile'
+#> Simple feature collection with 1 feature and 1 field
+#> Geometry type: MULTIPOLYGON
+#> Dimension:     XY
+#> Bounding box:  xmin: 326089.6 ymin: 5820342 xmax: 327662.5 ymax: 5821909
+#> Projected CRS: GDA94 / MGA zone 55
+prepare_rasters(lizard_habitat_sf, lizard_barrier_shp)
+#> $habitat_raster
+#> class       : SpatRaster 
+#> size        : 200, 200, 1  (nrow, ncol, nlyr)
+#> resolution  : 10.01307, 10.02632  (x, y)
+#> extent      : 326109.6, 328112.2, 5819883, 5821888  (xmin, xmax, ymin, ymax)
+#> coord. ref. : GDA94 / MGA zone 55 (EPSG:28355) 
+#> source(s)   : memory
+#> name        : layer 
+#> min value   :     1 
+#> max value   :     1 
+#> 
+#> $barrier_raster
+#> class       : SpatRaster 
+#> size        : 200, 200, 1  (nrow, ncol, nlyr)
+#> resolution  : 10.01307, 10.02632  (x, y)
+#> extent      : 326109.6, 328112.2, 5819883, 5821888  (xmin, xmax, ymin, ymax)
+#> coord. ref. : GDA94 / MGA zone 55 (EPSG:28355) 
+#> source(s)   : memory
+#> name        : layer 
+#> min value   :     0 
+#> max value   :     1 
+#> 
+```

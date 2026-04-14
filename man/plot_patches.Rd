@@ -36,5 +36,6 @@ fragment_patches <- assign_patches_to_fragments(
   remaining_habitat = remaining_habitat,
   fragment = fragmented
   ) |> add_patch_area()
+
 plot_patches(fragment_patches, distance = buffer_dist)
 }

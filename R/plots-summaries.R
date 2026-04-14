@@ -195,6 +195,7 @@ to_sentence <- function(x) {
 #'   remaining_habitat = remaining_habitat,
 #'   fragment = fragmented
 #'   ) |> add_patch_area()
+#'
 #' plot_patches(fragment_patches, distance = buffer_dist)
 plot_patches <- function(
   patch_id,
@@ -222,10 +223,12 @@ plot_patches <- function(
     tidyterra::geom_spatraster(data = patch_raster) +
     ggplot2::scale_fill_manual(values = colour_map, na.value = NA) +
     ggplot2::theme_minimal() +
-    ggplot2::theme(legend.position = "none") +
+    ggplot2::theme(legend.position = "none", aspect.ratio = 1) +
     ggplot2::theme_sub_panel(
       border = ggplot2::element_rect(
-        colour = "grey85"
+        colour = "grey85",
+        grid.major = ggplot2::element_blank(),
+        grid.minor = ggplot2::element_blank()
       )
     ) +
     ggplot2::labs(
@@ -235,6 +238,10 @@ plot_patches <- function(
       subtitle = glue::glue(
         "# patches: {n_patches}\nBuffer size: {distance}m\n{n_cols} colours"
       )
+    ) +
+    ggplot2::theme_sub_axis(
+      text = ggplot2::element_blank(),
+      ticks = ggplot2::element_blank()
     )
 }
 

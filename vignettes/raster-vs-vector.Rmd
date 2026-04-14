@@ -1,0 +1,262 @@
+---
+title: "Using raster vs vector"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Using raster vs vector}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r}
+#| include: false
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.align = "center"
+)
+```
+
+```{r}
+#| label: setup
+library(urbioconnect)
+library(terra)
+library(sf)
+```
+
+`urbioconnect` can perform habitat connectivity analysis on either **rasters** from `terra`, and a **vectors** built on `sf`. Both implement the same underlying method from Kirk et al. (2023) and produce compatible outputs. The choice between them depends on your input data format and the scale of your analysis. 
+
+This vignette demonstrates the raster and vector methods on the same example data, compares their outputs, then offers practical guidance on which to choose.
+
+## Rasters and vectors
+
+Rasters are essentially matrices - grids of cells at a fixed resolution. Vectors are essentially polygons - shapes drawn by a line. See below an example of Luxembourg as a raster on the left, where the colour values correspond to elevation. On the right is a vector, showing the 12 different cantons.
+
+```{r}
+#| label: show-raster-vector
+#| echo: false
+#| fig.show: "hold"
+#| fig.width: 6
+#| fig.height: 3
+par(mfrow = c(1, 2), mar = c(4, 4, .1, .1))
+f <- system.file("ex/elev.tif", package="terra")
+r <- rast(f)
+plot(r, legend = FALSE)
+
+f <- system.file("ex/lux.shp", package="terra")
+v <- vect(f)
+plot(v)
+```
+
+
+`urbioconnect` uses rasters that work on `SpatRaster` (Spatial Raster) objects. Buffering is performed using a focal window (`terra::focal()`), and connected patches are identified using `terra::patches()`.
+
+The vector approach works on `sf` objects. Habitat and barriers are represented as polygons. Buffering uses `sf::st_buffer()`, and connectivity is determined by spatial intersection (`sf::st_intersects()`).
+
+Both approaches expose convenience functions: `habitat_connectivity()` for rasters, and `sf_habitat_connectivity()` for vector. These run the full workflow in a single call.
+
+## Running raster and vector models on the same data
+
+### Prepare the example data
+
+The package ships with lizard habitat and barrier data from Darebin Creek in Melbourne. The habitat is available as a raster, and the barrier as both a raster and a shapefile.
+
+```{r}
+#| label: load-data
+# Raster inputs
+habitat_rast <- example_habitat()
+barrier_rast <- example_barrier()
+
+# Vector inputs
+# Convert the habitat raster to polygons for the vector approach
+habitat_sf <- terra::as.polygons(example_habitat(), dissolve = TRUE) |>
+  sf::st_as_sf()
+
+barrier_sf <- example_barrier_shp()
+```
+
+It is good practice to clean vector data before analysis, especially when working with real-world shapefiles that may contain topology errors or overlapping polygons. We have a `clean()` function in `urbioconnect` which runs `sf::st_make_valid()`, then unions the polygons, then simplifies with `st_simplify()`.
+
+```{r}
+#| label: clean-vector
+barrier_sf_clean <- clean(barrier_sf)
+habitat_sf_clean <- clean(habitat_sf)
+buffer_dist <- 10
+```
+
+### Raster approach
+
+We will compare the raster and vector data timings, as well, using the `tictoc` package
+
+```{r}
+#| label: raster-approach
+library(tictoc)
+tic()
+raster_result <- habitat_connectivity(
+  habitat = habitat_rast,
+  barrier = barrier_rast,
+  distance = buffer_dist,
+  verbose = FALSE
+)
+rast_time <- toc()
+
+raster_result
+```
+
+The raster result has columns `patch_id`, `area` (square metres), and `area_squared`.
+
+### Vector approach
+
+```{r}
+#| label: vector-approach
+tic()
+vector_result <- sf_habitat_connectivity(
+  habitat = habitat_sf_clean,
+  barrier = barrier_sf_clean,
+  distance = buffer_dist
+)
+vect_time <- toc()
+
+vector_result
+```
+
+The vector result has columns `patch_id`, `area` , and `area_squared`.
+
+## Comparing raster vs vector
+
+Both approaches produce one row per connected habitat patch, with patch area and squared area.
+
+```{r}
+#| label: compare
+nrow(raster_result)
+nrow(vector_result)
+```
+
+Small differences in patch counts and areas are expected. The raster approach discretises space into cells, so patch boundaries are approximated at the chosen resolution. The vector approach preserves exact polygon geometry, so it typically produces slightly different (and arguably more precise) patch boundaries, particularly along curved or irregular barrier edges.
+
+```{r}
+#| label: tic-time
+#| echo: false
+tic_time <- function(x) as.numeric(x$toc - x$tic)
+tic_time(rast_time)
+```
+
+Timings for the methods are also important to consider. The raster approach took `r tic_time(rast_time)` seconds, and the vector approach took `r tic_time(vect_time)` seconds.
+
+## Summarising connectivity metrics
+
+`summarise_connectivity()` works with output from either approach. You simply pass the appropriate area columns as vectors.
+
+```{r}
+#| label: summarise-raster
+# Raster approach output uses the `area` column
+summarise_connectivity(
+  area_squared = raster_result$area_squared,
+  area_total = raster_result$area,
+  buffer_distance = buffer_dist,
+  target_resolution = 500,
+  data_resolution = 10,
+  aggregation_factor = 50,
+  species_name = "Blue-tongued Lizard (raster)"
+)
+```
+
+```{r}
+#| label: summarise-vector
+# Vector approach output uses the `area_total` column
+# Strip units before passing to summarise_connectivity
+summarise_connectivity(
+  area_squared = vector_result$area_squared,
+  area_total = vector_result$area,
+  buffer_distance = buffer_dist,
+  target_resolution = NA,
+  data_resolution = NA,
+  aggregation_factor = NA,
+  species_name = "Blue-tongued Lizard (vector)"
+) 
+```
+
+The metrics — effective mesh size, probability of connectedness, mean patch area — will be close but not identical between the two approaches, reflecting the geometric differences described above.
+
+## Which approach should you use?
+
+One factor to consider is **what format your input data is already in**. The other factor to consider is whether the data is large and computational time is important. For many situations, the raster based approaches will be much faster.
+
+| Situation | Recommended approach |
+|---|---|
+| Habitat data is a GeoTIFF or other raster | Raster (`habitat_connectivity()`) |
+| Habitat data is a shapefile or GeoPackage | Vector (`sf_habitat_connectivity()`) |
+| Very large study area (regional scale) | Raster (faster for large grids) |
+| Small, precise study area | Vector (no resolution loss) |
+| Need output maps or GeoTIFFs | Raster (native map output) |
+| Exact polygon boundaries matter | Vector (no rasterisation artefacts) |
+
+### Raster approach trade-offs
+
+- Faster for large study areas because operations run on regular grids
+- Straightforward to visualise as maps and export as GeoTIFFs for use in GIS software
+- Resolution must be chosen upfront: coarser resolution speeds up computation but loses fine-scale habitat detail
+- A slight loss of geometric precision is introduced when rasterising polygon inputs
+
+### Vector approach trade-offs
+
+- Preserves exact polygon geometry with no resolution-related approximation
+- Better suited to small, precisely delineated study areas
+- No need to choose a resolution
+- Can become slow for complex geometries with many vertices; running `clean()` beforehand helps
+
+### Converting between raster and vector
+
+If your habitat is in raster format but you want to use the vector approach (or vice versa), conversion is straightforward.
+
+```{r}
+#| label: conversion
+#| eval: false
+# Raster to vector
+habitat_sf <- terra::as.polygons(example_habitat(), dissolve = TRUE) |>
+  sf::st_as_sf()
+
+# Vector to raster (requires a template grid)
+rasters <- prepare_rasters(
+  habitat = habitat_sf,
+  barrier = barrier_sf,
+  data_resolution = 10,
+  target_resolution = 500
+)
+habitat_rast <- rasters$habitat_raster
+barrier_rast <- rasters$barrier_raster
+```
+
+`prepare_rasters()` handles the conversion from `sf` to `SpatRaster` at the resolutions you specify, aligning the habitat and barrier grids so they are ready for the raster approach.
+
+## Analysis step-by-step 
+
+Both approaches expose individual functions if you need finer control — for example, to inspect intermediate outputs or to substitute a custom step.
+
+```{r}
+#| label: step-by-step-raster
+#| eval: false
+# Raster step-by-step
+barrier_mask <- create_barrier_mask(barrier_rast)
+remaining <- drop_habitat_under_barrier(habitat_rast, barrier_mask)
+buffered <- habitat_buffer(remaining, distance = 50)
+fragmented <- fragment_habitat(buffered, barrier_mask)
+patches <- assign_patches_to_fragments(remaining, fragmented) |>
+  add_patch_area()
+areas <- aggregate_connected_patches(patches)
+```
+
+```{r}
+#| label: step-by-step-vector
+#| eval: false
+# Vector step-by-step
+buffered_sf <- sf_habitat_buffer(habitat_sf_clean, distance = 50)
+fragments_sf <- sf_fragment_habitat(buffered_sf, barrier_sf_clean)
+remaining_sf <- sf_drop_habitat_under_barrier(habitat_sf_clean, barrier_sf_clean)
+patches_sf <- sf_assign_patches_to_fragments(remaining_sf, fragments_sf) |>
+  sf_add_patch_area()
+areas_sf <- sf_aggregate_connected_patches(patches_sf)
+```
+
+## References
+
+Kirk, H., Soanes, K., Amati, M., Bekessy, S., Harrison, L., Parris, K., Ramalho, C., van de Ree, R., & Threlfall, C. (2023). Ecological connectivity as a planning tool for the conservation of wildlife in cities. *MethodsX*, 10, 101989. <https://doi.org/10.1016/j.mex.2022.101989>

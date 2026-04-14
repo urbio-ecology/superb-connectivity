@@ -321,9 +321,9 @@ habitat_connectivity <- function(
       habitat,
       barrier,
       distance
-    )
+    )$result
   }
-  habitat_connectivity$result
+  habitat_connectivity
 }
 
 #' @noRd

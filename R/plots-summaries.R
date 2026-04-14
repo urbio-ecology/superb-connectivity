@@ -39,12 +39,19 @@ col2hex <- function(color_name) {
 #'   habitat = lizard_habitat,
 #'   distance = 10,
 #'   species_name = "Blue Tongue Lizard",
-#'   col_barrier = "white",
+#'   col_barrier = "black",
 #'   col_buffer = "lightgreen",
-#'   col_habitat = "seagreen",
-#'   col_paper = "grey50"
+#'   col_habitat = "seagreen"
 #' )
 #' gg_bar_hab_buf
+#'
+#' add north arrow and scale bar with ggspatiallibrary(ggspatial)
+#' library(tidyterra)
+#' gg_bar_hab_buf +
+#'  annotation_north_arrow(
+#'    style = north_arrow_fancy_orienteering()
+#'   ) +
+#'   annotation_scale()
 gg_barrier_habitat_buffer <- function(
   barrier,
   buffered,
@@ -54,7 +61,7 @@ gg_barrier_habitat_buffer <- function(
   col_barrier,
   col_buffer,
   col_habitat,
-  col_paper = "white"
+  col_paper = NA
 ) {
   # First, reclassify your rasters to assign actual color values
   barrier_coloured <- terra::subst(barrier, 1, col_barrier)
@@ -73,7 +80,7 @@ gg_barrier_habitat_buffer <- function(
       labels = c(
         stats::setNames("Habitat", col_habitat),
         stats::setNames("Buffer", col_buffer),
-        stats::setNames("Barrier",col_barrier)
+        stats::setNames("Barrier", col_barrier)
       ),
       breaks = c(
         col_habitat,
@@ -86,7 +93,7 @@ gg_barrier_habitat_buffer <- function(
     ggplot2::labs(
       title = glue::glue("{species_name} Habitat"),
       subtitle = glue::glue("With a {distance}m buffer, and barrier shown")
-     ) +
+    ) +
     ggplot2::theme_sub_plot(
       title = marquee::element_marquee()
     ) +
@@ -98,7 +105,6 @@ gg_barrier_habitat_buffer <- function(
       grid.major = ggplot2::element_blank(),
       grid.minor = ggplot2::element_blank()
     )
-
 }
 
 # TODO this might only be needed as an internal function

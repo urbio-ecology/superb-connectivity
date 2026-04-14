@@ -63,12 +63,12 @@ test_that("sf_aggregate_connected_patches groups by patch_id", {
 
   result <- sf_aggregate_connected_patches(patches)
 
-  expect_gt(result$area_total[1], result$area_total[2])
+  expect_gt(result$area[1], result$area[2])
   expect_gt(result$area_squared[1], result$area_squared[2])
   expect_equal(nrow(result), 2)
   expect_snapshot(names(result))
-  expect_all_true(as.numeric(result$area_total) > 0)
-  expect_equal(result$area_squared, result$area_total^2)
+  expect_all_true(as.numeric(result$area) > 0)
+  expect_equal(result$area_squared, result$area^2)
 })
 
 test_that("sf_aggregate_connected_patches computes area_squared correctly", {
@@ -80,7 +80,7 @@ test_that("sf_aggregate_connected_patches computes area_squared correctly", {
 
   result <- sf_aggregate_connected_patches(patches)
 
-  expect_equal(result$area_squared, result$area_total^2)
+  expect_equal(result$area_squared, result$area^2)
 })
 
 test_that("sf_drop_habitat_under_barrier removes overlapping habitat", {
@@ -104,5 +104,5 @@ test_that("sf_habitat_connectivity returns a data frame with expected columns", 
   expect_s3_class(result, "data.frame")
   expect_snapshot(names(result))
   expect_gt(nrow(result), 0)
-  expect_all_true(as.numeric(result$area_total) > 0)
+  expect_all_true(as.numeric(result$area) > 0)
 })

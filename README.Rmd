@@ -124,4 +124,9 @@ Other vignettes include:
 
 For a complete, production-ready `targets` pipeline with real species data and report generation, see:
 
+You can see example usage of the package, using a targets workflow at https://github.com/urbio-ecology/urbio-eco-targets.
+
+# Acknowledgements
+
+We would like to thank Kylie Soanes, Marco Amati, Sarah Bekessy, Lee Harrison, Kirsten Parris, Cristina Ramalho, Rodney van de Ree, and Caragh Threlfall for their work on the original paper this work is based upon. We would also like to thank Hugh Stanford, Nadine Gaskell, Kerryn Kneebone, and Nicholas Golding for their comments and insight during the development of the methods and software.
 **<https://github.com/urbio-ecology/urbio-eco-targets>**

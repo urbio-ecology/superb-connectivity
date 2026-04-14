@@ -68,7 +68,7 @@ barrier <- example_barrier()
 areas <- habitat_connectivity(
   habitat  = habitat,
   barrier  = barrier,
-  distance = 100,
+  distance = 10,
   verbose  = FALSE
 )
 

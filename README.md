@@ -69,7 +69,7 @@ barrier <- example_barrier()
 areas <- habitat_connectivity(
   habitat  = habitat,
   barrier  = barrier,
-  distance = 100,
+  distance = 10,
   verbose  = FALSE
 )
 
@@ -77,12 +77,12 @@ head(areas)
 #> # A tibble: 6 × 3
 #>   patch_id   area area_squared
 #>      <dbl>  <dbl>        <dbl>
-#> 1        1  5096.    25972178.
-#> 2        3 98006.  9605178767.
-#> 3        4  2416.     5837832.
-#> 4        5  1304.     1700646.
-#> 5        6  5008.    25083449.
-#> 6        7  1112.     1236681.
+#> 1        1 97878. 9580104085. 
+#> 2       15  2416.    5837832. 
+#> 3       18  1304.    1700646. 
+#> 4       32  1592.    2534763. 
+#> 5       37     4          16.0
+#> 6       39  3332.   11103470.
 ```
 
 Summarise the connectivity metrics:
@@ -100,7 +100,7 @@ summarise_connectivity(
 #> # A tibble: 1 × 10
 #>   species_name    buffer_distance n_patches prob_connectedness effective_mesh_ha
 #>   <chr>                     <dbl>     <int>              <dbl>             <dbl>
-#> 1 Blue-tongued L…             100        58           0.000017                 4
+#> 1 Blue-tongued L…             100       163           0.000017                 4
 #> # ℹ 5 more variables: patch_area_mean <dbl>, patch_area_total_ha <dbl>,
 #> #   target_resolution <dbl>, data_resolution <dbl>, aggregation_factor <dbl>
 ```

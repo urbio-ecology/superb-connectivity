@@ -99,7 +99,7 @@ connectivity_probability <- function(area_squared, area_total) {
 #' summarise_connectivity(
 #'   area_squared = lizard_areas_connected$area_squared,
 #'   area_total = lizard_areas_connected$area,
-#'   buffer_distance = 50,
+#'   buffer_distance = 10,
 #'   target_resolution = 500,
 #'   data_resolution = 10,
 #'   aggregation_factor = 50,

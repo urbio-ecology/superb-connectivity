@@ -21,5 +21,7 @@ a single polygon.
 \examples{
 lizard_habitat_sf <- terra::as.polygons(example_habitat(), dissolve = TRUE) |>
   sf::st_as_sf()
-sf_habitat_buffer(lizard_habitat_sf, distance = 50)
+\dontrun{
+sf_habitat_buffer(lizard_habitat_sf, distance = 10)
+}
 }

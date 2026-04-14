@@ -27,6 +27,6 @@ areas of connected patches.
 lizard_barrier_shp <- example_barrier_shp()
 lizard_habitat_sf <- terra::as.polygons(example_habitat(), dissolve = TRUE) |>
   sf::st_as_sf()
-result <- sf_habitat_connectivity(lizard_habitat_sf, lizard_barrier_shp, distance = 50)
+result <- sf_habitat_connectivity(lizard_habitat_sf, lizard_barrier_shp, distance = 10)
 result
 }

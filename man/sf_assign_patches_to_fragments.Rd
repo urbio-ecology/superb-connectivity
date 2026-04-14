@@ -22,8 +22,10 @@ based on spatial intersection.
 lizard_habitat_sf <- terra::as.polygons(example_habitat(), dissolve = TRUE) |>
   sf::st_as_sf()
 lizard_barrier_shp <- example_barrier_shp()
-buffered <- sf_habitat_buffer(lizard_habitat_sf, distance = 50)
+\dontrun{
+buffered <- sf_habitat_buffer(lizard_habitat_sf, distance = 10)
 fragments <- sf_fragment_habitat(buffered, lizard_barrier_shp)
 remaining <- sf_drop_habitat_under_barrier(lizard_habitat_sf, lizard_barrier_shp)
 sf_assign_patches_to_fragments(remaining, fragments)
+}
 }

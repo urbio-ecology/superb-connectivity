@@ -22,7 +22,7 @@ distances, otherwise it will just be a plot with one point.
 lizard_habitat <- example_habitat()
 lizard_barrier <- example_barrier()
 results <- purrr::map(
-  c(50, 100),
+  c(10, 20),
   function(d) {
     full <- habitat_connectivity_full(lizard_habitat, lizard_barrier,
       distance = d, verbose = FALSE)

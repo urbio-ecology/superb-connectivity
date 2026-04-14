@@ -45,13 +45,13 @@ Save barrier habitat buffer plot
 \dontrun{
 lizard_habitat <- example_habitat()
 lizard_barrier <- example_barrier()
-buffered <- habitat_buffer(lizard_habitat, distance = 50)
+buffered <- habitat_buffer(lizard_habitat, distance = 10)
 # Creates doc/plot-barrier-buffer-habitat-*.png in the working directory
 plot_barrier_habitat_buffer(
   barrier = lizard_barrier,
   buffered = buffered,
   habitat = lizard_habitat,
-  distance = 50,
+  distance = 10,
   species_name = "Blue-tongued Lizard",
   col_barrier = "white",
   col_buffer = "lightgreen",

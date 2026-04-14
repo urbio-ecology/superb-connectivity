@@ -377,7 +377,7 @@ habitat_connectivity <- function(
 #' result <- habitat_connectivity_full(
 #'   lizard_habitat,
 #'   lizard_barrier,
-#'   distance = 50,
+#'   distance = 10,
 #'   verbose = FALSE
 #' )
 #' names(result)

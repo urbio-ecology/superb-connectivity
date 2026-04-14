@@ -30,7 +30,7 @@ lizard_barrier <- example_barrier()
 result <- habitat_connectivity_full(
   lizard_habitat,
   lizard_barrier,
-  distance = 50,
+  distance = 10,
   verbose = FALSE
 )
 names(result)

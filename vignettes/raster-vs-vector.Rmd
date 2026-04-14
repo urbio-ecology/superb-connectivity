@@ -238,7 +238,7 @@ Both approaches expose individual functions if you need finer control — for ex
 # Raster step-by-step
 barrier_mask <- create_barrier_mask(barrier_rast)
 remaining <- drop_habitat_under_barrier(habitat_rast, barrier_mask)
-buffered <- habitat_buffer(remaining, distance = 50)
+buffered <- habitat_buffer(remaining, distance = 10)
 fragmented <- fragment_habitat(buffered, barrier_mask)
 patches <- assign_patches_to_fragments(remaining, fragmented) |>
   add_patch_area()
@@ -249,7 +249,7 @@ areas <- aggregate_connected_patches(patches)
 #| label: step-by-step-vector
 #| eval: false
 # Vector step-by-step
-buffered_sf <- sf_habitat_buffer(habitat_sf_clean, distance = 50)
+buffered_sf <- sf_habitat_buffer(habitat_sf_clean, distance = 10)
 fragments_sf <- sf_fragment_habitat(buffered_sf, barrier_sf_clean)
 remaining_sf <- sf_drop_habitat_under_barrier(habitat_sf_clean, barrier_sf_clean)
 patches_sf <- sf_assign_patches_to_fragments(remaining_sf, fragments_sf) |>

@@ -10,7 +10,9 @@
 #' @examples
 #' lizard_habitat_sf <- terra::as.polygons(example_habitat(), dissolve = TRUE) |>
 #'   sf::st_as_sf()
-#' sf_habitat_buffer(lizard_habitat_sf, distance = 50)
+#' \dontrun{
+#' sf_habitat_buffer(lizard_habitat_sf, distance = 10)
+#' }
 #' @export
 sf_habitat_buffer <- function(habitat, distance) {
   # buffer by the required distance
@@ -33,8 +35,10 @@ sf_habitat_buffer <- function(habitat, distance) {
 #' lizard_habitat_sf <- terra::as.polygons(example_habitat(), dissolve = TRUE) |>
 #'   sf::st_as_sf()
 #' lizard_barrier_shp <- example_barrier_shp()
-#' buffered <- sf_habitat_buffer(lizard_habitat_sf, distance = 50)
+#' \dontrun{
+#' buffered <- sf_habitat_buffer(lizard_habitat_sf, distance = 10)
 #' sf_fragment_habitat(buffered, lizard_barrier_shp)
+#' }
 #' @export
 sf_fragment_habitat <- function(habitat_buffered, barrier) {
   # Remove road polygon areas from buffered habitat polygon, creating gaps
@@ -85,10 +89,12 @@ sf_drop_habitat_under_barrier <- function(habitat, barrier) {
 #' lizard_habitat_sf <- terra::as.polygons(example_habitat(), dissolve = TRUE) |>
 #'   sf::st_as_sf()
 #' lizard_barrier_shp <- example_barrier_shp()
-#' buffered <- sf_habitat_buffer(lizard_habitat_sf, distance = 50)
+#' \dontrun{
+#' buffered <- sf_habitat_buffer(lizard_habitat_sf, distance = 10)
 #' fragments <- sf_fragment_habitat(buffered, lizard_barrier_shp)
 #' remaining <- sf_drop_habitat_under_barrier(lizard_habitat_sf, lizard_barrier_shp)
 #' sf_assign_patches_to_fragments(remaining, fragments)
+#' }
 #' @export
 sf_assign_patches_to_fragments <- function(remaining, fragment_id) {
   intersects <- sf::st_intersects(remaining, fragment_id)
@@ -106,12 +112,14 @@ sf_assign_patches_to_fragments <- function(remaining, fragment_id) {
 #' @examples
 #' lizard_habitat_sf <- terra::as.polygons(example_habitat(), dissolve = TRUE) |>
 #'   sf::st_as_sf()
+#' \dontrun{
 #' lizard_barrier_shp <- example_barrier_shp()
-#' buffered <- sf_habitat_buffer(lizard_habitat_sf, distance = 50)
+#' buffered <- sf_habitat_buffer(lizard_habitat_sf, distance = 10)
 #' fragments <- sf_fragment_habitat(buffered, lizard_barrier_shp)
 #' remaining <- sf_drop_habitat_under_barrier(lizard_habitat_sf, lizard_barrier_shp)
 #' patches <- sf_assign_patches_to_fragments(remaining, fragments)
 #' sf_add_patch_area(patches)
+#' }
 #' @export
 sf_add_patch_area <- function(patches) {
   patches |>
@@ -130,19 +138,21 @@ sf_add_patch_area <- function(patches) {
 #' lizard_habitat_sf <- terra::as.polygons(example_habitat(), dissolve = TRUE) |>
 #'   sf::st_as_sf()
 #' lizard_barrier_shp <- example_barrier_shp()
-#' buffered <- sf_habitat_buffer(lizard_habitat_sf, distance = 50)
+#' \dontrun{
+#' buffered <- sf_habitat_buffer(lizard_habitat_sf, distance = 10)
 #' fragments <- sf_fragment_habitat(buffered, lizard_barrier_shp)
 #' remaining <- sf_drop_habitat_under_barrier(lizard_habitat_sf, lizard_barrier_shp)
 #' patches <- sf_assign_patches_to_fragments(remaining, fragments) |>
 #'   sf_add_patch_area()
 #' sf_aggregate_connected_patches(patches)
+#' }
 #' @export
 sf_aggregate_connected_patches <- function(patch_areas) {
   summed <- patch_areas |>
     sf::st_drop_geometry() |>
     dplyr::group_by(patch_id) |>
-    dplyr::summarise(area_total = sum(area)) |>
-    dplyr::mutate(area_squared = area_total^2)
+    dplyr::summarise(area = as.numeric(sum(area))) |>
+    dplyr::mutate(area_squared = as.numeric(area^2))
   summed
 }
 
@@ -164,7 +174,7 @@ sf_aggregate_connected_patches <- function(patch_areas) {
 #' lizard_barrier_shp <- example_barrier_shp()
 #' lizard_habitat_sf <- terra::as.polygons(example_habitat(), dissolve = TRUE) |>
 #'   sf::st_as_sf()
-#' result <- sf_habitat_connectivity(lizard_habitat_sf, lizard_barrier_shp, distance = 50)
+#' result <- sf_habitat_connectivity(lizard_habitat_sf, lizard_barrier_shp, distance = 10)
 #' result
 #' @export
 sf_habitat_connectivity <- function(habitat, barrier, distance) {

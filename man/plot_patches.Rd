@@ -38,4 +38,13 @@ fragment_patches <- assign_patches_to_fragments(
   ) |> add_patch_area()
 
 plot_patches(fragment_patches, distance = buffer_dist)
+
+#' add north arrow and scale bar with ggspatial
+library(ggspatial)
+library(tidyterra)
+plot_patches(fragment_patches, distance = buffer_dist) +
+ annotation_north_arrow(
+   style = north_arrow_fancy_orienteering()
+  ) +
+  annotation_scale()
 }

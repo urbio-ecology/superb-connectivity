@@ -58,7 +58,8 @@ gg_bar_hab_buf <- gg_barrier_habitat_buffer(
 )
 gg_bar_hab_buf
 
-add north arrow and scale bar with ggspatiallibrary(ggspatial)
+add north arrow and scale bar with ggspatial
+library(ggspatial)
 library(tidyterra)
 gg_bar_hab_buf +
  annotation_north_arrow(

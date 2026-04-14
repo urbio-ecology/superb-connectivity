@@ -45,7 +45,8 @@ col2hex <- function(color_name) {
 #' )
 #' gg_bar_hab_buf
 #'
-#' add north arrow and scale bar with ggspatiallibrary(ggspatial)
+#' add north arrow and scale bar with ggspatial
+#' library(ggspatial)
 #' library(tidyterra)
 #' gg_bar_hab_buf +
 #'  annotation_north_arrow(
@@ -197,6 +198,15 @@ to_sentence <- function(x) {
 #'   ) |> add_patch_area()
 #'
 #' plot_patches(fragment_patches, distance = buffer_dist)
+#'
+#' #' add north arrow and scale bar with ggspatial
+#' library(ggspatial)
+#' library(tidyterra)
+#' plot_patches(fragment_patches, distance = buffer_dist) +
+#'  annotation_north_arrow(
+#'    style = north_arrow_fancy_orienteering()
+#'   ) +
+#'   annotation_scale()
 plot_patches <- function(
   patch_id,
   distance,
@@ -226,10 +236,10 @@ plot_patches <- function(
     ggplot2::theme(legend.position = "none", aspect.ratio = 1) +
     ggplot2::theme_sub_panel(
       border = ggplot2::element_rect(
-        colour = "grey85",
-        grid.major = ggplot2::element_blank(),
-        grid.minor = ggplot2::element_blank()
-      )
+        colour = "grey85"
+      ),
+      grid.major = ggplot2::element_blank(),
+      grid.minor = ggplot2::element_blank()
     ) +
     ggplot2::labs(
       title = glue::glue(

@@ -15,3 +15,7 @@ Character vector. Text converted to sentence case.
 \description{
 Convert snake_case to sentence case
 }
+\examples{
+to_sentence("prob_connectedness")
+to_sentence(c("n_patches", "patch_area_mean", "effective_mesh_ha"))
+}

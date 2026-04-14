@@ -15,3 +15,6 @@ Numeric. Mean patch size.
 \description{
 Calculate mean patch size
 }
+\examples{
+mean_patch_size(lizard_areas_connected$area)
+}

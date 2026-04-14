@@ -8,6 +8,9 @@
 #' @param habitat SF object or terra SpatRaster.
 #' @param resolution Numeric. Cell size in meters (default: 10).
 #' @returns Terra SpatRaster. Empty raster grid.
+#' @examples
+#' lizard_barrier_shp <- example_barrier_shp()
+#' empty_grid(lizard_barrier_shp, resolution = 10)
 #' @export
 empty_grid <- function(habitat, resolution = 10) {
   grid <- terra::rast(
@@ -45,6 +48,11 @@ align_to <- function(x, template, method = "near") {
 #' @param data_resolution Numeric. Fine resolution in meters. Default, 10.
 #' @param target_resolution Numeric. Coarse resolution in meters. Default, 500.
 #' @returns List with `habitat_raster` and `barrier_raster` elements.
+#' @examples
+#' lizard_habitat_sf <- terra::as.polygons(example_habitat(), dissolve = TRUE) |>
+#'   sf::st_as_sf()
+#' lizard_barrier_shp <- example_barrier_shp()
+#' prepare_rasters(lizard_habitat_sf, lizard_barrier_shp)
 #' @export
 prepare_rasters <- function(
   habitat,
@@ -313,7 +321,7 @@ habitat_connectivity <- function(
       habitat,
       barrier,
       distance
-    )
+    )$result
   }
   habitat_connectivity
 }
@@ -356,8 +364,23 @@ habitat_connectivity <- function(
 # TODO revist this - is this needed for the shiny app?
 #' Calculate habitat connectivity with visualization data
 #'
+#' Like [habitat_connectivity()], but also returns the intermediate rasters
+#' (buffered habitat, patch ID raster, barrier mask, remaining habitat) useful
+#' for mapping and reporting.
+#'
 #' @inheritParams habitat_connectivity
-#' @returns List with intermediate rasters and connectivity metrics.
+#' @returns Named list with elements: `buffered_habitat`, `patch_id_raster`,
+#'   `areas_connected`, `barrier_mask`, `remaining_habitat`.
+#' @examples
+#' lizard_habitat <- example_habitat()
+#' lizard_barrier <- example_barrier()
+#' result <- habitat_connectivity_full(
+#'   lizard_habitat,
+#'   lizard_barrier,
+#'   distance = 10,
+#'   verbose = FALSE
+#' )
+#' names(result)
 #' @export
 habitat_connectivity_full <- function(
   habitat,

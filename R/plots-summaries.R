@@ -45,7 +45,7 @@ col2hex <- function(color_name) {
 #' )
 #' gg_bar_hab_buf
 #'
-#' add north arrow and scale bar with ggspatial
+#' # add north arrow and scale bar with ggspatial
 #' library(ggspatial)
 #' library(tidyterra)
 #' gg_bar_hab_buf +

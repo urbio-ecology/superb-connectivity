@@ -73,7 +73,7 @@ gg_barrier_habitat_buffer <- function(
       labels = c(
         stats::setNames("Habitat", col_habitat),
         stats::setNames("Buffer", col_buffer),
-        stats::setNames("Barrier",col_barrier)
+        stats::setNames("Barrier", col_barrier)
       ),
       breaks = c(
         col_habitat,
@@ -86,7 +86,7 @@ gg_barrier_habitat_buffer <- function(
     ggplot2::labs(
       title = glue::glue("{species_name} Habitat"),
       subtitle = glue::glue("With a {distance}m buffer, and barrier shown")
-     ) +
+    ) +
     ggplot2::theme_sub_plot(
       title = marquee::element_marquee()
     ) +
@@ -98,7 +98,6 @@ gg_barrier_habitat_buffer <- function(
       grid.major = ggplot2::element_blank(),
       grid.minor = ggplot2::element_blank()
     )
-
 }
 
 # TODO this might only be needed as an internal function
@@ -111,6 +110,9 @@ gg_barrier_habitat_buffer <- function(
 #' @param message Character. Prefix message for each tab heading.
 #'
 #' @returns Invisible NULL. Prints plots with markdown headers.
+#' @examples
+#' plots <- list("100m" = ggplot2::ggplot(), "200m" = ggplot2::ggplot())
+#' show_tabs(plots, message = "Buffer distance")
 #' @export
 show_tabs <- function(the_list, message = NULL) {
   for (iplot in names(the_list)) {
@@ -130,6 +132,12 @@ show_tabs <- function(the_list, message = NULL) {
 #' @param message Character. Prefix message for each tab heading.
 #'
 #' @returns Invisible NULL. Includes images with markdown headers.
+#' @examples
+#' \dontrun{
+#' # Typically used inside a knitr/quarto document
+#' image_paths <- c("100m" = "plot-100m.png", "200m" = "plot-200m.png")
+#' show_image_tabs(image_paths, message = "Buffer distance")
+#' }
 #' @export
 show_image_tabs <- function(images, message = NULL) {
   for (iplot in names(images)) {
@@ -144,6 +152,9 @@ show_image_tabs <- function(images, message = NULL) {
 #' @param x Character vector. Text in snake_case format.
 #'
 #' @returns Character vector. Text converted to sentence case.
+#' @examples
+#' to_sentence("prob_connectedness")
+#' to_sentence(c("n_patches", "patch_area_mean", "effective_mesh_ha"))
 #' @export
 to_sentence <- function(x) {
   x |>
@@ -231,7 +242,26 @@ plot_patches <- function(
 #'   columns for species_name, buffer_distance, and various metrics.
 #'
 #' @returns A ggplot2 object with faceted plots of connectivity metrics.
-#'
+#' @examples
+#' lizard_habitat <- example_habitat()
+#' lizard_barrier <- example_barrier()
+#' results <- purrr::map(
+#'   c(10, 20),
+#'   function(d) {
+#'     full <- habitat_connectivity_full(lizard_habitat, lizard_barrier,
+#'       distance = d, verbose = FALSE)
+#'     summarise_connectivity(
+#'       area_squared = full$areas_connected$area_squared,
+#'       area_total = full$areas_connected$area,
+#'       buffer_distance = d,
+#'       target_resolution = 500,
+#'       data_resolution = 10,
+#'       aggregation_factor = 50,
+#'       species_name = "Blue-tongued Lizard"
+#'     )
+#'   }
+#' ) |> purrr::list_rbind()
+#' plot_connectivity(results)
 #' @export
 plot_connectivity <- function(results_connect_habitat) {
   geo_cols <- scico::scico(n = 6, palette = "bukavu") |> as.list()

@@ -18,3 +18,9 @@ SF object with habitat patches that don't intersect barriers.
 Removes all habitat areas that intersect with barriers and splits
 multipolygons into individual patches.
 }
+\examples{
+lizard_habitat_sf <- terra::as.polygons(example_habitat(), dissolve = TRUE) |>
+  sf::st_as_sf()
+lizard_barrier_shp <- example_barrier_shp()
+sf_drop_habitat_under_barrier(lizard_habitat_sf, lizard_barrier_shp)
+}

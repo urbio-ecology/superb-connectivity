@@ -20,6 +20,5 @@ represents the probability that two randomly chosen points within habitat
 remain connected.
 }
 \examples{
-areas <- c(100, 200, 150)
-effective_mesh_size(areas^2, areas)
+effective_mesh_size(lizard_areas_connected$area_squared, lizard_areas_connected$area)
 }

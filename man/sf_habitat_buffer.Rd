@@ -18,3 +18,10 @@ SF object with buffered and unioned habitat geometry.
 Creates a buffer around habitat polygons and unions overlapping areas into
 a single polygon.
 }
+\examples{
+lizard_habitat_sf <- terra::as.polygons(example_habitat(), dissolve = TRUE) |>
+  sf::st_as_sf()
+\dontrun{
+sf_habitat_buffer(lizard_habitat_sf, distance = 10)
+}
+}

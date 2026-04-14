@@ -52,3 +52,5 @@ renv/
 data-raw/wood-bird
 
 /.quarto/
+/doc/
+/Meta/

@@ -10,8 +10,25 @@
 #' @param col_paper colour to colour the paper layer of ggplot
 #' @param distance buffer distance, numeric
 #'
-#' @return saved ggplot and file path
-#' @author njtierney
+#' @returns Named character vector. The file path, named by the buffer distance.
+#' @examples
+#' \dontrun{
+#' lizard_habitat <- example_habitat()
+#' lizard_barrier <- example_barrier()
+#' buffered <- habitat_buffer(lizard_habitat, distance = 10)
+#' # Creates doc/plot-barrier-buffer-habitat-*.png in the working directory
+#' plot_barrier_habitat_buffer(
+#'   barrier = lizard_barrier,
+#'   buffered = buffered,
+#'   habitat = lizard_habitat,
+#'   distance = 10,
+#'   species_name = "Blue-tongued Lizard",
+#'   col_barrier = "white",
+#'   col_buffer = "lightgreen",
+#'   col_habitat = "seagreen",
+#'   col_paper = "grey50"
+#' )
+#' }
 #' @export
 plot_barrier_habitat_buffer <- function(
   barrier,
@@ -37,7 +54,7 @@ plot_barrier_habitat_buffer <- function(
   )
 
   plot_barrier_habitat_name <- glue::glue(
-    "doc/plot-barrier-buffer-habitat-{species_name}-buffer-{distance}.png"
+    "plot-barrier-buffer-habitat-{species_name}-buffer-{distance}.png"
   )
 
   ggplot2::ggsave(

@@ -39,12 +39,19 @@ col2hex <- function(color_name) {
 #'   habitat = lizard_habitat,
 #'   distance = 10,
 #'   species_name = "Blue Tongue Lizard",
-#'   col_barrier = "white",
+#'   col_barrier = "black",
 #'   col_buffer = "lightgreen",
-#'   col_habitat = "seagreen",
-#'   col_paper = "grey50"
+#'   col_habitat = "seagreen"
 #' )
 #' gg_bar_hab_buf
+#'
+#' add north arrow and scale bar with ggspatiallibrary(ggspatial)
+#' library(tidyterra)
+#' gg_bar_hab_buf +
+#'  annotation_north_arrow(
+#'    style = north_arrow_fancy_orienteering()
+#'   ) +
+#'   annotation_scale()
 gg_barrier_habitat_buffer <- function(
   barrier,
   buffered,
@@ -54,7 +61,7 @@ gg_barrier_habitat_buffer <- function(
   col_barrier,
   col_buffer,
   col_habitat,
-  col_paper = "white"
+  col_paper = NA
 ) {
   # First, reclassify your rasters to assign actual color values
   barrier_coloured <- terra::subst(barrier, 1, col_barrier)

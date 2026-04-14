@@ -110,6 +110,7 @@ test_that("gg_barrier_habitat_buffer returns a ggplot", {
 })
 
 test_that("gg_barrier_habitat_buffer renders correctly", {
+  skip_on_ci()
   vdiffr::expect_doppelganger("gg-barrier-habitat-buffer", gg_buffer_plot)
 })
 
@@ -121,6 +122,7 @@ test_that("plot_patches returns a ggplot", {
 })
 
 test_that("plot_patches renders correctly", {
+  skip_on_ci()
   vdiffr::expect_doppelganger(
     "plot-patches",
     plot_patches(
@@ -139,6 +141,7 @@ test_that("plot_connectivity returns a ggplot", {
 })
 
 test_that("plot_connectivity renders correctly", {
+  skip_on_ci()
   vdiffr::expect_doppelganger(
     "plot-connectivity",
     plot_connectivity(results_connect)

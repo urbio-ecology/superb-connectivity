@@ -13,6 +13,7 @@ Useful links:
 \itemize{
   \item \url{https://urbio-ecology.r-universe.dev/urbioconnect}
   \item \url{https://github.com/urbio-ecology/urbioconnect}
+  \item \url{https://urbio-ecology.github.io/urbioconnect/}
   \item Report bugs at \url{https://github.com/urbio-ecology/urbioconnect/issues}
 }
 

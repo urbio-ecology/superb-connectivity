@@ -11,10 +11,17 @@ clean(spatial_data, ...)
 
 \item{...}{extra options (currently not used)}
 }
+\value{
+An sf object with simplified and validated geometry.
+}
 \description{
 Many shape files contain errors, places where the edges of a polygon cross
 over or polygons which overlap. This helps remove some of those errors by
 smoothing the edges of polygons, removing corners, and dissolving edges
 where polygons overlap. This reduces the complexity of the shape file,
 making future steps faster.
+}
+\examples{
+lizard_barrier_shp <- example_barrier_shp()
+clean(lizard_barrier_shp)
 }

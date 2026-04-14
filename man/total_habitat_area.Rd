@@ -16,3 +16,6 @@ Numeric. Total habitat area in hectares.
 \description{
 Calculate total habitat area
 }
+\examples{
+total_habitat_area(lizard_areas_connected$area)
+}

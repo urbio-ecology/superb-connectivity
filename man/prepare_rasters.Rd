@@ -26,3 +26,9 @@ List with \code{habitat_raster} and \code{barrier_raster} elements.
 \description{
 Prepare habitat and barrier rasters
 }
+\examples{
+lizard_habitat_sf <- terra::as.polygons(example_habitat(), dissolve = TRUE) |>
+  sf::st_as_sf()
+lizard_barrier_shp <- example_barrier_shp()
+prepare_rasters(lizard_habitat_sf, lizard_barrier_shp)
+}

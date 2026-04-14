@@ -13,7 +13,7 @@ gg_barrier_habitat_buffer(
   col_barrier,
   col_buffer,
   col_habitat,
-  col_paper = "white"
+  col_paper = NA
 )
 }
 \arguments{
@@ -52,10 +52,17 @@ gg_bar_hab_buf <- gg_barrier_habitat_buffer(
   habitat = lizard_habitat,
   distance = 10,
   species_name = "Blue Tongue Lizard",
-  col_barrier = "white",
+  col_barrier = "black",
   col_buffer = "lightgreen",
-  col_habitat = "seagreen",
-  col_paper = "grey50"
+  col_habitat = "seagreen"
 )
 gg_bar_hab_buf
+
+add north arrow and scale bar with ggspatiallibrary(ggspatial)
+library(tidyterra)
+gg_bar_hab_buf +
+ annotation_north_arrow(
+   style = north_arrow_fancy_orienteering()
+  ) +
+  annotation_scale()
 }

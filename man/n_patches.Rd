@@ -15,3 +15,6 @@ Integer. Number of patches.
 \description{
 Count number of habitat patches
 }
+\examples{
+n_patches(lizard_areas_connected$area)
+}

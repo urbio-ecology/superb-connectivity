@@ -10,6 +10,10 @@
 #'
 #' @param ... extra options (currently not used)
 #'
+#' @returns An sf object with simplified and validated geometry.
+#' @examples
+#' lizard_barrier_shp <- example_barrier_shp()
+#' clean(lizard_barrier_shp)
 #' @export
 clean <- function(spatial_data, ...) {
   validated <- sf::st_make_valid(spatial_data)

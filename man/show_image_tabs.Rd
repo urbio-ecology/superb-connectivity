@@ -18,3 +18,10 @@ Invisible NULL. Includes images with markdown headers.
 Helper function to display a list of image paths with tab headers in R
 Markdown documents.
 }
+\examples{
+\dontrun{
+# Typically used inside a knitr/quarto document
+image_paths <- c("100m" = "plot-100m.png", "200m" = "plot-200m.png")
+show_image_tabs(image_paths, message = "Buffer distance")
+}
+}

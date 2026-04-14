@@ -18,3 +18,12 @@ SF object with individual habitat fragments, each with a unique ID.
 Removes barrier areas from buffered habitat and splits the result into
 individual polygon fragments.
 }
+\examples{
+lizard_habitat_sf <- terra::as.polygons(example_habitat(), dissolve = TRUE) |>
+  sf::st_as_sf()
+lizard_barrier_shp <- example_barrier_shp()
+\dontrun{
+buffered <- sf_habitat_buffer(lizard_habitat_sf, distance = 10)
+sf_fragment_habitat(buffered, lizard_barrier_shp)
+}
+}

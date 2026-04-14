@@ -18,3 +18,6 @@ Numeric. Probability of connectedness (0-1).
 Computes the probability that two randomly chosen points within habitat
 are connected, accounting for fragmentation.
 }
+\examples{
+connectivity_probability(lizard_areas_connected$area_squared, lizard_areas_connected$area)
+}

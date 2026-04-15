@@ -1,20 +1,28 @@
 # urbioconnect
 
-`urbioconnect` quantifies how connected habitats are in urban
-landscapes. This is done by providing **habitat** and **barrier**
-information. For example, raster grid data on blue tongued-lizard
-**habitat**, how far their roaming range is (say, 100 metres) and raster
-grid data on road and buildings (**barriers**). It then computes
-connected habitat patches and a set of landscape-level metrics:
+`urbioconnect` provides tools to quantify ecological connectivity for
+different urban wildlife species based on:
+
+- wildlife **habitat**
+- urban **barrier**
+- the roaming range (in metres) of the wildlife
+- A few other parameters
+
+An example of this is raster grid data on blue tongued-lizard
+**habitat**, raster grid data on road and buildings (**barriers**), and
+how far their roaming range is (say, 100 metres).
+
+`urbioconnect` computes metrics for assessing the connectedness of these
+habitat patches:
 
 - effective mesh size
 - probability of connectedness
-- number of patches,
-- total patch area and
+- number of patches
+- total patch area, and
 - mean patch area
 
-Note that you can use **vector** or **raster** data for habitat and
-barrier formats.
+Note you can use **vector** (shapefile) or **raster** data for habitat
+and barrier formats.
 
 This method is described in:
 
@@ -24,9 +32,24 @@ This method is described in:
 > cities. *MethodsX*, 10, 101989.
 > <https://doi.org/10.1016/j.mex.2022.101989>
 
+See the [getting
+started](https://urbio-ecology.github.io/urbioconnect/articles/getting-started.html)
+vignette for more details.
+
+## Shiny app
+
 We include a Shiny app for interactive analysis and report generation.
-These are powered by a set of R functions, so you can implement your own
-methods or approaches to pipelines.
+You can launch the interactive Shiny app with:
+
+``` r
+run_connectivity_app()
+```
+
+A hosted version is available at:
+<https://njtierney.shinyapps.io/urbioconnect/>
+
+You do not need the shiny app to perform analyses. All functions have
+been designed to work together in a pipeline - see example usage below.
 
 ## Installation
 
@@ -39,7 +62,7 @@ install.packages(
 )
 ```
 
-Or install the development version from GitHub:
+Or from GitHub:
 
 ``` r
 # install.packages("pak")
@@ -50,29 +73,67 @@ pak::pak("urbio-ecology/urbioconnect")
 
 ``` r
 library(urbioconnect)
+library(terra)
+#> terra 1.9.11
 
 # load example habitat and barrier rasters
 habitat <- example_habitat()
 barrier <- example_barrier()
 
-# run the full raster pipeline at a 100 m buffer distance
+plot(habitat, col = "seagreen", legend = FALSE, main = "Lizard Habitat")
+plot(barrier, col = c("grey", "white"), legend = FALSE, main = "Lizard Barriers")
+```
+
+![](reference/figures/README-get-started-1.png)![](reference/figures/README-get-started-2.png)
+
+``` r
+plot(barrier, col = c("grey", "white"), legend = FALSE, main = "Lizard Barriers and Habitat")
+plot(habitat, col = "seagreen", legend = FALSE, add = TRUE)
+```
+
+![](reference/figures/README-lizard-hab-barrier-1.png)
+
+``` r
+# run the full raster pipeline at a 10m buffer distance
 areas <- habitat_connectivity(
   habitat  = habitat,
   barrier  = barrier,
-  distance = 10,
-  verbose  = FALSE
+  distance = 10
 )
+#> ℹ Creating barrier mask
+#> ✔ Creating barrier mask [40ms]
+#> 
+#> ℹ Removing habitat underneath barrier
+#> ✔ Removing habitat underneath barrier [17ms]
+#> 
+#> ℹ Adding buffer of 10m to habitat layer
+#> ✔ Adding buffer of 10m to habitat layer [257ms]
+#> 
+#> ℹ Fragmenting habitat layer along barrier intersection
+#> ✔ Fragmenting habitat layer along barrier intersection [14ms]
+#> 
+#> ℹ Assigning patches ID to fragments
+#> ✔ Assigning patches ID to fragments [685ms]
+#> 
+#> ℹ Summarising area in each patch
+#> ✔ Summarising area in each patch [1.4s]
+#> 
 
-head(areas)
-#> # A tibble: 6 × 3
-#>   patch_id   area area_squared
-#>      <dbl>  <dbl>        <dbl>
-#> 1        1 97878. 9580104085. 
-#> 2       15  2416.    5837832. 
-#> 3       18  1304.    1700646. 
-#> 4       32  1592.    2534763. 
-#> 5       37     4          16.0
-#> 6       39  3332.   11103470.
+areas
+#> # A tibble: 163 × 3
+#>    patch_id    area area_squared
+#>       <dbl>   <dbl>        <dbl>
+#>  1        1 97878.  9580104085. 
+#>  2       15  2416.     5837832. 
+#>  3       18  1304.     1700646. 
+#>  4       32  1592.     2534763. 
+#>  5       37     4           16.0
+#>  6       39  3332.    11103470. 
+#>  7       40   132.       17426. 
+#>  8       44   108.       11665. 
+#>  9       47    36.0       1296. 
+#> 10       57  1112.     1236681. 
+#> # ℹ 153 more rows
 ```
 
 Summarise the connectivity metrics:
@@ -95,55 +156,30 @@ summarise_connectivity(
 #> #   target_resolution <dbl>, data_resolution <dbl>, aggregation_factor <dbl>
 ```
 
-## Shiny app
+## Works with raster and vector (shapefile)
 
-Launch the interactive Shiny app:
+See the vignette,
+[“raster-vs-vector”](https://urbio-ecology.github.io/urbioconnect/articles/raster-vs-vector.html)
+for a side-by-side comparison and guidance on when to use raster or
+vector. We mostly recommend using raster.
 
-``` r
-run_connectivity_app()
-```
+# Example usage
 
-A hosted version is available at:
-<https://njtierney.shinyapps.io/urbioconnect/>
-
-## Two pipelines: raster and vector
-
-`urbioconnect` provides two complete analysis pipelines:
-
-|               | Raster pipeline                                                                                            | Vector pipeline                                                                                                  |
-|---------------|------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------|
-| Input format  | `terra` SpatRaster                                                                                         | `sf` polygons                                                                                                    |
-| Main function | [`habitat_connectivity()`](https://urbio-ecology.github.io/urbioconnect/reference/habitat_connectivity.md) | [`sf_habitat_connectivity()`](https://urbio-ecology.github.io/urbioconnect/reference/sf_habitat_connectivity.md) |
-| Best for      | Large study areas, GeoTIFF output                                                                          | Small precise study areas, exact polygon boundaries                                                              |
-
-You can see the vignette, “raster-vs-vector” for a side-by-side
-comparison and guidance on which to choose with
-
-``` r
-vignette("raster-vs-vector")
-```
-
-Other vignettes include:
-
-- [`vignette("getting-started")`](https://urbio-ecology.github.io/urbioconnect/articles/getting-started.md)
-  — step-by-step raster workflow with example data
-- [`vignette("targets-pipeline")`](https://urbio-ecology.github.io/urbioconnect/articles/targets-pipeline.md)
-  — using `urbioconnect` in a `targets` reproducible pipeline
-
-## Example targets workflow
-
-For a complete, production-ready `targets` pipeline with real species
-data and report generation, see:
-
-You can see example usage of the package, using a targets workflow at
-<https://github.com/urbio-ecology/urbio-eco-targets>.
+We have an example pipeline using `targets` and `geotarget`, which
+includes generating reports as output at
+<https://github.com/urbio-ecology/urbio-eco-targets>. See the vignette
+[“Using urbioconnect in a targets
+pipeline”](https://urbio-ecology.github.io/urbioconnect/articles/targets-pipeline.html)
+for more detail.
 
 # Acknowledgements
 
-We would like to thank Kylie Soanes, Marco Amati, Sarah Bekessy, Lee
+This research was conducted on the unceded lands of the Wurundjeri Woi
+Wurrung and Bunurong Boon Wurrung peoples of the Eastern Kulin Nation,
+and the unceded lands of nipaluna, lutruwita of the muwinina people. We
+would like to thank Kylie Soanes, Marco Amati, Sarah Bekessy, Lee
 Harrison, Kirsten Parris, Cristina Ramalho, Rodney van de Ree, and
 Caragh Threlfall for their work on the original paper this work is based
 upon. We would also like to thank Hugh Stanford, Nadine Gaskell, Kerryn
 Kneebone, and Nicholas Golding for their comments and insight during the
 development of the methods and software.
-**<https://github.com/urbio-ecology/urbio-eco-targets>**

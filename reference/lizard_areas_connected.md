@@ -58,4 +58,19 @@ lizard_areas_connected <- habitat_connectivity(
     verbose = FALSE
   )
 } # }
+lizard_areas_connected
+#> # A tibble: 59 × 3
+#>    patch_id   area area_squared
+#>       <dbl>  <dbl>        <dbl>
+#>  1        1  5096.    25972178.
+#>  2        3 98006.  9605178767.
+#>  3        5  2416.     5837832.
+#>  4        6  1304.     1700646.
+#>  5        7  5008.    25083449.
+#>  6        8  1112.     1236681.
+#>  7        9  3276.    10733423.
+#>  8       10  3232.    10447202.
+#>  9       11   500.      250028.
+#> 10       12  2004.     4016481.
+#> # ℹ 49 more rows
 ```

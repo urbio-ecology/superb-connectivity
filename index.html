@@ -18,7 +18,7 @@
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
-    <nav class="navbar navbar-expand-lg fixed-top bg-light" data-bs-theme="light" aria-label="Site navigation"><div class="container">
+    <nav class="navbar navbar-expand-lg fixed-top bg-primary" data-bs-theme="dark" aria-label="Site navigation"><div class="container">
 
     <a class="navbar-brand me-2" href="index.html">urbioconnect</a>
 
@@ -59,64 +59,115 @@
 </h1></div>
 <!-- badges: start -->
 
-<p><code>urbioconnect</code> quantifies how connected habitats are in urban landscapes. This is done by providing <strong>habitat</strong> and <strong>barrier</strong> information. For example, raster grid data on blue tongued-lizard <strong>habitat</strong>, how far their roaming range is (say, 100 metres) and raster grid data on road and buildings (<strong>barriers</strong>). It then computes connected habitat patches and a set of landscape-level metrics:</p>
+<p><code>urbioconnect</code> provides tools to quantify ecological connectivity for different urban wildlife species based on:</p>
+<ul>
+<li>wildlife <strong>habitat</strong>
+</li>
+<li>urban <strong>barrier</strong>
+</li>
+<li>the roaming range (in metres) of the wildlife</li>
+<li>A few other parameters</li>
+</ul>
+<p>An example of this is raster grid data on blue tongued-lizard <strong>habitat</strong>, raster grid data on road and buildings (<strong>barriers</strong>), and how far their roaming range is (say, 100 metres).</p>
+<p><code>urbioconnect</code> computes metrics for assessing the connectedness of these habitat patches:</p>
 <ul>
 <li>effective mesh size</li>
 <li>probability of connectedness</li>
-<li>number of patches,</li>
-<li>total patch area and</li>
+<li>number of patches</li>
+<li>total patch area, and</li>
 <li>mean patch area</li>
 </ul>
-<p>Note that you can use <strong>vector</strong> or <strong>raster</strong> data for habitat and barrier formats.</p>
+<p>Note you can use <strong>vector</strong> (shapefile) or <strong>raster</strong> data for habitat and barrier formats.</p>
 <p>This method is described in:</p>
 <blockquote>
 <p>Kirk, H., Soanes, K., Amati, M., Bekessy, S., Harrison, L., Parris, K., Ramalho, C., van de Ree, R., &amp; Threlfall, C. (2023). Ecological connectivity as a planning tool for the conservation of wildlife in cities. <em>MethodsX</em>, 10, 101989. <a href="https://doi.org/10.1016/j.mex.2022.101989" class="external-link uri">https://doi.org/10.1016/j.mex.2022.101989</a></p>
 </blockquote>
-<p>We include a Shiny app for interactive analysis and report generation. These are powered by a set of R functions, so you can implement your own methods or approaches to pipelines.</p>
+<p>See the <a href="https://urbio-ecology.github.io/urbioconnect/articles/getting-started.html">getting started</a> vignette for more details.</p>
+<div class="section level2">
+<h2 id="shiny-app">Shiny app<a class="anchor" aria-label="anchor" href="#shiny-app"></a>
+</h2>
+<p>We include a Shiny app for interactive analysis and report generation. You can launch the interactive Shiny app with:</p>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="reference/run_connectivity_app.html">run_connectivity_app</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<p>A hosted version is available at: <a href="https://njtierney.shinyapps.io/urbioconnect/" class="external-link uri">https://njtierney.shinyapps.io/urbioconnect/</a></p>
+<p>You do not need the shiny app to perform analyses. All functions have been designed to work together in a pipeline - see example usage below.</p>
+</div>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
 <p>Install from R-universe:</p>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span></span>
 <span>  <span class="st">"urbioconnect"</span>,</span>
 <span>  repos <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"https://urbio-ecology.r-universe.dev"</span>, <span class="st">"https://cloud.r-project.org"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p>Or install the development version from GitHub:</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<p>Or from GitHub:</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># install.packages("pak")</span></span>
 <span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"urbio-ecology/urbioconnect"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="get-started">Get started<a class="anchor" aria-label="anchor" href="#get-started"></a>
 </h2>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://urbio-ecology.r-universe.dev/urbioconnect" class="external-link">urbioconnect</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rspatial.org/" class="external-link">terra</a></span><span class="op">)</span></span>
+<span><span class="co">#&gt; terra 1.9.11</span></span>
 <span></span>
 <span><span class="co"># load example habitat and barrier rasters</span></span>
 <span><span class="va">habitat</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/example-lizard-data.html">example_habitat</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">barrier</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/example-lizard-data.html">example_barrier</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># run the full raster pipeline at a 100 m buffer distance</span></span>
+<span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">habitat</span>, col <span class="op">=</span> <span class="st">"seagreen"</span>, legend <span class="op">=</span> <span class="cn">FALSE</span>, main <span class="op">=</span> <span class="st">"Lizard Habitat"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">barrier</span>, col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"grey"</span>, <span class="st">"white"</span><span class="op">)</span>, legend <span class="op">=</span> <span class="cn">FALSE</span>, main <span class="op">=</span> <span class="st">"Lizard Barriers"</span><span class="op">)</span></span></code></pre></div>
+<p><img src="reference/figures/README-get-started-1.png" alt="" width="45%"><img src="reference/figures/README-get-started-2.png" alt="" width="45%"></p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">barrier</span>, col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"grey"</span>, <span class="st">"white"</span><span class="op">)</span>, legend <span class="op">=</span> <span class="cn">FALSE</span>, main <span class="op">=</span> <span class="st">"Lizard Barriers and Habitat"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">habitat</span>, col <span class="op">=</span> <span class="st">"seagreen"</span>, legend <span class="op">=</span> <span class="cn">FALSE</span>, add <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<p><img src="reference/figures/README-lizard-hab-barrier-1.png" alt="" width="90%"></p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># run the full raster pipeline at a 10m buffer distance</span></span>
 <span><span class="va">areas</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/habitat_connectivity.html">habitat_connectivity</a></span><span class="op">(</span></span>
 <span>  habitat  <span class="op">=</span> <span class="va">habitat</span>,</span>
 <span>  barrier  <span class="op">=</span> <span class="va">barrier</span>,</span>
-<span>  distance <span class="op">=</span> <span class="fl">10</span>,</span>
-<span>  verbose  <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span>  distance <span class="op">=</span> <span class="fl">10</span></span>
 <span><span class="op">)</span></span>
+<span><span class="co">#&gt; ℹ Creating barrier mask</span></span>
+<span><span class="co">#&gt; ✔ Creating barrier mask [40ms]</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; ℹ Removing habitat underneath barrier</span></span>
+<span><span class="co">#&gt; ✔ Removing habitat underneath barrier [17ms]</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; ℹ Adding buffer of 10m to habitat layer</span></span>
+<span><span class="co">#&gt; ✔ Adding buffer of 10m to habitat layer [257ms]</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; ℹ Fragmenting habitat layer along barrier intersection</span></span>
+<span><span class="co">#&gt; ✔ Fragmenting habitat layer along barrier intersection [14ms]</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; ℹ Assigning patches ID to fragments</span></span>
+<span><span class="co">#&gt; ✔ Assigning patches ID to fragments [685ms]</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; ℹ Summarising area in each patch</span></span>
+<span><span class="co">#&gt; ✔ Summarising area in each patch [1.4s]</span></span>
+<span><span class="co">#&gt; </span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">areas</span><span class="op">)</span></span>
-<span><span class="co">#&gt; # A tibble: 6 × 3</span></span>
-<span><span class="co">#&gt;   patch_id   area area_squared</span></span>
-<span><span class="co">#&gt;      &lt;dbl&gt;  &lt;dbl&gt;        &lt;dbl&gt;</span></span>
-<span><span class="co">#&gt; 1        1 97878. 9580104085. </span></span>
-<span><span class="co">#&gt; 2       15  2416.    5837832. </span></span>
-<span><span class="co">#&gt; 3       18  1304.    1700646. </span></span>
-<span><span class="co">#&gt; 4       32  1592.    2534763. </span></span>
-<span><span class="co">#&gt; 5       37     4          16.0</span></span>
-<span><span class="co">#&gt; 6       39  3332.   11103470.</span></span></code></pre></div>
+<span><span class="va">areas</span></span>
+<span><span class="co">#&gt; # A tibble: 163 × 3</span></span>
+<span><span class="co">#&gt;    patch_id    area area_squared</span></span>
+<span><span class="co">#&gt;       &lt;dbl&gt;   &lt;dbl&gt;        &lt;dbl&gt;</span></span>
+<span><span class="co">#&gt;  1        1 97878.  9580104085. </span></span>
+<span><span class="co">#&gt;  2       15  2416.     5837832. </span></span>
+<span><span class="co">#&gt;  3       18  1304.     1700646. </span></span>
+<span><span class="co">#&gt;  4       32  1592.     2534763. </span></span>
+<span><span class="co">#&gt;  5       37     4           16.0</span></span>
+<span><span class="co">#&gt;  6       39  3332.    11103470. </span></span>
+<span><span class="co">#&gt;  7       40   132.       17426. </span></span>
+<span><span class="co">#&gt;  8       44   108.       11665. </span></span>
+<span><span class="co">#&gt;  9       47    36.0       1296. </span></span>
+<span><span class="co">#&gt; 10       57  1112.     1236681. </span></span>
+<span><span class="co">#&gt; # ℹ 153 more rows</span></span></code></pre></div>
 <p>Summarise the connectivity metrics:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/summarise_connectivity.html">summarise_connectivity</a></span><span class="op">(</span></span>
 <span>  area_squared     <span class="op">=</span> <span class="va">areas</span><span class="op">$</span><span class="va">area_squared</span>,</span>
 <span>  area_total       <span class="op">=</span> <span class="va">areas</span><span class="op">$</span><span class="va">area</span>,</span>
@@ -134,70 +185,20 @@
 <span><span class="co">#&gt; #   target_resolution &lt;dbl&gt;, data_resolution &lt;dbl&gt;, aggregation_factor &lt;dbl&gt;</span></span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="shiny-app">Shiny app<a class="anchor" aria-label="anchor" href="#shiny-app"></a>
+<h2 id="works-with-raster-and-vector-shapefile">Works with raster and vector (shapefile)<a class="anchor" aria-label="anchor" href="#works-with-raster-and-vector-shapefile"></a>
 </h2>
-<p>Launch the interactive Shiny app:</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="reference/run_connectivity_app.html">run_connectivity_app</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p>A hosted version is available at: <a href="https://njtierney.shinyapps.io/urbioconnect/" class="external-link uri">https://njtierney.shinyapps.io/urbioconnect/</a></p>
+<p>See the vignette, <a href="https://urbio-ecology.github.io/urbioconnect/articles/raster-vs-vector.html">“raster-vs-vector”</a> for a side-by-side comparison and guidance on when to use raster or vector. We mostly recommend using raster.</p>
 </div>
-<div class="section level2">
-<h2 id="two-pipelines-raster-and-vector">Two pipelines: raster and vector<a class="anchor" aria-label="anchor" href="#two-pipelines-raster-and-vector"></a>
-</h2>
-<p><code>urbioconnect</code> provides two complete analysis pipelines:</p>
-<table class="table">
-<colgroup>
-<col width="33%">
-<col width="33%">
-<col width="33%">
-</colgroup>
-<thead><tr class="header">
-<th></th>
-<th>Raster pipeline</th>
-<th>Vector pipeline</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td>Input format</td>
-<td>
-<code>terra</code> SpatRaster</td>
-<td>
-<code>sf</code> polygons</td>
-</tr>
-<tr class="even">
-<td>Main function</td>
-<td><code><a href="reference/habitat_connectivity.html">habitat_connectivity()</a></code></td>
-<td><code><a href="reference/sf_habitat_connectivity.html">sf_habitat_connectivity()</a></code></td>
-</tr>
-<tr class="odd">
-<td>Best for</td>
-<td>Large study areas, GeoTIFF output</td>
-<td>Small precise study areas, exact polygon boundaries</td>
-</tr>
-</tbody>
-</table>
-<p>You can see the vignette, “raster-vs-vector” for a side-by-side comparison and guidance on which to choose with</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/vignette.html" class="external-link">vignette</a></span><span class="op">(</span><span class="st">"raster-vs-vector"</span><span class="op">)</span></span></code></pre></div>
-<p>Other vignettes include:</p>
-<ul>
-<li>
-<code><a href="articles/getting-started.html">vignette("getting-started")</a></code> — step-by-step raster workflow with example data</li>
-<li>
-<code><a href="articles/targets-pipeline.html">vignette("targets-pipeline")</a></code> — using <code>urbioconnect</code> in a <code>targets</code> reproducible pipeline</li>
-</ul>
 </div>
-<div class="section level2">
-<h2 id="example-targets-workflow">Example targets workflow<a class="anchor" aria-label="anchor" href="#example-targets-workflow"></a>
-</h2>
-<p>For a complete, production-ready <code>targets</code> pipeline with real species data and report generation, see:</p>
-<p>You can see example usage of the package, using a targets workflow at <a href="https://github.com/urbio-ecology/urbio-eco-targets" class="external-link uri">https://github.com/urbio-ecology/urbio-eco-targets</a>.</p>
-</div>
+<div class="section level1">
+<h1 id="example-usage">Example usage<a class="anchor" aria-label="anchor" href="#example-usage"></a>
+</h1>
+<p>We have an example pipeline using <code>targets</code> and <code>geotarget</code>, which includes generating reports as output at <a href="https://github.com/urbio-ecology/urbio-eco-targets" class="external-link uri">https://github.com/urbio-ecology/urbio-eco-targets</a>. See the vignette <a href="https://urbio-ecology.github.io/urbioconnect/articles/targets-pipeline.html">“Using urbioconnect in a targets pipeline”</a> for more detail.</p>
 </div>
 <div class="section level1">
 <h1 id="acknowledgements">Acknowledgements<a class="anchor" aria-label="anchor" href="#acknowledgements"></a>
 </h1>
-<p>We would like to thank Kylie Soanes, Marco Amati, Sarah Bekessy, Lee Harrison, Kirsten Parris, Cristina Ramalho, Rodney van de Ree, and Caragh Threlfall for their work on the original paper this work is based upon. We would also like to thank Hugh Stanford, Nadine Gaskell, Kerryn Kneebone, and Nicholas Golding for their comments and insight during the development of the methods and software. <strong><a href="https://github.com/urbio-ecology/urbio-eco-targets" class="external-link uri">https://github.com/urbio-ecology/urbio-eco-targets</a></strong></p>
+<p>This research was conducted on the unceded lands of the Wurundjeri Woi Wurrung and Bunurong Boon Wurrung peoples of the Eastern Kulin Nation, and the unceded lands of nipaluna, lutruwita of the muwinina people. We would like to thank Kylie Soanes, Marco Amati, Sarah Bekessy, Lee Harrison, Kirsten Parris, Cristina Ramalho, Rodney van de Ree, and Caragh Threlfall for their work on the original paper this work is based upon. We would also like to thank Hugh Stanford, Nadine Gaskell, Kerryn Kneebone, and Nicholas Golding for their comments and insight during the development of the methods and software.</p>
 </div>
 
   </main><aside class="col-md-3"><div class="links">

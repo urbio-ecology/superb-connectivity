@@ -29,16 +29,11 @@ Terra SpatRaster with buffered habitat.
 
 ``` r
 lizard_habitat <- example_habitat()
+library(terra)
+plot(lizard_habitat, col = "darkgreen", legend = FALSE)
+
 # run with a small buffer distance
-habitat_buffer(lizard_habitat, 5)
-#> class       : SpatRaster 
-#> size        : 763, 766, 1  (nrow, ncol, nlyr)
-#> resolution  : 2, 2  (x, y)
-#> extent      : 326109.6, 327641.6, 5820362, 5821888  (xmin, xmax, ymin, ymax)
-#> coord. ref. : GDA94 / MGA zone 55 (EPSG:28355) 
-#> source(s)   : memory
-#> varname     : lizard_habitat_raster 
-#> name        : focal_max 
-#> min value   :         1 
-#> max value   :         1 
+lizard_buff <- habitat_buffer(lizard_habitat, 10)
+plot(lizard_buff, col = "lightgreen", legend = FALSE)
+plot(lizard_habitat, col = "darkgreen", legend = FALSE, add = TRUE)
 ```

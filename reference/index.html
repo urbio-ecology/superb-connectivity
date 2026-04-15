@@ -3,7 +3,7 @@
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
-    <nav class="navbar navbar-expand-lg fixed-top bg-light" data-bs-theme="light" aria-label="Site navigation"><div class="container">
+    <nav class="navbar navbar-expand-lg fixed-top bg-primary" data-bs-theme="dark" aria-label="Site navigation"><div class="container">
 
     <a class="navbar-brand me-2" href="../index.html">urbioconnect</a>
 
@@ -38,7 +38,7 @@
     </div>
 
     <div class="section level2">
-      <h2 id="all-functions">All functions<a class="anchor" aria-label="anchor" href="#all-functions"></a></h2>
+      <h2 id="raster-functions">Raster functions<a class="anchor" aria-label="anchor" href="#raster-functions"></a></h2>
 
 
 
@@ -48,48 +48,6 @@
 
 
       <dl><dt>
-
-          <code><a href="add_patch_area.html">add_patch_area()</a></code>
-
-        </dt>
-        <dd>Add patch area layer</dd>
-
-        <dt>
-
-          <code><a href="aggregate_connected_patches.html">aggregate_connected_patches()</a></code>
-
-        </dt>
-        <dd>Aggregate connected patch areas</dd>
-
-        <dt>
-
-          <code><a href="assign_patches_to_fragments.html">assign_patches_to_fragments()</a></code>
-
-        </dt>
-        <dd>Assign patches to fragments</dd>
-
-        <dt>
-
-          <code><a href="clean.html">clean()</a></code>
-
-        </dt>
-        <dd>Clean any spatial data layer (shape file)</dd>
-
-        <dt>
-
-          <code><a href="col2hex.html">col2hex()</a></code>
-
-        </dt>
-        <dd>Convert color name to hexadecimal</dd>
-
-        <dt>
-
-          <code><a href="connectivity_probability.html">connectivity_probability()</a></code>
-
-        </dt>
-        <dd>Calculate connectivity probability</dd>
-
-        <dt>
 
           <code><a href="create_barrier_mask.html">create_barrier_mask()</a></code>
 
@@ -105,24 +63,10 @@
 
         <dt>
 
-          <code><a href="effective_mesh_size.html">effective_mesh_size()</a></code>
+          <code><a href="habitat_buffer.html">habitat_buffer()</a></code>
 
         </dt>
-        <dd>Calculate effective mesh size</dd>
-
-        <dt>
-
-          <code><a href="empty_grid.html">empty_grid()</a></code>
-
-        </dt>
-        <dd>Create Empty terra raster grid</dd>
-
-        <dt>
-
-          <code><a href="example-lizard-data.html">example_habitat()</a></code> <code><a href="example-lizard-data.html">example_barrier_shp()</a></code> <code><a href="example-lizard-data.html">example_barrier()</a></code>
-
-        </dt>
-        <dd>Lizard Habitat and Barrier Data from Melbourne.</dd>
+        <dd>Buffer habitat raster</dd>
 
         <dt>
 
@@ -133,59 +77,112 @@
 
         <dt>
 
-          <code><a href="generate_connectivity_report.html">generate_connectivity_report()</a></code>
+          <code><a href="assign_patches_to_fragments.html">assign_patches_to_fragments()</a></code>
 
         </dt>
-        <dd>Generate Connectivity Report</dd>
+        <dd>Assign patches to fragments</dd>
 
         <dt>
+
+          <code><a href="add_patch_area.html">add_patch_area()</a></code>
+
+        </dt>
+        <dd>Add patch area layer</dd>
+
+        <dt>
+
+          <code><a href="aggregate_connected_patches.html">aggregate_connected_patches()</a></code>
+
+        </dt>
+        <dd>Aggregate connected patch areas</dd>
+      </dl></div><div class="section level2">
+      <h2 id="vector-shapefile-functions">Vector (shapefile) functions<a class="anchor" aria-label="anchor" href="#vector-shapefile-functions"></a></h2>
+
+
+
+      <dl></dl></div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="prepare_rasters.html">prepare_rasters()</a></code>
+
+        </dt>
+        <dd>Prepare habitat and barrier rasters</dd>
+
+        <dt>
+
+          <code><a href="read_geometry.html">read_geometry()</a></code>
+
+        </dt>
+        <dd>Read shapefile geometry</dd>
+
+        <dt>
+
+          <code><a href="sf_habitat_buffer.html">sf_habitat_buffer()</a></code>
+
+        </dt>
+        <dd>Buffer habitat by distance</dd>
+
+        <dt>
+
+          <code><a href="sf_fragment_habitat.html">sf_fragment_habitat()</a></code>
+
+        </dt>
+        <dd>Fragment habitat along barriers</dd>
+
+        <dt>
+
+          <code><a href="sf_drop_habitat_under_barrier.html">sf_drop_habitat_under_barrier()</a></code>
+
+        </dt>
+        <dd>Remove habitat underneath barriers</dd>
+
+        <dt>
+
+          <code><a href="sf_assign_patches_to_fragments.html">sf_assign_patches_to_fragments()</a></code>
+
+        </dt>
+        <dd>Assign habitat patches to fragment IDs</dd>
+
+        <dt>
+
+          <code><a href="sf_add_patch_area.html">sf_add_patch_area()</a></code>
+
+        </dt>
+        <dd>Add patch area column</dd>
+
+        <dt>
+
+          <code><a href="sf_aggregate_connected_patches.html">sf_aggregate_connected_patches()</a></code>
+
+        </dt>
+        <dd>Aggregate connected patch areas</dd>
+
+        <dt>
+
+          <code><a href="sf_habitat_connectivity.html">sf_habitat_connectivity()</a></code>
+
+        </dt>
+        <dd>Calculate habitat connectivity</dd>
+      </dl></div><div class="section level2">
+      <h2 id="visualisation">Visualisation<a class="anchor" aria-label="anchor" href="#visualisation"></a></h2>
+
+
+
+      <dl></dl></div><div class="section level2">
+
+
+
+
+      <dl><dt>
 
           <code><a href="gg_barrier_habitat_buffer.html">gg_barrier_habitat_buffer()</a></code>
 
         </dt>
         <dd>Plot barrier, habitat, and buffer layers</dd>
-
-        <dt>
-
-          <code><a href="habitat_buffer.html">habitat_buffer()</a></code>
-
-        </dt>
-        <dd>Buffer habitat raster</dd>
-
-        <dt>
-
-          <code><a href="habitat_connectivity.html">habitat_connectivity()</a></code>
-
-        </dt>
-        <dd>Calculate habitat connectivity using terra</dd>
-
-        <dt>
-
-          <code><a href="habitat_connectivity_full.html">habitat_connectivity_full()</a></code>
-
-        </dt>
-        <dd>Calculate habitat connectivity with visualization data</dd>
-
-        <dt>
-
-          <code><a href="lizard_areas_connected.html">lizard_areas_connected</a></code>
-
-        </dt>
-        <dd>Connected habitat patch areas for Blue-tongued Lizard</dd>
-
-        <dt>
-
-          <code><a href="mean_patch_size.html">mean_patch_size()</a></code>
-
-        </dt>
-        <dd>Calculate mean patch size</dd>
-
-        <dt>
-
-          <code><a href="n_patches.html">n_patches()</a></code>
-
-        </dt>
-        <dd>Count number of habitat patches</dd>
 
         <dt>
 
@@ -207,76 +204,147 @@
 
         </dt>
         <dd>Plot connected habitat patches</dd>
+      </dl></div><div class="section level2">
+      <h2 id="summaries">Summaries<a class="anchor" aria-label="anchor" href="#summaries"></a></h2>
 
-        <dt>
 
-          <code><a href="prepare_rasters.html">prepare_rasters()</a></code>
+
+      <dl></dl></div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="effective_mesh_size.html">effective_mesh_size()</a></code>
 
         </dt>
-        <dd>Prepare habitat and barrier rasters</dd>
+        <dd>Calculate effective mesh size</dd>
 
         <dt>
 
-          <code><a href="read_geometry.html">read_geometry()</a></code>
+          <code><a href="connectivity_probability.html">connectivity_probability()</a></code>
 
         </dt>
-        <dd>Read shapefile geometry</dd>
+        <dd>Calculate connectivity probability</dd>
 
         <dt>
+
+          <code><a href="mean_patch_size.html">mean_patch_size()</a></code>
+
+        </dt>
+        <dd>Calculate mean patch size</dd>
+
+        <dt>
+
+          <code><a href="n_patches.html">n_patches()</a></code>
+
+        </dt>
+        <dd>Count number of habitat patches</dd>
+
+        <dt>
+
+          <code><a href="summarise_connectivity.html">summarise_connectivity()</a></code>
+
+        </dt>
+        <dd>Summarise connectivity metrics</dd>
+
+        <dt>
+
+          <code><a href="total_habitat_area.html">total_habitat_area()</a></code>
+
+        </dt>
+        <dd>Calculate total habitat area</dd>
+
+        <dt>
+
+          <code><a href="habitat_connectivity.html">habitat_connectivity()</a></code>
+
+        </dt>
+        <dd>Calculate habitat connectivity using terra</dd>
+
+        <dt>
+
+          <code><a href="habitat_connectivity_full.html">habitat_connectivity_full()</a></code>
+
+        </dt>
+        <dd>Calculate habitat connectivity with visualization data</dd>
+      </dl></div><div class="section level2">
+      <h2 id="data-sources">Data sources<a class="anchor" aria-label="anchor" href="#data-sources"></a></h2>
+
+
+
+      <dl></dl></div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="example-lizard-data.html">example_habitat()</a></code> <code><a href="example-lizard-data.html">example_barrier_shp()</a></code> <code><a href="example-lizard-data.html">example_barrier()</a></code>
+
+        </dt>
+        <dd>Lizard Habitat and Barrier Data from Melbourne.</dd>
+
+        <dt>
+
+          <code><a href="lizard_areas_connected.html">lizard_areas_connected</a></code>
+
+        </dt>
+        <dd>Connected habitat patch areas for Blue-tongued Lizard</dd>
+      </dl></div><div class="section level2">
+      <h2 id="general">General<a class="anchor" aria-label="anchor" href="#general"></a></h2>
+
+
+
+      <dl></dl></div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="clean.html">clean()</a></code>
+
+        </dt>
+        <dd>Clean any spatial data layer (shape file)</dd>
+
+        <dt>
+
+          <code><a href="col2hex.html">col2hex()</a></code>
+
+        </dt>
+        <dd>Convert color name to hexadecimal</dd>
+
+        <dt>
+
+          <code><a href="empty_grid.html">empty_grid()</a></code>
+
+        </dt>
+        <dd>Create Empty terra raster grid</dd>
+
+        <dt>
+
+          <code><a href="generate_connectivity_report.html">generate_connectivity_report()</a></code>
+
+        </dt>
+        <dd>Generate Connectivity Report</dd>
+      </dl></div><div class="section level2">
+      <h2 id="shiny-app-related">Shiny app related<a class="anchor" aria-label="anchor" href="#shiny-app-related"></a></h2>
+
+
+
+      <dl></dl></div><div class="section level2">
+
+
+
+
+      <dl><dt>
 
           <code><a href="run_connectivity_app.html">run_connectivity_app()</a></code>
 
         </dt>
         <dd>Launch the Connectivity Shiny App</dd>
-
-        <dt>
-
-          <code><a href="sf_add_patch_area.html">sf_add_patch_area()</a></code>
-
-        </dt>
-        <dd>Add patch area column</dd>
-
-        <dt>
-
-          <code><a href="sf_aggregate_connected_patches.html">sf_aggregate_connected_patches()</a></code>
-
-        </dt>
-        <dd>Aggregate connected patch areas</dd>
-
-        <dt>
-
-          <code><a href="sf_assign_patches_to_fragments.html">sf_assign_patches_to_fragments()</a></code>
-
-        </dt>
-        <dd>Assign habitat patches to fragment IDs</dd>
-
-        <dt>
-
-          <code><a href="sf_drop_habitat_under_barrier.html">sf_drop_habitat_under_barrier()</a></code>
-
-        </dt>
-        <dd>Remove habitat underneath barriers</dd>
-
-        <dt>
-
-          <code><a href="sf_fragment_habitat.html">sf_fragment_habitat()</a></code>
-
-        </dt>
-        <dd>Fragment habitat along barriers</dd>
-
-        <dt>
-
-          <code><a href="sf_habitat_buffer.html">sf_habitat_buffer()</a></code>
-
-        </dt>
-        <dd>Buffer habitat by distance</dd>
-
-        <dt>
-
-          <code><a href="sf_habitat_connectivity.html">sf_habitat_connectivity()</a></code>
-
-        </dt>
-        <dd>Calculate habitat connectivity</dd>
 
         <dt>
 
@@ -294,26 +362,13 @@
 
         <dt>
 
-          <code><a href="summarise_connectivity.html">summarise_connectivity()</a></code>
-
-        </dt>
-        <dd>Summarise connectivity metrics</dd>
-
-        <dt>
-
           <code><a href="to_sentence.html">to_sentence()</a></code>
 
         </dt>
         <dd>Convert snake_case to sentence case</dd>
-
-        <dt>
-
-          <code><a href="total_habitat_area.html">total_habitat_area()</a></code>
-
-        </dt>
-        <dd>Calculate total habitat area</dd>
       </dl></div>
-  </main></div>
+  </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
+    </nav></aside></div>
 
 
     <footer><div class="pkgdown-footer-left">

@@ -1,6 +1,6 @@
 # Add patch area layer
 
-Add patch area layer
+Adds an area layer to the raster of the area of each patch.
 
 ## Usage
 
@@ -12,11 +12,11 @@ add_patch_area(raster)
 
 - raster:
 
-  Terra SpatRaster. In the workflow, this is the patch ID raster.
+  terra SpatRaster. In the workflow, this is the patch ID raster.
 
 ## Value
 
-Terra SpatRaster with two layers: patch_id and area.
+terra SpatRaster with two layers: patch_id and area.
 
 ## Examples
 

@@ -1,6 +1,7 @@
 # Aggregate connected patch areas
 
-Aggregate connected patch areas
+Aggregate a raster with connected patch areas into a data frame where
+each row is a unique patch, and its area and area squared.
 
 ## Usage
 
@@ -12,7 +13,7 @@ aggregate_connected_patches(raster)
 
 - raster:
 
-  Terra SpatRaster. Raster with patch_id and area layers.
+  terra SpatRaster. Raster with patch_id and area layers.
 
 ## Value
 

@@ -39,6 +39,7 @@ lizard_areas_connected <- habitat_connectivity(
     verbose = FALSE
   )
 }
+lizard_areas_connected
 }
 \seealso{
 \code{\link[=habitat_connectivity]{habitat_connectivity()}}, \code{\link[=summarise_connectivity]{summarise_connectivity()}}

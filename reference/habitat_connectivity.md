@@ -60,22 +60,22 @@ connectivity <- habitat_connectivity(
     distance = 10
   )
 #> ℹ Creating barrier mask
-#> ✔ Creating barrier mask [33ms]
+#> ✔ Creating barrier mask [46ms]
 #> 
 #> ℹ Removing habitat underneath barrier
-#> ✔ Removing habitat underneath barrier [23ms]
+#> ✔ Removing habitat underneath barrier [28ms]
 #> 
 #> ℹ Adding buffer of 10m to habitat layer
-#> ✔ Adding buffer of 10m to habitat layer [283ms]
+#> ✔ Adding buffer of 10m to habitat layer [298ms]
 #> 
 #> ℹ Fragmenting habitat layer along barrier intersection
-#> ✔ Fragmenting habitat layer along barrier intersection [21ms]
+#> ✔ Fragmenting habitat layer along barrier intersection [25ms]
 #> 
 #> ℹ Assigning patches ID to fragments
-#> ✔ Assigning patches ID to fragments [1.1s]
+#> ✔ Assigning patches ID to fragments [1.2s]
 #> 
 #> ℹ Summarising area in each patch
-#> ✔ Summarising area in each patch [38ms]
+#> ✔ Summarising area in each patch [41ms]
 #> 
 connectivity
 #> # A tibble: 163 × 3

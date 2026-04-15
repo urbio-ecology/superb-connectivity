@@ -55,3 +55,4 @@ data-raw/wood-bird
 /doc/
 /Meta/
 docs
+.pre-commit-config.yaml

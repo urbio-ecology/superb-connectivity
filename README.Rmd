@@ -22,7 +22,11 @@ knitr::opts_chunk$set(
 [![Codecov test coverage](https://codecov.io/gh/urbio-ecology/urbioconnect/graph/badge.svg)](https://app.codecov.io/gh/urbio-ecology/urbioconnect)
 <!-- badges: end -->
 
-`urbioconnect` quantifies how connected habitats are in urban landscapes. This is done by providing **habitat** and **barrier** information. For example, raster grid data on blue tongued-lizard **habitat**, how far their roaming range is (say, 100 metres) and raster grid data on road and buildings (**barriers**). It then computes connected habitat patches and a set of landscape-level metrics: 
+`urbioconnect` implements methods that help quantify the ecological connectivity for different urban wildlife species.
+
+This is done by providing wildlife **habitat** and urban **barrier** information, the roaming range (in metres) of the wildlife, and some other parameters.
+
+For example, raster grid data on blue tongued-lizard **habitat**, how far their roaming range is (say, 100 metres) and raster grid data on road and buildings (**barriers**). It then computes metrics that help assess how connected these habitat patches are:
 
 * effective mesh size
 * probability of connectedness
@@ -36,7 +40,19 @@ This method is described in:
 
 > Kirk, H., Soanes, K., Amati, M., Bekessy, S., Harrison, L., Parris, K., Ramalho, C., van de Ree, R., & Threlfall, C. (2023). Ecological connectivity as a planning tool for the conservation of wildlife in cities. *MethodsX*, 10, 101989. <https://doi.org/10.1016/j.mex.2022.101989>
 
-We include a Shiny app for interactive analysis and report generation. These are powered by a set of R functions, so you can implement your own methods or approaches to pipelines.
+See the [getting started](https://urbio-ecology.github.io/urbioconnect/articles/getting-started.html) vignette for more details.
+
+## Shiny app
+
+We include a Shiny app for interactive analysis and report generation. You can launch the interactive Shiny app with:
+
+```r
+run_connectivity_app()
+```
+
+A hosted version is available at: <https://njtierney.shinyapps.io/urbioconnect/>
+
+However, it is worth noting you do not need the shiny app to perform analyses, all functions have been designed to work together in a pipeline - see example usage below.
 
 ## Installation
 
@@ -49,7 +65,7 @@ install.packages(
 )
 ```
 
-Or install the development version from GitHub:
+Or install from GitHub:
 
 ```r
 # install.packages("pak")
@@ -65,15 +81,14 @@ library(urbioconnect)
 habitat <- example_habitat()
 barrier <- example_barrier()
 
-# run the full raster pipeline at a 100 m buffer distance
+# run the full raster pipeline at a 10m buffer distance
 areas <- habitat_connectivity(
   habitat  = habitat,
   barrier  = barrier,
-  distance = 10,
-  verbose  = FALSE
+  distance = 10
 )
 
-head(areas)
+areas
 ```
 
 Summarise the connectivity metrics:
@@ -90,19 +105,10 @@ summarise_connectivity(
 )
 ```
 
-## Shiny app
 
-Launch the interactive Shiny app:
+## Use raster and vector
 
-```r
-run_connectivity_app()
-```
-
-A hosted version is available at: <https://njtierney.shinyapps.io/urbioconnect/>
-
-## Two pipelines: raster and vector
-
-`urbioconnect` provides two complete analysis pipelines:
+You can use raster and vector data with `urbioconnect`:
 
 | | Raster pipeline | Vector pipeline |
 |---|---|---|
@@ -110,24 +116,12 @@ A hosted version is available at: <https://njtierney.shinyapps.io/urbioconnect/>
 | Main function | `habitat_connectivity()` | `sf_habitat_connectivity()` |
 | Best for | Large study areas, GeoTIFF output | Small precise study areas, exact polygon boundaries |
 
-You can see the vignette, "raster-vs-vector" for a side-by-side comparison and guidance on which to choose with 
+You can see the vignette, ["raster-vs-vector"](https://urbio-ecology.github.io/urbioconnect/articles/raster-vs-vector.html) for a side-by-side comparison and guidance on which to choose.
 
-```r
-vignette("raster-vs-vector")
-```
+# Example usage
 
-Other vignettes include:
-
-- `vignette("getting-started")` — step-by-step raster workflow with example data
-- `vignette("targets-pipeline")` — using `urbioconnect` in a `targets` reproducible pipeline
-
-## Example targets workflow
-
-For a complete, production-ready `targets` pipeline with real species data and report generation, see:
-
-You can see example usage of the package, using a targets workflow at https://github.com/urbio-ecology/urbio-eco-targets.
+We have an example pipeline using `targets` and `geotarget`, which includes generating reports as output at https://github.com/urbio-ecology/urbio-eco-targets. See the vignette ["Using urbioconnect in a targets pipeline"](https://urbio-ecology.github.io/urbioconnect/articles/targets-pipeline.html) for more detail.
 
 # Acknowledgements
 
 We would like to thank Kylie Soanes, Marco Amati, Sarah Bekessy, Lee Harrison, Kirsten Parris, Cristina Ramalho, Rodney van de Ree, and Caragh Threlfall for their work on the original paper this work is based upon. We would also like to thank Hugh Stanford, Nadine Gaskell, Kerryn Kneebone, and Nicholas Golding for their comments and insight during the development of the methods and software.
-**<https://github.com/urbio-ecology/urbio-eco-targets>**

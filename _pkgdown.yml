@@ -1,4 +1,57 @@
 url: https://urbio-ecology.github.io/urbioconnect/
 template:
   bootstrap: 5
-
+  bootswatch: minty
+reference:
+- title: Raster functions
+  contents:
+  - create_barrier_mask
+  - drop_habitat_under_barrier
+  - habitat_buffer
+  - fragment_habitat
+  - assign_patches_to_fragments
+  - add_patch_area
+  - aggregate_connected_patches
+- title: Vector (shapefile) functions
+  contents:
+  - prepare_rasters
+  - read_geometry
+  - sf_habitat_buffer
+  - sf_fragment_habitat
+  - sf_drop_habitat_under_barrier
+  - sf_assign_patches_to_fragments
+  - sf_add_patch_area
+  - sf_aggregate_connected_patches
+  - sf_habitat_connectivity
+- title: Visualisation
+  contents:
+  - gg_barrier_habitat_buffer
+  - plot_barrier_habitat_buffer
+  - plot_connectivity
+  - plot_patches
+- title: Summaries
+  contents:
+  - effective_mesh_size
+  - connectivity_probability
+  - mean_patch_size
+  - n_patches
+  - summarise_connectivity
+  - total_habitat_area
+  - habitat_connectivity
+  - habitat_connectivity_full
+- title: Data sources
+  contents:
+  - starts_with("example")
+  - lizard_areas_connected
+- title: General
+  contents:
+  - clean
+  - col2hex
+  - empty_grid
+  - generate_connectivity_report
+- title: Shiny app related
+  contents:
+  - run_connectivity_app
+  - show_image_tabs
+  - show_tabs
+  - to_sentence

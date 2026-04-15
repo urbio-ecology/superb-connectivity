@@ -126,7 +126,7 @@ show_tabs <- function(the_list, message = NULL) {
   for (iplot in names(the_list)) {
     cat(sprintf("## %s %s\n", message, iplot))
     print(the_list[[iplot]])
-    cat(sprintf("\n\n"))
+    cat("\n\n")
   }
 }
 
@@ -151,7 +151,7 @@ show_image_tabs <- function(images, message = NULL) {
   for (iplot in names(images)) {
     cat(sprintf("## %s %s\n", message, iplot))
     knitr::include_graphics(images[[iplot]])
-    cat(sprintf("\n\n"))
+    cat("\n\n")
   }
 }
 

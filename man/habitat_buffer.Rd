@@ -21,6 +21,10 @@ distance past which habitat patches are no longer considered connected).
 }
 \examples{
 lizard_habitat <- example_habitat()
+library(terra)
+plot(lizard_habitat, col = "darkgreen", legend = FALSE)
 # run with a small buffer distance
-habitat_buffer(lizard_habitat, 5)
+lizard_buff <- habitat_buffer(lizard_habitat, 10)
+plot(lizard_buff, col = "lightgreen", legend = FALSE)
+plot(lizard_habitat, col = "darkgreen", legend = FALSE, add = TRUE)
 }

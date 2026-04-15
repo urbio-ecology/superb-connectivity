@@ -40,7 +40,7 @@ library(terra)
 
 # Load habitat raster
 lizard_habitat <- example_habitat()
-plot(lizard_habitat)
+plot(lizard_habitat, col = "darkgreen", legend = FALSE, main = "Lizard Habitat")
 
 # Load barrier shapefile
 lizard_barrier_shp <- example_barrier_shp()
@@ -48,6 +48,9 @@ plot(lizard_barrier_shp)
 
 # Load barrier raster
 lizard_barrier <- example_barrier()
-plot(lizard_barrier)
+plot(lizard_barrier, col = c("grey", "white"), legend = FALSE, main = "Lizard Barriers")
+
+plot(lizard_barrier, col = c("grey", "white"), legend = FALSE, main = "Lizard Habitat and Barrier")
+plot(lizard_habitat, col = "darkgreen", legend = FALSE, add = TRUE)
 }
 \keyword{datasets}

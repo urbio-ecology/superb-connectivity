@@ -26,5 +26,6 @@
 #'     verbose = FALSE
 #'   )
 #' }
+#' lizard_areas_connected
 #' @keywords datasets
 "lizard_areas_connected"

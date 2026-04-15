@@ -34,7 +34,7 @@ test_that("create_barrier_mask converts 1s to NA and NAs to 1s", {
   expect_true(is.na(vals[centre_cell_idx]))
   # All other cells (previously NA) should be 1
   expect_true(all(vals[-centre_cell_idx] == 1, na.rm = TRUE))
-  expect_false(any(is.na(vals[-centre_cell_idx])))
+  expect_false(anyNA(vals[-centre_cell_idx]))
 })
 
 test_that("create_barrier_mask on all-NA raster produces all-1 raster", {
@@ -43,7 +43,7 @@ test_that("create_barrier_mask on all-NA raster produces all-1 raster", {
   vals <- as.numeric(terra::values(mask))
 
   expect_true(all(vals == 1))
-  expect_false(any(is.na(vals)))
+  expect_false(anyNA(vals))
 })
 
 test_that("drop_habitat_under_barrier removes habitat cells covered by barriers", {

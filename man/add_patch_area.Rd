@@ -7,13 +7,13 @@
 add_patch_area(raster)
 }
 \arguments{
-\item{raster}{Terra SpatRaster. In the workflow, this is the patch ID raster.}
+\item{raster}{terra SpatRaster. In the workflow, this is the patch ID raster.}
 }
 \value{
-Terra SpatRaster with two layers: patch_id and area.
+terra SpatRaster with two layers: patch_id and area.
 }
 \description{
-Add patch area layer
+Adds an area layer to the raster of the area of each patch.
 }
 \examples{
 lizard_habitat <- example_habitat()

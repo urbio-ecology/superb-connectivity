@@ -69,6 +69,7 @@ Suggests:
     targets,
     testthat (>= 3.0.0),
     vctrs,
+    vdiffr,
     withr,
     tictoc,
     ggspatial

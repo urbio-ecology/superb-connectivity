@@ -10,6 +10,7 @@
 ^data-raw$
 ^LICENSE\.md$
 ^\.github$
+^codecov\.yml$
 ^Meta$
 ^_pkgdown\.yml$
 ^docs$

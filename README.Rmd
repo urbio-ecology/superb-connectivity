@@ -19,6 +19,7 @@ knitr::opts_chunk$set(
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/urbio-ecology/urbioconnect/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/urbio-ecology/urbioconnect/actions/workflows/R-CMD-check.yaml)
 [![R-universe version](https://urbio-ecology.r-universe.dev/urbioconnect/badges/version)](https://urbio-ecology.r-universe.dev/urbioconnect)
+[![Codecov test coverage](https://codecov.io/gh/urbio-ecology/urbioconnect/graph/badge.svg)](https://app.codecov.io/gh/urbio-ecology/urbioconnect)
 <!-- badges: end -->
 
 `urbioconnect` quantifies how connected habitats are in urban landscapes. This is done by providing **habitat** and **barrier** information. For example, raster grid data on blue tongued-lizard **habitat**, how far their roaming range is (say, 100 metres) and raster grid data on road and buildings (**barriers**). It then computes connected habitat patches and a set of landscape-level metrics: 

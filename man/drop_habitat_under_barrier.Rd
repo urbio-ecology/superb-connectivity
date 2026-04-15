@@ -25,4 +25,5 @@ remaining_habitat <- drop_habitat_under_barrier(
   habitat = lizard_habitat,
   barrier = lizard_barrier
   )
+remaining_habitat
 }

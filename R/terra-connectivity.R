@@ -94,8 +94,12 @@ prepare_rasters <- function(
 #' @export
 #' @examples
 #' lizard_habitat <- example_habitat()
+#' library(terra)
+#' plot(lizard_habitat, col = "darkgreen", legend = FALSE)
 #' # run with a small buffer distance
-#' habitat_buffer(lizard_habitat, 5)
+#' lizard_buff <- habitat_buffer(lizard_habitat, 10)
+#' plot(lizard_buff, col = "lightgreen", legend = FALSE)
+#' plot(lizard_habitat, col = "darkgreen", legend = FALSE, add = TRUE)
 habitat_buffer <- function(habitat, distance) {
   buffer_window <- terra::focalMat(
     x = habitat,
@@ -153,6 +157,7 @@ create_barrier_mask <- function(barrier) {
 #'   habitat = lizard_habitat,
 #'   barrier = lizard_barrier
 #'   )
+#' remaining_habitat
 drop_habitat_under_barrier <- function(habitat, barrier_mask) {
   barrier_mask <- align_to(barrier_mask, habitat)
   habitat_no_barriers <- terra::mask(habitat, barrier_mask)
@@ -207,8 +212,10 @@ assign_patches_to_fragments <- function(remaining_habitat, fragment) {
 
 #' Add patch area layer
 #'
-#' @param raster Terra SpatRaster. In the workflow, this is the patch ID raster.
-#' @returns Terra SpatRaster with two layers: patch_id and area.
+#' Adds an area layer to the raster of the area of each patch.
+#'
+#' @param raster terra SpatRaster. In the workflow, this is the patch ID raster.
+#' @returns terra SpatRaster with two layers: patch_id and area.
 #' @export
 #' @examples
 #' lizard_habitat <- example_habitat()
@@ -235,7 +242,10 @@ add_patch_area <- function(raster) {
 
 #' Aggregate connected patch areas
 #'
-#' @param raster Terra SpatRaster. Raster with patch_id and area layers.
+#' Aggregate a raster with connected patch areas into a data frame where
+#' each row is a unique patch, and its area and area squared.
+#'
+#' @param raster terra SpatRaster. Raster with patch_id and area layers.
 #' @returns Data frame with patch areas and areas squared.
 #' @export
 #' @examples

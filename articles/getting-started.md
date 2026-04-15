@@ -357,22 +357,22 @@ areas_connected <- habitat_connectivity(
   verbose = TRUE
 )
 #> ℹ Creating barrier mask
-#> ✔ Creating barrier mask [33ms]
+#> ✔ Creating barrier mask [32ms]
 #> 
 #> ℹ Removing habitat underneath barrier
 #> ✔ Removing habitat underneath barrier [23ms]
 #> 
 #> ℹ Adding buffer of 10m to habitat layer
-#> ✔ Adding buffer of 10m to habitat layer [387ms]
+#> ✔ Adding buffer of 10m to habitat layer [383ms]
 #> 
 #> ℹ Fragmenting habitat layer along barrier intersection
-#> ✔ Fragmenting habitat layer along barrier intersection [21ms]
+#> ✔ Fragmenting habitat layer along barrier intersection [19ms]
 #> 
 #> ℹ Assigning patches ID to fragments
-#> ✔ Assigning patches ID to fragments [1.1s]
+#> ✔ Assigning patches ID to fragments [1.2s]
 #> 
 #> ℹ Summarising area in each patch
-#> ✔ Summarising area in each patch [38ms]
+#> ✔ Summarising area in each patch [36ms]
 #> 
 ```
 

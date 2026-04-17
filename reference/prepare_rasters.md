@@ -1,6 +1,6 @@
 # Prepare habitat and barrier rasters
 
-Prepare habitat and barrier rasters
+Convert vector (shapefile) SF habitat and barrier objects into rasters.
 
 ## Usage
 

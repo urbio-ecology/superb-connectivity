@@ -1,6 +1,8 @@
 # Save barrier habitat buffer plot
 
-Save barrier habitat buffer plot
+Saved a plot created by
+[`gg_barrier_habitat_buffer()`](https://urbio-ecology.github.io/urbioconnect/reference/gg_barrier_habitat_buffer.md)
+to file.
 
 ## Usage
 
@@ -67,7 +69,7 @@ if (FALSE) { # \dontrun{
 lizard_habitat <- example_habitat()
 lizard_barrier <- example_barrier()
 buffered <- habitat_buffer(lizard_habitat, distance = 10)
-# Creates doc/plot-barrier-buffer-habitat-*.png in the working directory
+# Creates plot-barrier-buffer-habitat-*.png in the working directory
 plot_barrier_habitat_buffer(
   barrier = lizard_barrier,
   buffered = buffered,

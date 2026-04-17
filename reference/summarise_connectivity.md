@@ -2,6 +2,9 @@
 
 Calculates a comprehensive set of habitat connectivity metrics including
 effective mesh size, probability of connectedness, and patch statistics.
+Intended for usage from objects created by
+[`habitat_connectivity()`](https://urbio-ecology.github.io/urbioconnect/reference/habitat_connectivity.md).
+See examples below.
 
 ## Usage
 

@@ -1,6 +1,8 @@
 # Remove habitat under barriers
 
-Remove habitat under barriers
+Essentially just performs a
+[`terra::mask()`](https://rspatial.github.io/terra/reference/mask.html)
+operation, to remove the habitat parts that are under the mask.
 
 ## Usage
 

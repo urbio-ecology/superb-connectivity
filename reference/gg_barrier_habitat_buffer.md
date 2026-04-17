@@ -1,6 +1,6 @@
 # Plot barrier, habitat, and buffer layers
 
-Creates a visualization showing habitat, buffer zone, and barriers using
+Creates a visualisation of habitat, buffer zone, and barriers using
 terra rasters.
 
 ## Usage

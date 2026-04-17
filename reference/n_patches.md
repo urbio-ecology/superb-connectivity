@@ -1,6 +1,10 @@
 # Count number of habitat patches
 
-Count number of habitat patches
+Identify the number of habitat patches. A wrapper around
+[`length()`](https://rdrr.io/r/base/length.html), but named to establish
+its context. Intended for usage from objects created by
+[`habitat_connectivity()`](https://urbio-ecology.github.io/urbioconnect/reference/habitat_connectivity.md).
+See examples below.
 
 ## Usage
 

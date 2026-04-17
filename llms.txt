@@ -267,23 +267,15 @@ development of the methods and software.
 
 - [`clean()`](https://urbio-ecology.github.io/urbioconnect/reference/clean.md)
   : Clean any spatial data layer (shape file)
-- [`col2hex()`](https://urbio-ecology.github.io/urbioconnect/reference/col2hex.md)
-  : Convert color name to hexadecimal
 - [`empty_grid()`](https://urbio-ecology.github.io/urbioconnect/reference/empty_grid.md)
   : Create Empty terra raster grid
 - [`generate_connectivity_report()`](https://urbio-ecology.github.io/urbioconnect/reference/generate_connectivity_report.md)
   : Generate Connectivity Report
 
-## Shiny app related
+## Shiny app
 
 - [`run_connectivity_app()`](https://urbio-ecology.github.io/urbioconnect/reference/run_connectivity_app.md)
   : Launch the Connectivity Shiny App
-- [`show_image_tabs()`](https://urbio-ecology.github.io/urbioconnect/reference/show_image_tabs.md)
-  : Display images in tabs
-- [`show_tabs()`](https://urbio-ecology.github.io/urbioconnect/reference/show_tabs.md)
-  : Display plots in tabs
-- [`to_sentence()`](https://urbio-ecology.github.io/urbioconnect/reference/to_sentence.md)
-  : Convert snake_case to sentence case
 
 # Articles
 

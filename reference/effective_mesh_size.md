@@ -1,8 +1,10 @@
 # Calculate effective mesh size
 
-Computes the effective mesh size metric for habitat connectivity, which
+Computes the effective mesh size metric for habitat connectivity, This
 represents the probability that two randomly chosen points within
-habitat remain connected.
+habitat remain connected. Intended for usage from objects created by
+[`habitat_connectivity()`](https://urbio-ecology.github.io/urbioconnect/reference/habitat_connectivity.md).
+See examples below.
 
 ## Usage
 

@@ -1,6 +1,10 @@
 # Calculate total habitat area
 
-Calculate total habitat area
+Calculate the total habitat area in hectars. A wrapper around summing
+the area and multiplying by 0.0001 to give the units in hectares.
+Intended for usage from objects created by
+[`habitat_connectivity()`](https://urbio-ecology.github.io/urbioconnect/reference/habitat_connectivity.md).
+See examples below.
 
 ## Usage
 

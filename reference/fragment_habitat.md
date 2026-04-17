@@ -1,6 +1,8 @@
 # Fragment habitat
 
-Fragment habitat
+Takes a barrier mask (created with
+[`create_barrier_mask()`](https://urbio-ecology.github.io/urbioconnect/reference/create_barrier_mask.md))
+and fragments up the habitat where they intersect.
 
 ## Usage
 

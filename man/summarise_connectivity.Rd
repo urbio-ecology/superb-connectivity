@@ -38,6 +38,8 @@ areas.
 \description{
 Calculates a comprehensive set of habitat connectivity metrics including
 effective mesh size, probability of connectedness, and patch statistics.
+Intended for usage from objects created by \code{\link[=habitat_connectivity]{habitat_connectivity()}}.
+See examples below.
 }
 \examples{
 summarise_connectivity(

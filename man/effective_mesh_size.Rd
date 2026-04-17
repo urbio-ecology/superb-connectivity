@@ -15,9 +15,10 @@ effective_mesh_size(area_squared, area_total)
 Numeric. Effective mesh size in hectares.
 }
 \description{
-Computes the effective mesh size metric for habitat connectivity, which
+Computes the effective mesh size metric for habitat connectivity, This
 represents the probability that two randomly chosen points within habitat
-remain connected.
+remain connected. Intended for usage from objects created by
+\code{\link[=habitat_connectivity]{habitat_connectivity()}}. See examples below.
 }
 \examples{
 effective_mesh_size(lizard_areas_connected$area_squared, lizard_areas_connected$area)

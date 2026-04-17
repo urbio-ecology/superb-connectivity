@@ -15,7 +15,8 @@ drop_habitat_under_barrier(habitat, barrier_mask)
 Terra SpatRaster with habitat remaining after barrier removal.
 }
 \description{
-Remove habitat under barriers
+Essentially just performs a \code{\link[terra:mask]{terra::mask()}} operation, to remove the habitat
+parts that are under the mask.
 }
 \examples{
 lizard_habitat <- example_habitat()

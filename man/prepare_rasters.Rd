@@ -24,7 +24,7 @@ prepare_rasters(
 List with \code{habitat_raster} and \code{barrier_raster} elements.
 }
 \description{
-Prepare habitat and barrier rasters
+Convert vector (shapefile) SF habitat and barrier objects into rasters.
 }
 \examples{
 lizard_habitat_sf <- terra::as.polygons(example_habitat(), dissolve = TRUE) |>

@@ -4,16 +4,20 @@
 \alias{mean_patch_size}
 \title{Calculate mean patch size}
 \usage{
-mean_patch_size(area_total)
+mean_patch_size(area_total, ...)
 }
 \arguments{
 \item{area_total}{Numeric vector. Total areas of habitat patches.}
+
+\item{...}{extra arguments to pass to \code{mean()}.}
 }
 \value{
 Numeric. Mean patch size.
 }
 \description{
-Calculate mean patch size
+This is just a wrapper around \code{mean()}, however it is written to clearly
+identify it's usage in the context of the area data. Intended for usage
+from objects created by \code{\link[=habitat_connectivity]{habitat_connectivity()}}. See examples below.
 }
 \examples{
 mean_patch_size(lizard_areas_connected$area)

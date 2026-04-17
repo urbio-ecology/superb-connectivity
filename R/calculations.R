@@ -1,8 +1,9 @@
 #' Calculate effective mesh size
 #'
-#' Computes the effective mesh size metric for habitat connectivity, which
-#' represents the probability that two randomly chosen points within habitat
-#' remain connected.
+#' Computes the effective mesh size metric for habitat connectivity, This
+#'   represents the probability that two randomly chosen points within habitat
+#'   remain connected. Intended for usage from objects created by
+#'   [habitat_connectivity()]. See examples below.
 #'
 #' @param area_squared Numeric vector. Squared areas of connected patches.
 #' @param area_total Numeric vector. Total areas of connected patches.
@@ -20,18 +21,27 @@ effective_mesh_size <- function(area_squared, area_total) {
 
 #' Calculate mean patch size
 #'
+#' This is just a wrapper around `mean()`, however it is written to clearly
+#'   identify it's usage in the context of the area data. Intended for usage
+#'   from objects created by [habitat_connectivity()]. See examples below.
+#'
 #' @param area_total Numeric vector. Total areas of habitat patches.
+#' @param ... extra arguments to pass to `mean()`.
 #'
 #' @returns Numeric. Mean patch size.
 #' @examples
 #' mean_patch_size(lizard_areas_connected$area)
 #' @export
-mean_patch_size <- function(area_total) {
-  mean_size <- mean(area_total)
+mean_patch_size <- function(area_total, ...) {
+  mean_size <- mean(area_total, ...)
   mean_size
 }
 
 #' Count number of habitat patches
+#'
+#' Identify the number of habitat patches. A wrapper around `length()`, but
+#'   named to establish its context. Intended for usage from objects created by
+#'   [habitat_connectivity()]. See examples below.
 #'
 #' @param area_total Numeric vector. Total areas of habitat patches.
 #'
@@ -45,6 +55,11 @@ n_patches <- function(area_total) {
 }
 
 #' Calculate total habitat area
+#'
+#' Calculate the total habitat area in hectars. A wrapper around summing the
+#'   area and multiplying by 0.0001 to give the units in hectares. Intended
+#'   for usage from objects created by [habitat_connectivity()]. See examples
+#'   below.
 #'
 #' @param area_total Numeric vector. Total areas of habitat patches in square
 #'   meters.
@@ -61,8 +76,11 @@ total_habitat_area <- function(area_total) {
 
 #' Calculate connectivity probability
 #'
-#' Computes the probability that two randomly chosen points within habitat
-#' are connected, accounting for fragmentation.
+#' Computes the probability two randomly chosen points within habitat
+#' are connected, accounting for fragmentation. This is given by calulating
+#' effective mesh size (via [effective_mesh_size()]), then dividing by
+#' total area. Intended for usage from objects created by
+#' [habitat_connectivity()]. See examples below.
 #'
 #' @param area_squared Numeric vector. Squared areas of connected patches.
 #' @param area_total Numeric vector. Total areas of connected patches.
@@ -82,6 +100,8 @@ connectivity_probability <- function(area_squared, area_total) {
 #'
 #' Calculates a comprehensive set of habitat connectivity metrics including
 #' effective mesh size, probability of connectedness, and patch statistics.
+#' Intended for usage from objects created by [habitat_connectivity()].
+#' See examples below.
 #'
 #' @param area_squared Numeric vector. Squared areas of connected patches.
 #' @param area_total Numeric vector. Total areas of connected patches.

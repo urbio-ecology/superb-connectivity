@@ -7,14 +7,15 @@
 #' @examples
 #' col2hex("forestgreen")
 #' col2hex("blue")
-#' @export
+#' @noRd
+#' @note internal
 col2hex <- function(color_name) {
   grDevices::rgb(t(grDevices::col2rgb(color_name)), maxColorValue = 255)
 }
 
 #' Plot barrier, habitat, and buffer layers
 #'
-#' Creates a visualization showing habitat, buffer zone, and barriers using
+#' Creates a visualisation of habitat, buffer zone, and barriers using
 #' terra rasters.
 #'
 #' @param barrier Terra SpatRaster. Barrier layer (e.g., roads).
@@ -108,7 +109,6 @@ gg_barrier_habitat_buffer <- function(
     )
 }
 
-# TODO this might only be needed as an internal function
 #' Display plots in tabs
 #'
 #' Helper function to display a list of plots with tab headers in R Markdown
@@ -121,7 +121,8 @@ gg_barrier_habitat_buffer <- function(
 #' @examples
 #' plots <- list("100m" = ggplot2::ggplot(), "200m" = ggplot2::ggplot())
 #' show_tabs(plots, message = "Buffer distance")
-#' @export
+#' @noRd
+#' @note internal
 show_tabs <- function(the_list, message = NULL) {
   for (iplot in names(the_list)) {
     cat(sprintf("## %s %s\n", message, iplot))
@@ -130,7 +131,6 @@ show_tabs <- function(the_list, message = NULL) {
   }
 }
 
-# TODO this might only be needed as an internal function
 #' Display images in tabs
 #'
 #' Helper function to display a list of image paths with tab headers in R
@@ -146,7 +146,8 @@ show_tabs <- function(the_list, message = NULL) {
 #' image_paths <- c("100m" = "plot-100m.png", "200m" = "plot-200m.png")
 #' show_image_tabs(image_paths, message = "Buffer distance")
 #' }
-#' @export
+#' @noRd
+#' @note internal
 show_image_tabs <- function(images, message = NULL) {
   for (iplot in names(images)) {
     cat(sprintf("## %s %s\n", message, iplot))
@@ -163,7 +164,8 @@ show_image_tabs <- function(images, message = NULL) {
 #' @examples
 #' to_sentence("prob_connectedness")
 #' to_sentence(c("n_patches", "patch_area_mean", "effective_mesh_ha"))
-#' @export
+#' @noRd
+#' @note internal
 to_sentence <- function(x) {
   x |>
     stringr::str_replace_all("_", " ") |>

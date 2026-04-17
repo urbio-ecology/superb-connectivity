@@ -46,12 +46,8 @@ reference:
 - title: General
   contents:
   - clean
-  - col2hex
   - empty_grid
   - generate_connectivity_report
-- title: Shiny app related
+- title: Shiny app
   contents:
   - run_connectivity_app
-  - show_image_tabs
-  - show_tabs
-  - to_sentence

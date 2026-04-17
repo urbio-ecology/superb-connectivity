@@ -39,14 +39,14 @@ plot_barrier_habitat_buffer(
 Named character vector. The file path, named by the buffer distance.
 }
 \description{
-Save barrier habitat buffer plot
+Saved a plot created by \code{\link[=gg_barrier_habitat_buffer]{gg_barrier_habitat_buffer()}} to file.
 }
 \examples{
 \dontrun{
 lizard_habitat <- example_habitat()
 lizard_barrier <- example_barrier()
 buffered <- habitat_buffer(lizard_habitat, distance = 10)
-# Creates doc/plot-barrier-buffer-habitat-*.png in the working directory
+# Creates plot-barrier-buffer-habitat-*.png in the working directory
 plot_barrier_habitat_buffer(
   barrier = lizard_barrier,
   buffered = buffered,

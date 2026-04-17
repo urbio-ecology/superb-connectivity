@@ -13,7 +13,9 @@ n_patches(area_total)
 Integer. Number of patches.
 }
 \description{
-Count number of habitat patches
+Identify the number of habitat patches. A wrapper around \code{length()}, but
+named to establish its context. Intended for usage from objects created by
+\code{\link[=habitat_connectivity]{habitat_connectivity()}}. See examples below.
 }
 \examples{
 n_patches(lizard_areas_connected$area)

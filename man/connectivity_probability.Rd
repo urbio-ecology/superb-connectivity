@@ -15,8 +15,11 @@ connectivity_probability(area_squared, area_total)
 Numeric. Probability of connectedness (0-1).
 }
 \description{
-Computes the probability that two randomly chosen points within habitat
-are connected, accounting for fragmentation.
+Computes the probability two randomly chosen points within habitat
+are connected, accounting for fragmentation. This is given by calulating
+effective mesh size (via \code{\link[=effective_mesh_size]{effective_mesh_size()}}), then dividing by
+total area. Intended for usage from objects created by
+\code{\link[=habitat_connectivity]{habitat_connectivity()}}. See examples below.
 }
 \examples{
 connectivity_probability(lizard_areas_connected$area_squared, lizard_areas_connected$area)

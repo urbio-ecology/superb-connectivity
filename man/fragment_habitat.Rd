@@ -15,7 +15,8 @@ fragment_habitat(buffered_habitat, barrier_mask)
 Terra SpatRaster with fragmented habitat.
 }
 \description{
-Fragment habitat
+Takes a barrier mask (created with \code{\link[=create_barrier_mask]{create_barrier_mask()}}) and fragments
+up the habitat where they intersect.
 }
 \examples{
 lizard_habitat <- example_habitat()

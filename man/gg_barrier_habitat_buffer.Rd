@@ -39,7 +39,7 @@ gg_barrier_habitat_buffer(
 A ggplot2 object.
 }
 \description{
-Creates a visualization showing habitat, buffer zone, and barriers using
+Creates a visualisation of habitat, buffer zone, and barriers using
 terra rasters.
 }
 \examples{

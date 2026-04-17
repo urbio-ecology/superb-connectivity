@@ -24,7 +24,7 @@ empty_grid <- function(habitat, resolution = 10) {
 #' Align a raster to a template grid
 #'
 #' Resamples `x` to match the grid of `template` if their geometries differ.
-#' No-op if they already match.
+#' Do not do anything if they already match.
 #'
 #' @param x Terra SpatRaster to align.
 #' @param template Terra SpatRaster to align to.
@@ -32,6 +32,7 @@ empty_grid <- function(habitat, resolution = 10) {
 #'   `"near"` is appropriate for categorical/mask rasters.
 #' @returns Terra SpatRaster aligned to `template`.
 #' @noRd
+#' @note internal
 align_to <- function(x, template, method = "near") {
   already_aligned <- terra::compareGeom(x, template, stopOnError = FALSE)
   if (!already_aligned) {
@@ -42,6 +43,8 @@ align_to <- function(x, template, method = "near") {
 }
 
 #' Prepare habitat and barrier rasters
+#'
+#' Convert vector (shapefile) SF habitat and barrier objects into rasters.
 #'
 #' @param habitat SF object. Habitat spatial data.
 #' @param barrier SF object. Barrier spatial data.
@@ -145,6 +148,9 @@ create_barrier_mask <- function(barrier) {
 
 #' Remove habitat under barriers
 #'
+#' Essentially just performs a [terra::mask()] operation, to remove the habitat
+#'   parts that are under the mask.
+#'
 #' @param habitat Terra SpatRaster. Habitat layer.
 #' @param barrier_mask Terra SpatRaster. Barrier mask.
 #' @returns Terra SpatRaster with habitat remaining after barrier removal.
@@ -165,6 +171,9 @@ drop_habitat_under_barrier <- function(habitat, barrier_mask) {
 }
 
 #' Fragment habitat
+#'
+#' Takes a barrier mask (created with [create_barrier_mask()]) and fragments
+#'   up the habitat where they intersect.
 #'
 #' @param buffered_habitat Terra SpatRaster. Buffered habitat.
 #' @param barrier_mask Terra SpatRaster. Barrier mask.
@@ -337,6 +346,7 @@ habitat_connectivity <- function(
 }
 
 #' @noRd
+#' @note internal
 .habitat_connectivity <- function(habitat, barrier, distance) {
   cli::cli_progress_step("Creating barrier mask")
   barrier_mask <- create_barrier_mask(barrier = barrier)
@@ -408,6 +418,7 @@ habitat_connectivity_full <- function(
 }
 
 #' @noRd
+#' @note internal
 .habitat_connectivity_full <- function(habitat, barrier, distance) {
   cli::cli_progress_step("Creating barrier mask")
   barrier_mask <- create_barrier_mask(barrier = barrier)

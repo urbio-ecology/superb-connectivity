@@ -61,7 +61,7 @@ You do not need the shiny app to perform analyses. All functions have been desig
 
 ## Installation
 
-Install from R-universe:
+Install from [R-universe](https://urbio-ecology.r-universe.dev/builds):
 
 ```r
 install.packages(

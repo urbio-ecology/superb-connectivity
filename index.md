@@ -53,7 +53,7 @@ been designed to work together in a pipeline - see example usage below.
 
 ## Installation
 
-Install from R-universe:
+Install from [R-universe](https://urbio-ecology.r-universe.dev/builds):
 
 ``` r
 install.packages(
@@ -107,16 +107,16 @@ areas <- habitat_connectivity(
 #> ✔ Removing habitat underneath barrier [17ms]
 #> 
 #> ℹ Adding buffer of 10m to habitat layer
-#> ✔ Adding buffer of 10m to habitat layer [257ms]
+#> ✔ Adding buffer of 10m to habitat layer [260ms]
 #> 
 #> ℹ Fragmenting habitat layer along barrier intersection
 #> ✔ Fragmenting habitat layer along barrier intersection [14ms]
 #> 
 #> ℹ Assigning patches ID to fragments
-#> ✔ Assigning patches ID to fragments [685ms]
+#> ✔ Assigning patches ID to fragments [700ms]
 #> 
 #> ℹ Summarising area in each patch
-#> ✔ Summarising area in each patch [1.4s]
+#> ✔ Summarising area in each patch [1.9s]
 #> 
 
 areas

@@ -1,7 +1,5 @@
-library(fasterize)
 library(glue)
 library(sf)
-library(stringr)
 library(terra)
 library(tidyterra)
 library(tidyverse)
@@ -322,12 +320,6 @@ server <- function(input, output, session) {
     getwd()
   })
 
-  # Output: Show buffer comparison flag ----
-  output$show_buffer_comparison <- reactive({
-    results$ready && length(results$buffer_distances) > 1
-  })
-  outputOptions(output, "show_buffer_comparison", suspendWhenHidden = FALSE)
-
   # Output: Habitat, Buffered Habitat, and Barrier - Tabbed Plots ----
   output$gg_barrier_habitat_buffer_tabs <- renderUI({
     req(results$ready)
@@ -507,78 +499,6 @@ server <- function(input, output, session) {
     plot_connectivity(results$results_connect_habitat)
   })
 
-  # Output: Buffer comparison plot ----
-  output$plot_buffer_comparison <- renderPlot({
-    req(results$results_connect_habitat)
-    req(length(results$buffer_distances) > 1)
-
-    # Create a multi-panel comparison
-    p1 <- ggplot(
-      results$results_connect_habitat,
-      aes(x = buffer_distance, y = prob_connectedness)
-    ) +
-      geom_line(linewidth = 1.2, color = "#1976D2") +
-      geom_point(size = 3, color = "#1976D2") +
-      scale_y_continuous(labels = scales::percent_format()) +
-      theme_minimal() +
-      labs(
-        x = "Buffer Distance (m)",
-        y = "Probability of Connectedness",
-        title = "Connectivity Metrics by Buffer Distance"
-      ) +
-      theme(
-        plot.title = element_text(size = 13, face = "bold"),
-        axis.title = element_text(size = 10)
-      )
-
-    p2 <- ggplot(
-      results$results_connect_habitat,
-      aes(x = buffer_distance, y = n_patches)
-    ) +
-      geom_line(linewidth = 1.2, color = "#D32F2F") +
-      geom_point(size = 3, color = "#D32F2F") +
-      theme_minimal() +
-      labs(
-        x = "Buffer Distance (m)",
-        y = "Number of Patches"
-      ) +
-      theme(
-        axis.title = element_text(size = 10)
-      )
-
-    p3 <- ggplot(
-      results$results_connect_habitat,
-      aes(x = buffer_distance, y = effective_mesh_ha)
-    ) +
-      geom_line(linewidth = 1.2, color = "#388E3C") +
-      geom_point(size = 3, color = "#388E3C") +
-      theme_minimal() +
-      labs(
-        x = "Buffer Distance (m)",
-        y = "Effective Mesh Size (ha)"
-      ) +
-      theme(
-        axis.title = element_text(size = 10)
-      )
-
-    p4 <- ggplot(
-      results$results_connect_habitat,
-      aes(x = buffer_distance, y = patch_area_mean)
-    ) +
-      geom_line(linewidth = 1.2, color = "#F57C00") +
-      geom_point(size = 3, color = "#F57C00") +
-      theme_minimal() +
-      labs(
-        x = "Buffer Distance (m)",
-        y = "Mean Patch Area (m²)"
-      ) +
-      theme(
-        axis.title = element_text(size = 10)
-      )
-
-    gridExtra::grid.arrange(p1, p2, p3, p4, ncol = 2)
-  })
-
   # Downloads ----
 
   output$download_summary_csv <- downloadHandler(
@@ -590,186 +510,12 @@ server <- function(input, output, session) {
     }
   )
 
-  output$download_patches_csv <- downloadHandler(
-    filename = function() {
-      paste0("patch_areas_", Sys.Date(), ".csv")
-    },
-    content = function(file) {
-      all_patches <- map2(
-        results$areas_connected,
-        results$buffer_distances,
-        ~ mutate(.x, buffer_distance = .y)
-      ) |>
-        list_rbind()
-      write_csv(all_patches, file)
-    }
-  )
-
   output$download_raster <- downloadHandler(
     filename = function() {
       paste0("habitat_patches_", Sys.Date(), ".tif")
     },
     content = function(file) {
       terra::writeRaster(results$habitat_raster, file, overwrite = TRUE)
-    }
-  )
-
-  output$download_map_1 <- downloadHandler(
-    filename = function() {
-      paste0("habitat_barrier_map_", Sys.Date(), ".png")
-    },
-    content = function(file) {
-      png(file, width = 1200, height = 800, res = 150)
-      print(
-        ggplot() +
-          geom_sf(
-            data = results$habitat,
-            fill = "#2E7D32",
-            alpha = 0.7,
-            color = NA
-          ) +
-          geom_sf(
-            data = results$barrier,
-            fill = "#D32F2F",
-            alpha = 0.7,
-            color = NA
-          ) +
-          theme_minimal() +
-          labs(
-            title = "Habitat and Barrier Layers",
-            subtitle = paste("Species:", input$species_name)
-          ) +
-          theme(
-            plot.title = element_text(size = 14, face = "bold"),
-            plot.subtitle = element_text(size = 11)
-          )
-      )
-      dev.off()
-    }
-  )
-
-  output$download_map_2 <- downloadHandler(
-    filename = function() {
-      paste0("patches_map_", Sys.Date(), ".png")
-    },
-    content = function(file) {
-      first_result <- results$areas_connected[[1]]
-      first_buffer <- results$buffer_distances[1]
-
-      patch_summary <- first_result |>
-        arrange(desc(area)) |>
-        mutate(
-          patch_rank = row_number(),
-          patch_category = case_when(
-            patch_rank == 1 ~ "Largest",
-            patch_rank <= 5 ~ "Top 5",
-            TRUE ~ "Other"
-          )
-        )
-
-      png(file, width = 1200, height = 800, res = 150)
-      print(
-        ggplot(
-          patch_summary,
-          aes(x = patch_rank, y = area, fill = patch_category)
-        ) +
-          geom_col() +
-          scale_fill_manual(
-            values = c(
-              "Largest" = "#1B5E20",
-              "Top 5" = "#43A047",
-              "Other" = "#81C784"
-            )
-          ) +
-          theme_minimal() +
-          labs(
-            title = "Connected Habitat Patches by Size",
-            subtitle = paste("Buffer distance:", first_buffer, "m"),
-            x = "Patch Rank (by size)",
-            y = "Patch Area (m²)",
-            fill = "Category"
-          ) +
-          theme(
-            plot.title = element_text(size = 14, face = "bold"),
-            plot.subtitle = element_text(size = 11)
-          )
-      )
-      dev.off()
-    }
-  )
-
-  output$download_comparison <- downloadHandler(
-    filename = function() {
-      paste0("buffer_comparison_", Sys.Date(), ".png")
-    },
-    content = function(file) {
-      png(file, width = 1600, height = 1200, res = 150)
-
-      p1 <- ggplot(
-        results$results_connect_habitat,
-        aes(x = buffer_distance, y = prob_connectedness)
-      ) +
-        geom_line(linewidth = 1.2, color = "#1976D2") +
-        geom_point(size = 3, color = "#1976D2") +
-        scale_y_continuous(labels = scales::percent_format()) +
-        theme_minimal() +
-        labs(
-          x = "Buffer Distance (m)",
-          y = "Probability of Connectedness",
-          title = "Connectivity Metrics by Buffer Distance"
-        ) +
-        theme(
-          plot.title = element_text(size = 13, face = "bold"),
-          axis.title = element_text(size = 10)
-        )
-
-      p2 <- ggplot(
-        results$results_connect_habitat,
-        aes(x = buffer_distance, y = n_patches)
-      ) +
-        geom_line(linewidth = 1.2, color = "#D32F2F") +
-        geom_point(size = 3, color = "#D32F2F") +
-        theme_minimal() +
-        labs(
-          x = "Buffer Distance (m)",
-          y = "Number of Patches"
-        ) +
-        theme(
-          axis.title = element_text(size = 10)
-        )
-
-      p3 <- ggplot(
-        results$results_connect_habitat,
-        aes(x = buffer_distance, y = effective_mesh_ha)
-      ) +
-        geom_line(linewidth = 1.2, color = "#388E3C") +
-        geom_point(size = 3, color = "#388E3C") +
-        theme_minimal() +
-        labs(
-          x = "Buffer Distance (m)",
-          y = "Effective Mesh Size (ha)"
-        ) +
-        theme(
-          axis.title = element_text(size = 10)
-        )
-
-      p4 <- ggplot(
-        results$results_connect_habitat,
-        aes(x = buffer_distance, y = patch_area_mean)
-      ) +
-        geom_line(linewidth = 1.2, color = "#F57C00") +
-        geom_point(size = 3, color = "#F57C00") +
-        theme_minimal() +
-        labs(
-          x = "Buffer Distance (m)",
-          y = "Mean Patch Area (m²)"
-        ) +
-        theme(
-          axis.title = element_text(size = 10)
-        )
-
-      print(gridExtra::grid.arrange(p1, p2, p3, p4, ncol = 2))
-      dev.off()
     }
   )
 

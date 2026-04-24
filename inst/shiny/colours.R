@@ -55,25 +55,3 @@ urbio_theme <- function() {
     "input-border-radius" = "0.375rem"
   )
 }
-
-# Optional: Dark theme variant
-urbio_theme_dark <- function() {
-  bs_theme(
-    version = 5,
-    preset = "shiny",
-    bootswatch = "darkly",
-
-    # Primary colors using urbio palette
-    primary = col_primary,
-    secondary = "#6c757d",
-    success = col_success,
-    info = urbio_pal_cut[6],
-    warning = "#f9a825",
-    danger = "#d32f2f",
-
-    # Typography
-    base_font = font_google("Inter"),
-    heading_font = font_google("Roboto"),
-    code_font = font_google("Fira Code")
-  )
-}

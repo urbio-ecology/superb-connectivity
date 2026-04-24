@@ -25,7 +25,6 @@ run_connectivity_app <- function() {
     "DT",
     "bslib",
     "conflicted",
-    "fasterize",
     "gridExtra",
     "shinyjs"
   )

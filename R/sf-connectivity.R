@@ -132,8 +132,7 @@ sf_add_patch_area <- function(patches) {
 #'
 #' @param patch_areas SF object. Habitat patches with area column.
 #'
-#' @returns Data frame with `patch_id`, `area_total`, and `area_squared`
-#'   columns.
+#' @returns Data frame with `patch_id`, `area`, and `area_squared` columns.
 #' @examples
 #' lizard_habitat_sf <- terra::as.polygons(example_habitat(), dissolve = TRUE) |>
 #'   sf::st_as_sf()

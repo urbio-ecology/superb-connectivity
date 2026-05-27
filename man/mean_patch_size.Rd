@@ -4,10 +4,10 @@
 \alias{mean_patch_size}
 \title{Calculate mean patch size}
 \usage{
-mean_patch_size(area_total, ...)
+mean_patch_size(area, ...)
 }
 \arguments{
-\item{area_total}{Numeric vector. Total areas of habitat patches.}
+\item{area}{Numeric vector. Area of a connected patch.}
 
 \item{...}{extra arguments to pass to \code{mean()}.}
 }

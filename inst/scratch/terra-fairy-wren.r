@@ -57,7 +57,7 @@ rast_areas_connected <- aggregate_connected_patches(patch_id_raster)
 
 summarise_connectivity(
   area_squared = rast_areas_connected$area_squared,
-  area_total = rast_areas_connected$area
+  area = rast_areas_connected$area
 )
 
 areas_connected2 <- habitat_connectivity(

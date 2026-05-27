@@ -9,7 +9,7 @@ connectivity_probability(effective_mesh_size, area)
 \arguments{
 \item{area}{Numeric vector. Total areas of connected patches.}
 
-\item{area_squared}{Numeric vector. Squared areas of connected patches.}
+\item{area}{Numeric vector. Area of a connected patch.}
 }
 \value{
 Numeric. Probability of connectedness (0-1).

@@ -28,7 +28,7 @@ results <- purrr::map(
       distance = d, verbose = FALSE)
     summarise_connectivity(
       area_squared = full$areas_connected$area_squared,
-      area_total = full$areas_connected$area,
+      area = full$areas_connected$area,
       buffer_distance = d,
       target_resolution = 500,
       data_resolution = 10,

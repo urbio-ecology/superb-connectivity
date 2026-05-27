@@ -31,7 +31,7 @@ test_that("summarise_connectivity with multiple buffer distances stays one row e
   purrr::walk(c(50, 100, 200), function(dist) {
     result <- summarise_connectivity(
       area_squared = c(5000^2, 5000^2),
-      area_total = c(5000, 5000),
+      area = c(5000, 5000),
       buffer_distance = dist,
       target_resolution = 500,
       data_resolution = 10,

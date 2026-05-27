@@ -6,7 +6,7 @@
 \usage{
 summarise_connectivity(
   area_squared,
-  area_total,
+  area,
   buffer_distance,
   target_resolution,
   data_resolution,
@@ -17,7 +17,7 @@ summarise_connectivity(
 \arguments{
 \item{area_squared}{Numeric vector. Squared areas of connected patches.}
 
-\item{area_total}{Numeric vector. Total areas of connected patches.}
+\item{area}{Numeric vector. Area of a connected patch.}
 
 \item{buffer_distance}{Numeric. Buffer distance used in analysis (meters).}
 
@@ -44,7 +44,7 @@ See examples below.
 \examples{
 summarise_connectivity(
   area_squared = lizard_areas_connected$area_squared,
-  area_total = lizard_areas_connected$area,
+  area = lizard_areas_connected$area,
   buffer_distance = 10,
   target_resolution = 500,
   data_resolution = 10,

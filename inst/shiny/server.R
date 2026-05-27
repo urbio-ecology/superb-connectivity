@@ -253,7 +253,7 @@ server <- function(input, output, session) {
             .f = function(areas, dist) {
               summarise_connectivity(
                 area_squared = areas$area_squared,
-                area_total = areas$area,
+                area = areas$area,
                 buffer_distance = dist,
                 target_resolution = overlay_res,
                 data_resolution = base_res,

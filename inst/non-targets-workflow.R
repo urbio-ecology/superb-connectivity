@@ -119,7 +119,7 @@ results_connect_habitat <- map(
   .f = function(areas_connected) {
     summarise_connectivity(
       area_squared = areas_connected$area_squared,
-      area_total = areas_connected$area,
+      area = areas_connected$area,
       buffer_distance = buffer_distance,
       target_resolution = target_resolution,
       data_resolution = data_resolution,

@@ -40,7 +40,7 @@ test_that("connectivity_probability is higher for unfragmented habitat", {
 test_that("summarise_connectivity returns a tibble with expected columns", {
   result <- summarise_connectivity(
     area_squared = 10000^2,
-    area_total = 10000,
+    area = 10000,
     buffer_distance = 100,
     target_resolution = 500,
     data_resolution = 10,
@@ -57,7 +57,7 @@ test_that("summarise_connectivity returns a tibble with expected columns", {
 test_that("summarise_connectivity rounds prob_connectedness to 6 decimal places", {
   result <- summarise_connectivity(
     area_squared = c(10000^2, 20000^2),
-    area_total = c(10000, 20000),
+    area = c(10000, 20000),
     buffer_distance = 200,
     target_resolution = 500,
     data_resolution = 10,

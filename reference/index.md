@@ -85,6 +85,8 @@
   : Create Empty terra raster grid
 - [`generate_connectivity_report()`](https://urbio-ecology.github.io/urbioconnect/reference/generate_connectivity_report.md)
   : Generate Connectivity Report
+- [`col2hex()`](https://urbio-ecology.github.io/urbioconnect/reference/col2hex.md)
+  : Convert color name to hexadecimal
 
 ## Shiny app
 

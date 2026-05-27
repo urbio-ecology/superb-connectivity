@@ -1,9 +1,10 @@
 # Using raster vs vector
 
 ``` r
+
 library(urbioconnect)
 library(terra)
-#> terra 1.9.11
+#> terra 1.9.27
 library(sf)
 #> Linking to GEOS 3.12.1, GDAL 3.8.4, PROJ 9.4.0; sf_use_s2() is TRUE
 ```
@@ -55,6 +56,7 @@ Creek in Melbourne. The habitat is available as a raster, and the
 barrier as both a raster and a shapefile.
 
 ``` r
+
 # Raster inputs
 habitat_rast <- example_habitat()
 barrier_rast <- example_barrier()
@@ -85,6 +87,7 @@ then unions the polygons, then simplifies with
 [`st_simplify()`](https://r-spatial.github.io/sf/reference/geos_unary.html).
 
 ``` r
+
 barrier_sf_clean <- clean(barrier_sf)
 habitat_sf_clean <- clean(habitat_sf)
 buffer_dist <- 10
@@ -96,6 +99,7 @@ We will compare the raster and vector data timings, as well, using the
 `tictoc` package
 
 ``` r
+
 library(tictoc)
 #> 
 #> Attaching package: 'tictoc'
@@ -110,7 +114,7 @@ raster_result <- habitat_connectivity(
   verbose = FALSE
 )
 rast_time <- toc()
-#> 1.904 sec elapsed
+#> 2.392 sec elapsed
 
 raster_result
 #> # A tibble: 163 × 3
@@ -135,6 +139,7 @@ The raster result has columns `patch_id`, `area` (square metres), and
 ### Vector approach
 
 ``` r
+
 tic()
 vector_result <- sf_habitat_connectivity(
   habitat = habitat_sf_clean,
@@ -142,7 +147,7 @@ vector_result <- sf_habitat_connectivity(
   distance = buffer_dist
 )
 vect_time <- toc()
-#> 13.174 sec elapsed
+#> 15.457 sec elapsed
 
 vector_result
 #> # A tibble: 136 × 3
@@ -169,6 +174,7 @@ Both approaches produce one row per connected habitat patch, with patch
 area and squared area.
 
 ``` r
+
 nrow(raster_result)
 #> [1] 163
 nrow(vector_result)
@@ -182,10 +188,10 @@ exact polygon geometry, so it typically produces slightly different (and
 arguably more precise) patch boundaries, particularly along curved or
 irregular barrier edges.
 
-    #> [1] 1.904
+    #> [1] 2.392
 
 Timings for the methods are also important to consider. The raster
-approach took 1.904 seconds, and the vector approach took 13.174
+approach took 2.392 seconds, and the vector approach took 15.457
 seconds.
 
 ## Summarising connectivity metrics
@@ -195,10 +201,11 @@ works with output from either approach. You simply pass the appropriate
 area columns as vectors.
 
 ``` r
+
 # Raster approach output uses the `area` column
 summarise_connectivity(
   area_squared = raster_result$area_squared,
-  area_total = raster_result$area,
+  area = raster_result$area,
   buffer_distance = buffer_dist,
   target_resolution = 500,
   data_resolution = 10,
@@ -214,11 +221,12 @@ summarise_connectivity(
 ```
 
 ``` r
-# Vector approach output uses the `area_total` column
+
+# Vector approach output uses the `area` column
 # Strip units before passing to summarise_connectivity
 summarise_connectivity(
   area_squared = vector_result$area_squared,
-  area_total = vector_result$area,
+  area = vector_result$area,
   buffer_distance = buffer_dist,
   target_resolution = NA,
   data_resolution = NA,
@@ -244,14 +252,14 @@ The other factor to consider is whether the data is large and
 computational time is important. For many situations, the raster based
 approaches will be much faster.
 
-| Situation                                 | Recommended approach                                                                                                      |
-|-------------------------------------------|---------------------------------------------------------------------------------------------------------------------------|
-| Habitat data is a GeoTIFF or other raster | Raster ([`habitat_connectivity()`](https://urbio-ecology.github.io/urbioconnect/reference/habitat_connectivity.md))       |
+| Situation | Recommended approach |
+|----|----|
+| Habitat data is a GeoTIFF or other raster | Raster ([`habitat_connectivity()`](https://urbio-ecology.github.io/urbioconnect/reference/habitat_connectivity.md)) |
 | Habitat data is a shapefile or GeoPackage | Vector ([`sf_habitat_connectivity()`](https://urbio-ecology.github.io/urbioconnect/reference/sf_habitat_connectivity.md)) |
-| Very large study area (regional scale)    | Raster (faster for large grids)                                                                                           |
-| Small, precise study area                 | Vector (no resolution loss)                                                                                               |
-| Need output maps or GeoTIFFs              | Raster (native map output)                                                                                                |
-| Exact polygon boundaries matter           | Vector (no rasterisation artefacts)                                                                                       |
+| Very large study area (regional scale) | Raster (faster for large grids) |
+| Small, precise study area | Vector (no resolution loss) |
+| Need output maps or GeoTIFFs | Raster (native map output) |
+| Exact polygon boundaries matter | Vector (no rasterisation artefacts) |
 
 ### Raster approach trade-offs
 
@@ -279,6 +287,7 @@ If your habitat is in raster format but you want to use the vector
 approach (or vice versa), conversion is straightforward.
 
 ``` r
+
 # Raster to vector
 habitat_sf <- terra::as.polygons(example_habitat(), dissolve = TRUE) |>
   sf::st_as_sf()
@@ -306,6 +315,7 @@ for example, to inspect intermediate outputs or to substitute a custom
 step.
 
 ``` r
+
 # Raster step-by-step
 barrier_mask <- create_barrier_mask(barrier_rast)
 remaining <- drop_habitat_under_barrier(habitat_rast, barrier_mask)
@@ -317,6 +327,7 @@ areas <- aggregate_connected_patches(patches)
 ```
 
 ``` r
+
 # Vector step-by-step
 buffered_sf <- sf_habitat_buffer(habitat_sf_clean, distance = 10)
 fragments_sf <- sf_fragment_habitat(buffered_sf, barrier_sf_clean)

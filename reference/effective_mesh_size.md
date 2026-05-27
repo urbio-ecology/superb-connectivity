@@ -9,18 +9,18 @@ See examples below.
 ## Usage
 
 ``` r
-effective_mesh_size(area_squared, area_total)
+effective_mesh_size(area_squared, area)
 ```
 
 ## Arguments
 
 - area_squared:
 
-  Numeric vector. Squared areas of connected patches.
+  Numeric vector. Squared area of connected patches.
 
-- area_total:
+- area:
 
-  Numeric vector. Total areas of connected patches.
+  Numeric vector. Area of a connected patch.
 
 ## Value
 

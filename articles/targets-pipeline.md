@@ -1,6 +1,7 @@
 # Using urbioconnect in a targets pipeline
 
 ``` r
+
 library(urbioconnect)
 ```
 
@@ -41,6 +42,7 @@ Place this code in a file in the root of your project directory, and
 name it `_targets.R`:
 
 ``` r
+
 # _targets.R
 library(geotargets)
 library(tarchetypes)
@@ -88,7 +90,7 @@ tar_assign({
 
   results_connect_habitat <- summarise_connectivity(
     area_squared = areas_connected$area_squared,
-    area_total = areas_connected$area,
+    area = areas_connected$area,
     buffer_distance = buffer_distance,
     target_resolution = target_resolution,
     data_resolution = data_resolution,
@@ -104,6 +106,7 @@ tar_assign({
 This `tar_assign({` does something special
 
 ``` r
+
 tar_assign({
 })
 ```
@@ -116,6 +119,7 @@ targets with
 [`tar_target()`](https://docs.ropensci.org/targets/reference/tar_target.html):
 
 ``` r
+
   species_name <- tar_target("Blue-Tongued-Lizard")
   target_resolution <- tar_target(500)
   data_resolution <- tar_target(10)
@@ -130,6 +134,7 @@ to get rerun.
 These parts here:
 
 ``` r
+
 example_habitat() |> tar_terra_rast()
 example_barrier() |> tar_terra_rast()
 ```
@@ -139,15 +144,16 @@ Are somewhat special because
 creates an example habitat raster file:
 
 ``` r
+
 example_habitat()
-#> class       : SpatRaster 
+#> class       : SpatRaster
 #> size        : 763, 766, 1  (nrow, ncol, nlyr)
 #> resolution  : 2, 2  (x, y)
 #> extent      : 326109.6, 327641.6, 5820362, 5821888  (xmin, xmax, ymin, ymax)
-#> coord. ref. : GDA94 / MGA zone 55 (EPSG:28355) 
-#> source      : lizard_habitat_raster.tif 
-#> name        : Pseudo Layer 
-#> min value   :            1 
+#> coord. ref. : GDA94 / MGA zone 55 (EPSG:28355)
+#> source      : lizard_habitat_raster.tif
+#> name        : Pseudo Layer
+#> min value   :            1
 #> max value   :            1
 ```
 
@@ -166,6 +172,7 @@ and
 with your own loading code, which might look like this:
 
 ``` r
+
 tar_file(habitat_file, "data/habitat.tif")
 rast(habitat_file) |> tar_terra_rast()
 ```
@@ -185,6 +192,7 @@ a target, using something such as
 From an R session in your project directory run the following
 
 ``` r
+
 targets::tar_make()
 ```
 
@@ -194,6 +202,7 @@ again, only out-of-date targets are re-computed.
 If you need to force everything to re-run, you can do the following:
 
 ``` r
+
 targets::tar_invalidate(everything())
 targets::tar_make()
 ```
@@ -204,6 +213,7 @@ You can load the individual targets back into your R session using
 [`tar_load()`](https://docs.ropensci.org/targets/reference/tar_load.html)
 
 ``` r
+
 # The combined summary table
 targets::tar_load(results_connect_habitat)
 results_connect_habitat
@@ -219,6 +229,7 @@ Before running, you can inspect the pipeline graph to check the
 dependency structure looks correct:
 
 ``` r
+
 targets::tar_visnetwork()
 ```
 

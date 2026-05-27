@@ -17,7 +17,7 @@ sf_aggregate_connected_patches(patch_areas)
 
 ## Value
 
-Data frame with `patch_id`, `area_total`, and `area_squared` columns.
+Data frame with `patch_id`, `area`, and `area_squared` columns.
 
 ## Examples
 

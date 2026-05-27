@@ -7,8 +7,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>Using urbioconnect in a targets pipeline • urbioconnect</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Using urbioconnect in a targets pipeline">
 </head>
@@ -149,7 +149,7 @@ name it <code>_targets.R</code>:</p>
 <span></span>
 <span>  <span class="va">results_connect_habitat</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/summarise_connectivity.html">summarise_connectivity</a></span><span class="op">(</span></span>
 <span>    area_squared <span class="op">=</span> <span class="va">areas_connected</span><span class="op">$</span><span class="va">area_squared</span>,</span>
-<span>    area_total <span class="op">=</span> <span class="va">areas_connected</span><span class="op">$</span><span class="va">area</span>,</span>
+<span>    area <span class="op">=</span> <span class="va">areas_connected</span><span class="op">$</span><span class="va">area</span>,</span>
 <span>    buffer_distance <span class="op">=</span> <span class="va">buffer_distance</span>,</span>
 <span>    target_resolution <span class="op">=</span> <span class="va">target_resolution</span>,</span>
 <span>    data_resolution <span class="op">=</span> <span class="va">data_resolution</span>,</span>
@@ -186,14 +186,14 @@ targets with <code><a href="https://docs.ropensci.org/targets/reference/tar_targ
 an example habitat raster file:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/example-lizard-data.html">example_habitat</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; class       : SpatRaster </span></span>
+<span><span class="co">#&gt; class       : SpatRaster</span></span>
 <span><span class="co">#&gt; size        : 763, 766, 1  (nrow, ncol, nlyr)</span></span>
 <span><span class="co">#&gt; resolution  : 2, 2  (x, y)</span></span>
 <span><span class="co">#&gt; extent      : 326109.6, 327641.6, 5820362, 5821888  (xmin, xmax, ymin, ymax)</span></span>
-<span><span class="co">#&gt; coord. ref. : GDA94 / MGA zone 55 (EPSG:28355) </span></span>
-<span><span class="co">#&gt; source      : lizard_habitat_raster.tif </span></span>
-<span><span class="co">#&gt; name        : Pseudo Layer </span></span>
-<span><span class="co">#&gt; min value   :            1 </span></span>
+<span><span class="co">#&gt; coord. ref. : GDA94 / MGA zone 55 (EPSG:28355)</span></span>
+<span><span class="co">#&gt; source      : lizard_habitat_raster.tif</span></span>
+<span><span class="co">#&gt; name        : Pseudo Layer</span></span>
+<span><span class="co">#&gt; min value   :            1</span></span>
 <span><span class="co">#&gt; max value   :            1</span></span></code></pre></div>
 <p>but instead of using <code><a href="https://docs.ropensci.org/targets/reference/tar_target.html" class="external-link">tar_target()</a></code>, we use
 <code>tar_terra_rast()</code>. The reason is essentially that raster

@@ -51,25 +51,25 @@ lizard_barrier_shp <- example_barrier_shp()
 #> Projected CRS: GDA94 / MGA zone 55
 prepare_rasters(lizard_habitat_sf, lizard_barrier_shp)
 #> $habitat_raster
-#> class       : SpatRaster 
+#> class       : SpatRaster
 #> size        : 200, 200, 1  (nrow, ncol, nlyr)
 #> resolution  : 10.01307, 10.02632  (x, y)
 #> extent      : 326109.6, 328112.2, 5819883, 5821888  (xmin, xmax, ymin, ymax)
-#> coord. ref. : GDA94 / MGA zone 55 (EPSG:28355) 
+#> coord. ref. : GDA94 / MGA zone 55 (EPSG:28355)
 #> source(s)   : memory
-#> name        : layer 
-#> min value   :     1 
-#> max value   :     1 
+#> name        : layer
+#> min value   :     1
+#> max value   :     1
 #> 
 #> $barrier_raster
-#> class       : SpatRaster 
+#> class       : SpatRaster
 #> size        : 200, 200, 1  (nrow, ncol, nlyr)
 #> resolution  : 10.01307, 10.02632  (x, y)
 #> extent      : 326109.6, 328112.2, 5819883, 5821888  (xmin, xmax, ymin, ymax)
-#> coord. ref. : GDA94 / MGA zone 55 (EPSG:28355) 
+#> coord. ref. : GDA94 / MGA zone 55 (EPSG:28355)
 #> source(s)   : memory
-#> name        : layer 
-#> min value   :     0 
-#> max value   :     1 
+#> name        : layer
+#> min value   :     0
+#> max value   :     1
 #> 
 ```

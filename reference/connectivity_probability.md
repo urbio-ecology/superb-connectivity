@@ -11,7 +11,7 @@ See examples below.
 ## Usage
 
 ``` r
-connectivity_probability(area_squared, area_total)
+connectivity_probability(area_squared, area)
 ```
 
 ## Arguments
@@ -20,9 +20,9 @@ connectivity_probability(area_squared, area_total)
 
   Numeric vector. Squared areas of connected patches.
 
-- area_total:
+- area:
 
-  Numeric vector. Total areas of connected patches.
+  Numeric vector. Area of a connected patch.
 
 ## Value
 

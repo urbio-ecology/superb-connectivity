@@ -11,7 +11,7 @@ See examples below.
 ``` r
 summarise_connectivity(
   area_squared,
-  area_total,
+  area,
   buffer_distance,
   target_resolution,
   data_resolution,
@@ -26,9 +26,9 @@ summarise_connectivity(
 
   Numeric vector. Squared areas of connected patches.
 
-- area_total:
+- area:
 
-  Numeric vector. Total areas of connected patches.
+  Numeric vector. Area of a connected patch.
 
 - buffer_distance:
 
@@ -61,7 +61,7 @@ areas.
 ``` r
 summarise_connectivity(
   area_squared = lizard_areas_connected$area_squared,
-  area_total = lizard_areas_connected$area,
+  area = lizard_areas_connected$area,
   buffer_distance = 10,
   target_resolution = 500,
   data_resolution = 10,

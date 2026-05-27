@@ -29,14 +29,14 @@ barriers exist.
 ``` r
 lizard_barrier <- example_barrier()
 create_barrier_mask(lizard_barrier)
-#> class       : SpatRaster 
+#> class       : SpatRaster
 #> size        : 763, 766, 1  (nrow, ncol, nlyr)
 #> resolution  : 2, 2  (x, y)
 #> extent      : 326109.6, 327641.6, 5820362, 5821888  (xmin, xmax, ymin, ymax)
-#> coord. ref. : GDA94 / MGA zone 55 (EPSG:28355) 
+#> coord. ref. : GDA94 / MGA zone 55 (EPSG:28355)
 #> source(s)   : memory
-#> varname     : lizard_barrier_raster 
-#> name        : layer 
-#> min value   :     1 
-#> max value   :     1 
+#> varname     : lizard_barrier_raster
+#> name        : layer
+#> min value   :     1
+#> max value   :     1
 ```

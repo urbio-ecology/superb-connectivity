@@ -7,8 +7,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>Using raster vs vector • urbioconnect</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Using raster vs vector">
 </head>
@@ -70,7 +70,7 @@
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://urbio-ecology.r-universe.dev/urbioconnect" class="external-link">urbioconnect</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rspatial.org/" class="external-link">terra</a></span><span class="op">)</span></span>
-<span><span class="co">#&gt; terra 1.9.11</span></span>
+<span><span class="co">#&gt; terra 1.9.27</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/" class="external-link">sf</a></span><span class="op">)</span></span>
 <span><span class="co">#&gt; Linking to GEOS 3.12.1, GDAL 3.8.4, PROJ 9.4.0; sf_use_s2() is TRUE</span></span></code></pre></div>
 <p><code>urbioconnect</code> can perform habitat connectivity analysis
@@ -163,7 +163,7 @@ the <code>tictoc</code> package</p>
 <span>  verbose <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span>
 <span><span class="va">rast_time</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/tictoc/man/tic.html" class="external-link">toc</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; 1.904 sec elapsed</span></span>
+<span><span class="co">#&gt; 2.392 sec elapsed</span></span>
 <span></span>
 <span><span class="va">raster_result</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 163 × 3</span></span></span>
@@ -194,7 +194,7 @@ the <code>tictoc</code> package</p>
 <span>  distance <span class="op">=</span> <span class="va">buffer_dist</span></span>
 <span><span class="op">)</span></span>
 <span><span class="va">vect_time</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/tictoc/man/tic.html" class="external-link">toc</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; 13.174 sec elapsed</span></span>
+<span><span class="co">#&gt; 15.457 sec elapsed</span></span>
 <span></span>
 <span><span class="va">vector_result</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 136 × 3</span></span></span>
@@ -231,9 +231,9 @@ approximated at the chosen resolution. The vector approach preserves
 exact polygon geometry, so it typically produces slightly different (and
 arguably more precise) patch boundaries, particularly along curved or
 irregular barrier edges.</p>
-<pre><code><span><span class="co">#&gt; [1] 1.904</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; [1] 2.392</span></span></code></pre>
 <p>Timings for the methods are also important to consider. The raster
-approach took 1.904 seconds, and the vector approach took 13.174
+approach took 2.392 seconds, and the vector approach took 15.457
 seconds.</p>
 </div>
 <div class="section level2">
@@ -245,7 +245,7 @@ approach. You simply pass the appropriate area columns as vectors.</p>
 <code class="sourceCode R"><span><span class="co"># Raster approach output uses the `area` column</span></span>
 <span><span class="fu"><a href="../reference/summarise_connectivity.html">summarise_connectivity</a></span><span class="op">(</span></span>
 <span>  area_squared <span class="op">=</span> <span class="va">raster_result</span><span class="op">$</span><span class="va">area_squared</span>,</span>
-<span>  area_total <span class="op">=</span> <span class="va">raster_result</span><span class="op">$</span><span class="va">area</span>,</span>
+<span>  area <span class="op">=</span> <span class="va">raster_result</span><span class="op">$</span><span class="va">area</span>,</span>
 <span>  buffer_distance <span class="op">=</span> <span class="va">buffer_dist</span>,</span>
 <span>  target_resolution <span class="op">=</span> <span class="fl">500</span>,</span>
 <span>  data_resolution <span class="op">=</span> <span class="fl">10</span>,</span>
@@ -259,11 +259,11 @@ approach. You simply pass the appropriate area columns as vectors.</p>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 5 more variables: patch_area_mean &lt;dbl&gt;, patch_area_total_ha &lt;dbl&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   target_resolution &lt;dbl&gt;, data_resolution &lt;dbl&gt;, aggregation_factor &lt;dbl&gt;</span></span></span></code></pre></div>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Vector approach output uses the `area_total` column</span></span>
+<code class="sourceCode R"><span><span class="co"># Vector approach output uses the `area` column</span></span>
 <span><span class="co"># Strip units before passing to summarise_connectivity</span></span>
 <span><span class="fu"><a href="../reference/summarise_connectivity.html">summarise_connectivity</a></span><span class="op">(</span></span>
 <span>  area_squared <span class="op">=</span> <span class="va">vector_result</span><span class="op">$</span><span class="va">area_squared</span>,</span>
-<span>  area_total <span class="op">=</span> <span class="va">vector_result</span><span class="op">$</span><span class="va">area</span>,</span>
+<span>  area <span class="op">=</span> <span class="va">vector_result</span><span class="op">$</span><span class="va">area</span>,</span>
 <span>  buffer_distance <span class="op">=</span> <span class="va">buffer_dist</span>,</span>
 <span>  target_resolution <span class="op">=</span> <span class="cn">NA</span>,</span>
 <span>  data_resolution <span class="op">=</span> <span class="cn">NA</span>,</span>

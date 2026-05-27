@@ -26,5 +26,8 @@ Useful links:
 
 Authors:
 
+- Nicholas Tierney <nicholas.tierney@gmail.com>
+  ([ORCID](https://orcid.org/0000-0003-1460-8722))
+
 - Holly Kirk <hollylkirk@gmail.com>
   ([ORCID](https://orcid.org/0000-0002-8724-3210)) \[copyright holder\]

@@ -1,9 +1,10 @@
 # Getting started
 
 ``` r
+
 library(urbioconnect)
 library(terra)
-#> terra 1.9.11
+#> terra 1.9.27
 ```
 
 ## Overview
@@ -38,28 +39,29 @@ Lizard study area along Darebin Creek, between Preston and West
 Heidelberg, Melbourne.
 
 ``` r
+
 habitat <- example_habitat()
 barrier <- example_barrier()
 
 habitat
-#> class       : SpatRaster 
+#> class       : SpatRaster
 #> size        : 763, 766, 1  (nrow, ncol, nlyr)
 #> resolution  : 2, 2  (x, y)
 #> extent      : 326109.6, 327641.6, 5820362, 5821888  (xmin, xmax, ymin, ymax)
-#> coord. ref. : GDA94 / MGA zone 55 (EPSG:28355) 
-#> source      : lizard_habitat_raster.tif 
-#> name        : Pseudo Layer 
-#> min value   :            1 
+#> coord. ref. : GDA94 / MGA zone 55 (EPSG:28355)
+#> source      : lizard_habitat_raster.tif
+#> name        : Pseudo Layer
+#> min value   :            1
 #> max value   :            1
 barrier
-#> class       : SpatRaster 
+#> class       : SpatRaster
 #> size        : 763, 766, 1  (nrow, ncol, nlyr)
 #> resolution  : 2, 2  (x, y)
 #> extent      : 326109.6, 327641.6, 5820362, 5821888  (xmin, xmax, ymin, ymax)
-#> coord. ref. : GDA94 / MGA zone 55 (EPSG:28355) 
-#> source      : lizard_barrier_raster.tif 
-#> name        : layer 
-#> min value   :     0 
+#> coord. ref. : GDA94 / MGA zone 55 (EPSG:28355)
+#> source      : lizard_barrier_raster.tif
+#> name        : layer
+#> min value   :     0
 #> max value   :     1
 ```
 
@@ -67,6 +69,7 @@ The habitat raster has value 1 where lizard habitat exists, NA
 elsewhere.
 
 ``` r
+
 plot(habitat, main = "Lizard Habitat", col = "seagreen", legend = FALSE)
 ```
 
@@ -76,6 +79,7 @@ The barrier raster has value 1 where barriers (roads exist), 0
 elsewhere.
 
 ``` r
+
 plot(barrier, main = "Lizard Barriers", col = c("white", "black"), legend = FALSE)
 ```
 
@@ -84,6 +88,7 @@ plot(barrier, main = "Lizard Barriers", col = c("white", "black"), legend = FALS
 We can see these overlaid:
 
 ``` r
+
 plot(barrier, main = "Lizard Habitat and Barrier", col = c("white", "black"), legend = FALSE)
 plot(habitat, col = "seagreen", add = TRUE, legend = FALSE)
 ```
@@ -117,6 +122,7 @@ multiplier mask (NA = barrier, 1 = passable). This format lets us block
 movement when we multiplying layers together.
 
 ``` r
+
 barrier_mask <- create_barrier_mask(barrier)
 plot(barrier_mask, col = c("grey"), legend = FALSE)
 ```
@@ -132,6 +138,7 @@ been removed - the green spaces are habitat kep, and the orange ones are
 habitat that intersected with barriers.
 
 ``` r
+
 remaining_habitat <- drop_habitat_under_barrier(
   habitat = habitat,
   barrier_mask = barrier_mask
@@ -139,6 +146,7 @@ remaining_habitat <- drop_habitat_under_barrier(
 ```
 
 ``` r
+
 plot(barrier_mask, col = c("grey"), legend = FALSE)
 plot(habitat, col = "#d95f02", legend = FALSE, add = TRUE)
 plot(remaining_habitat, col = "#1b9e77", legend = FALSE, add = TRUE)
@@ -159,6 +167,7 @@ buffer of 500 m. However, we use 10 for a faster demonstration on the
 small example dataset.
 
 ``` r
+
 buffer_distance <- 10
 
 buffered_habitat <- habitat_buffer(
@@ -177,6 +186,7 @@ We can now visualise the three layers together using
 [`gg_barrier_habitat_buffer()`](https://urbio-ecology.github.io/urbioconnect/reference/gg_barrier_habitat_buffer.md):
 
 ``` r
+
 gg_barrier_habitat_buffer(
   barrier = barrier,
   buffered = buffered_habitat,
@@ -202,21 +212,22 @@ cuts the buffered habitat wherever a barrier cell exists. This is the
 step that disconnects patches separated by roads.
 
 ``` r
+
 fragmented <- fragment_habitat(
   buffered_habitat = buffered_habitat,
   barrier_mask = barrier_mask
 )
 
 fragmented
-#> class       : SpatRaster 
+#> class       : SpatRaster
 #> size        : 763, 766, 1  (nrow, ncol, nlyr)
 #> resolution  : 2, 2  (x, y)
 #> extent      : 326109.6, 327641.6, 5820362, 5821888  (xmin, xmax, ymin, ymax)
-#> coord. ref. : GDA94 / MGA zone 55 (EPSG:28355) 
+#> coord. ref. : GDA94 / MGA zone 55 (EPSG:28355)
 #> source(s)   : memory
-#> varname     : lizard_habitat_raster 
-#> name        : focal_max 
-#> min value   :         1 
+#> varname     : lizard_habitat_raster
+#> name        : focal_max
+#> min value   :         1
 #> max value   :         1
 ```
 
@@ -228,6 +239,7 @@ patch it belongs to. Habitat cells that share a fragment blob get the
 same patch ID.
 
 ``` r
+
 patch_id_raster <- assign_patches_to_fragments(
   remaining_habitat = remaining_habitat,
   fragment = fragmented
@@ -235,16 +247,16 @@ patch_id_raster <- assign_patches_to_fragments(
   add_patch_area()
 
 patch_id_raster
-#> class       : SpatRaster 
+#> class       : SpatRaster
 #> size        : 763, 766, 2  (nrow, ncol, nlyr)
 #> resolution  : 2, 2  (x, y)
 #> extent      : 326109.6, 327641.6, 5820362, 5821888  (xmin, xmax, ymin, ymax)
-#> coord. ref. : GDA94 / MGA zone 55 (EPSG:28355) 
+#> coord. ref. : GDA94 / MGA zone 55 (EPSG:28355)
 #> source(s)   : memory
-#> varnames    : lizard_habitat_raster 
-#>               lizard_habitat_raster 
-#> names       : patch_id,     area 
-#> min values  :        1, 4.000221 
+#> varnames    : lizard_habitat_raster
+#>               lizard_habitat_raster
+#> names       : patch_id,     area
+#> min values  :        1, 4.000221
 #> max values  :      406, 4.000273
 ```
 
@@ -257,6 +269,7 @@ colour using
 [`plot_patches()`](https://urbio-ecology.github.io/urbioconnect/reference/plot_patches.md):
 
 ``` r
+
 plot_patches(
   patch_id = patch_id_raster,
   distance = buffer_distance,
@@ -274,6 +287,7 @@ collapses the raster down to one row per patch, summing the area of all
 habitat cells within that patch.
 
 ``` r
+
 areas_connected <- aggregate_connected_patches(patch_id_raster)
 areas_connected
 #> # A tibble: 163 × 3
@@ -305,9 +319,10 @@ takes the patch area data and computes a set of landscape-level
 connectivity metrics:
 
 ``` r
+
 results <- summarise_connectivity(
   area_squared = areas_connected$area_squared,
-  area_total = areas_connected$area,
+  area = areas_connected$area,
   buffer_distance = buffer_distance,
   target_resolution = 500,
   data_resolution = 10,
@@ -329,15 +344,19 @@ The two key metrics are:
 **Effective mesh size (ha)** - the average area of the patch a randomly
 chosen animal finds itself in. Larger values mean better connectivity:
 
-$$m_{\text{eff}} = \frac{\sum A_{i}^{2}}{\sum A_{i}} \times 0.0001$$
+``` math
+m_{\text{eff}} = \frac{\sum A_i^2}{\sum A_i} \times 0.0001
+```
 
 **Probability of connectedness** - the probability that two randomly
 chosen points within habitat are in the same connected patch. Ranges
 from 0 (fully fragmented) to 1 (all habitat connected):
 
-$$P_{c} = \frac{m_{\text{eff}}}{\text{total habitat area}}$$
+``` math
+P_c = \frac{m_{\text{eff}}}{\text{total habitat area}}
+```
 
-Where $A_{i}$ is the area of a given patch.
+Where $`A_i`$ is the area of a given patch.
 
 ## Run the pipeline as a single step
 
@@ -350,6 +369,7 @@ by setting `verbose` to FALSE if you do not want the loading/running
 messages.
 
 ``` r
+
 areas_connected <- habitat_connectivity(
   habitat = habitat,
   barrier = barrier,
@@ -357,22 +377,22 @@ areas_connected <- habitat_connectivity(
   verbose = TRUE
 )
 #> ℹ Creating barrier mask
-#> ✔ Creating barrier mask [34ms]
+#> ✔ Creating barrier mask [33ms]
 #> 
 #> ℹ Removing habitat underneath barrier
-#> ✔ Removing habitat underneath barrier [23ms]
+#> ✔ Removing habitat underneath barrier [24ms]
 #> 
 #> ℹ Adding buffer of 10m to habitat layer
-#> ✔ Adding buffer of 10m to habitat layer [388ms]
+#> ✔ Adding buffer of 10m to habitat layer [576ms]
 #> 
 #> ℹ Fragmenting habitat layer along barrier intersection
-#> ✔ Fragmenting habitat layer along barrier intersection [22ms]
+#> ✔ Fragmenting habitat layer along barrier intersection [19ms]
 #> 
 #> ℹ Assigning patches ID to fragments
-#> ✔ Assigning patches ID to fragments [1.1s]
+#> ✔ Assigning patches ID to fragments [1.4s]
 #> 
 #> ℹ Summarising area in each patch
-#> ✔ Summarising area in each patch [41ms]
+#> ✔ Summarising area in each patch [44ms]
 #> 
 ```
 
@@ -380,6 +400,7 @@ The package also includes a pre-computed version of this result (at 50 m
 buffer distance) as `lizard_areas_connected`:
 
 ``` r
+
 lizard_areas_connected
 #> # A tibble: 59 × 3
 #>    patch_id   area area_squared
@@ -404,6 +425,7 @@ ID raster, barrier mask, remaining habitat, and the `areas_connected`
 data frame:
 
 ``` r
+
 result <- habitat_connectivity_full(
   habitat = habitat,
   barrier = barrier,
@@ -426,6 +448,7 @@ iterate, then
 to combine:
 
 ``` r
+
 buffer_distances <- c(10, 25, 50)
 
 all_results <- purrr::map(
@@ -439,7 +462,7 @@ all_results <- purrr::map(
     )
     summarise_connectivity(
       area_squared = areas$area_squared,
-      area_total = areas$area,
+      area = areas$area,
       buffer_distance = d,
       target_resolution = 500,
       data_resolution = 10,
@@ -466,6 +489,7 @@ changes using
 [`plot_connectivity()`](https://urbio-ecology.github.io/urbioconnect/reference/plot_connectivity.md):
 
 ``` r
+
 plot_connectivity(all_results)
 ```
 

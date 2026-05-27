@@ -9,14 +9,14 @@ See examples below.
 ## Usage
 
 ``` r
-n_patches(area_total)
+n_patches(area)
 ```
 
 ## Arguments
 
-- area_total:
+- area:
 
-  Numeric vector. Total areas of habitat patches.
+  Numeric vector. Area of a connected patch.
 
 ## Value
 

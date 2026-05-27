@@ -42,6 +42,7 @@ We include a Shiny app for interactive analysis and report generation.
 You can launch the interactive Shiny app with:
 
 ``` r
+
 run_connectivity_app()
 ```
 
@@ -56,6 +57,7 @@ been designed to work together in a pipeline - see example usage below.
 Install from [R-universe](https://urbio-ecology.r-universe.dev/builds):
 
 ``` r
+
 install.packages(
   "urbioconnect",
   repos = c("https://urbio-ecology.r-universe.dev", "https://cloud.r-project.org")
@@ -65,6 +67,7 @@ install.packages(
 Or from GitHub:
 
 ``` r
+
 # install.packages("pak")
 pak::pak("urbio-ecology/urbioconnect")
 ```
@@ -72,9 +75,10 @@ pak::pak("urbio-ecology/urbioconnect")
 ## Get started
 
 ``` r
+
 library(urbioconnect)
 library(terra)
-#> terra 1.9.11
+#> terra 1.9.27
 
 # load example habitat and barrier rasters
 habitat <- example_habitat()
@@ -87,6 +91,7 @@ plot(barrier, col = c("grey", "white"), legend = FALSE, main = "Lizard Barriers"
 ![](reference/figures/README-get-started-1.png)![](reference/figures/README-get-started-2.png)
 
 ``` r
+
 plot(barrier, col = c("grey", "white"), legend = FALSE, main = "Lizard Barriers and Habitat")
 plot(habitat, col = "seagreen", legend = FALSE, add = TRUE)
 ```
@@ -94,6 +99,7 @@ plot(habitat, col = "seagreen", legend = FALSE, add = TRUE)
 ![](reference/figures/README-lizard-hab-barrier-1.png)
 
 ``` r
+
 # run the full raster pipeline at a 10m buffer distance
 areas <- habitat_connectivity(
   habitat  = habitat,
@@ -101,22 +107,22 @@ areas <- habitat_connectivity(
   distance = 10
 )
 #> ℹ Creating barrier mask
-#> ✔ Creating barrier mask [40ms]
+#> ✔ Creating barrier mask [39ms]
 #> 
 #> ℹ Removing habitat underneath barrier
 #> ✔ Removing habitat underneath barrier [17ms]
 #> 
 #> ℹ Adding buffer of 10m to habitat layer
-#> ✔ Adding buffer of 10m to habitat layer [260ms]
+#> ✔ Adding buffer of 10m to habitat layer [240ms]
 #> 
 #> ℹ Fragmenting habitat layer along barrier intersection
-#> ✔ Fragmenting habitat layer along barrier intersection [14ms]
+#> ✔ Fragmenting habitat layer along barrier intersection [13ms]
 #> 
 #> ℹ Assigning patches ID to fragments
-#> ✔ Assigning patches ID to fragments [700ms]
+#> ✔ Assigning patches ID to fragments [669ms]
 #> 
 #> ℹ Summarising area in each patch
-#> ✔ Summarising area in each patch [1.9s]
+#> ✔ Summarising area in each patch [113ms]
 #> 
 
 areas
@@ -139,14 +145,15 @@ areas
 Summarise the connectivity metrics:
 
 ``` r
+
 summarise_connectivity(
-  area_squared     = areas$area_squared,
-  area_total       = areas$area,
+  area_squared = areas$area_squared,
+  area = areas$area,
   buffer_distance  = 100,
   target_resolution = 500,
-  data_resolution  = 10,
+  data_resolution = 10,
   aggregation_factor = 50,
-  species_name     = "Blue-tongued Lizard"
+  species_name = "Blue-tongued Lizard"
 )
 #> # A tibble: 1 × 10
 #>   species_name    buffer_distance n_patches prob_connectedness effective_mesh_ha
@@ -271,6 +278,8 @@ development of the methods and software.
   : Create Empty terra raster grid
 - [`generate_connectivity_report()`](https://urbio-ecology.github.io/urbioconnect/reference/generate_connectivity_report.md)
   : Generate Connectivity Report
+- [`col2hex()`](https://urbio-ecology.github.io/urbioconnect/reference/col2hex.md)
+  : Convert color name to hexadecimal
 
 ## Shiny app
 

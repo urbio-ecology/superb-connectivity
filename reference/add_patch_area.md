@@ -35,17 +35,17 @@ fragment_patches <- assign_patches_to_fragments(
   fragment = fragmented
   )
 library(terra)
-#> terra 1.9.11
+#> terra 1.9.27
 add_patch_area(fragment_patches)
-#> class       : SpatRaster 
+#> class       : SpatRaster
 #> size        : 763, 766, 2  (nrow, ncol, nlyr)
 #> resolution  : 2, 2  (x, y)
 #> extent      : 326109.6, 327641.6, 5820362, 5821888  (xmin, xmax, ymin, ymax)
-#> coord. ref. : GDA94 / MGA zone 55 (EPSG:28355) 
+#> coord. ref. : GDA94 / MGA zone 55 (EPSG:28355)
 #> source(s)   : memory
-#> varnames    : lizard_habitat_raster 
-#>               lizard_habitat_raster 
-#> names       : patch_id,     area 
-#> min values  :        1, 4.000221 
-#> max values  :     1481, 4.000273 
+#> varnames    : lizard_habitat_raster
+#>               lizard_habitat_raster
+#> names       : patch_id,     area
+#> min values  :        1, 4.000221
+#> max values  :     1481, 4.000273
 ```

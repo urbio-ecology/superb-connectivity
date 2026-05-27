@@ -10,14 +10,14 @@ See examples below.
 ## Usage
 
 ``` r
-mean_patch_size(area_total, ...)
+mean_patch_size(area, ...)
 ```
 
 ## Arguments
 
-- area_total:
+- area:
 
-  Numeric vector. Total areas of habitat patches.
+  Numeric vector. Area of a connected patch.
 
 - ...:
 

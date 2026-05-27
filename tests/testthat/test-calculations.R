@@ -30,8 +30,20 @@ test_that("total_habitat_area converts square metres to hectares", {
 })
 
 test_that("connectivity_probability is higher for unfragmented habitat", {
-  unfrag <- connectivity_probability(10000^2, 10000)
-  frag <- connectivity_probability(c(5000^2, 5000^2), c(5000, 5000))
+  unfrag_area <- 1000
+  frag_area <- 5000
+
+  effective_mesh_unfrag <- effective_mesh_size(
+    area_squared = unfrag_area^2,
+    area = unfrag_area
+  )
+  effective_mesh_frag <- effective_mesh_size(
+    area_squared = c(frag_area^2, frag_area^2),
+    area = c(frag_area, frag_area)
+  )
+
+  unfrag <- connectivity_probability(effective_mesh_unfrag, unfrag_area)
+  frag <- connectivity_probability(effective_mesh_frag, c(frag_area, frag_area))
   expect_gt(unfrag, frag)
   expect_gt(unfrag, 0)
   expect_gt(frag, 0)

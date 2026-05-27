@@ -76,22 +76,36 @@ total_habitat_area <- function(area) {
 #' Calculate connectivity probability
 #'
 #' Computes the probability two randomly chosen points within habitat
-#' are connected, accounting for fragmentation. This is given by calulating
-#' effective mesh size (via [effective_mesh_size()]), then dividing by
-#' total area. Intended for usage from objects created by
-#' [habitat_connectivity()]. See examples below.
+#' are connected, accounting for fragmentation. This requires the effective
+#' mesh size (via [effective_mesh_size()]), and the area of patches. This means
+#' that you can calculate the change in connectivity if you calculate the
+#' effective mesh size of a new habitat/barrier plan, and then use the baseline
 #'
-#' @param area_squared Numeric vector. Squared areas of connected patches.
+#' @param effective_mesh_size As calculated by [effective_mesh_size()]
 #' @param area Numeric vector. Area of a connected patch.
 #'
 #' @returns Numeric. Probability of connectedness (0-1).
 #' @examples
-#' connectivity_probability(lizard_areas_connected$area_squared, lizard_areas_connected$area)
+#' effective_mesh <- effective_mesh_size(
+#'   area_squared = lizard_areas_connected$area_squared,
+#'   area = lizard_areas_connected$area
+#'   )
+#' connectivity_probability(
+#'   effective_mesh_size = effective_mesh,
+#'   area = lizard_areas_connected$area
+#'   )
+#' # if you wanted to compare to a scenario, you would consider the effective
+#' # mesh size to be the new scenario level, and the baseline would be "area"
+#' connectivity_probability(
+#' # scenario 1
+#'   effective_mesh_size = effective_mesh,
+#' # baseline
+#'   area = lizard_areas_connected$area
+#'   )
 #' @export
-connectivity_probability <- function(area_squared, area) {
+connectivity_probability <- function(effective_mesh_size, area) {
   total_habitat <- sum(area)
-  connect_value <- effective_mesh_size(area_squared, area)
-  prob_connect <- connect_value / total_habitat
+  prob_connect <- effective_mesh_size / total_habitat
   prob_connect
 }
 
@@ -138,8 +152,8 @@ summarise_connectivity <- function(
     species_name = species_name,
     buffer_distance = buffer_distance,
     n_patches = n_patches(area),
-    prob_connectedness = connectivity_probability(area_squared, area),
     effective_mesh_ha = effective_mesh_size(area_squared, area),
+    prob_connectedness = connectivity_probability(effective_mesh_ha, area),
     patch_area_mean = mean_patch_size(area),
     patch_area_total_ha = total_habitat_area(area),
     target_resolution = target_resolution,

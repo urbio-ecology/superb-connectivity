@@ -18,6 +18,13 @@
 #' @export
 #'
 #' @examples
+#' compare_connectivity(
+#'   new_area_squared = lizard_areas_connected$area_squared,
+#'   new_area = lizard_areas_connected$area,
+#'   baseline_area = lizard_areas_connected$area,
+#'   buffer_distance = 10,
+#'   species_name = "Blue-Tongued Lizard"
+#' )
 compare_connectivity <- function(
   new_area_squared,
   new_area,

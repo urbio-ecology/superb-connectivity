@@ -25,6 +25,10 @@ areas.}
 
 \item{species_name}{Character. Name of species analysed.}
 }
+\value{
+tibble with "species_name", "buffer_distance", "n_patches",
+"effective_mesh_ha", and "prob_connectedness".
+}
 \description{
 We can measure the connectivity of a given habitat and barrier with
 \code{\link[=habitat_connectivity]{habitat_connectivity()}}. We can also compare the connectivity, say for

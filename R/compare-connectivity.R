@@ -14,7 +14,8 @@
 #' @param buffer_distance Numeric. Buffer distance used in analysis (meters).
 #' @param species_name Character. Name of species analysed.
 #'
-#' @returns
+#' @returns tibble with "species_name", "buffer_distance", "n_patches",
+#'   "effective_mesh_ha", and "prob_connectedness".
 #' @export
 #'
 #' @examples
@@ -42,7 +43,7 @@ compare_connectivity <- function(
     ),
     prob_connectedness = connectivity_probability(
       effective_mesh_size = effective_mesh_ha,
-      area_total = baseline_area
+      area = baseline_area
     )
   ) |>
     dplyr::mutate(

@@ -48,6 +48,7 @@ reference:
   - clean
   - empty_grid
   - generate_connectivity_report
+  - col2hex
 - title: Shiny app
   contents:
   - run_connectivity_app

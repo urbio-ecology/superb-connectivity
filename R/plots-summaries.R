@@ -7,8 +7,7 @@
 #' @examples
 #' col2hex("forestgreen")
 #' col2hex("blue")
-#' @noRd
-#' @note internal
+#' @export
 col2hex <- function(color_name) {
   grDevices::rgb(t(grDevices::col2rgb(color_name)), maxColorValue = 255)
 }

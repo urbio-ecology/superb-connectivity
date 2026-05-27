@@ -23,6 +23,7 @@ Useful links:
 
 Authors:
 \itemize{
+  \item Nicholas Tierney \email{nicholas.tierney@gmail.com} (\href{https://orcid.org/0000-0003-1460-8722}{ORCID})
   \item Holly Kirk \email{hollylkirk@gmail.com} (\href{https://orcid.org/0000-0002-8724-3210}{ORCID}) [copyright holder]
 }
 

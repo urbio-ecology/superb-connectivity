@@ -86,7 +86,7 @@ pak::pak("urbio-ecology/urbioconnect")
 ``` r
 library(urbioconnect)
 library(terra)
-#> terra 1.9.11
+#> terra 1.9.27
 
 # load example habitat and barrier rasters
 habitat <- example_habitat()
@@ -113,22 +113,22 @@ areas <- habitat_connectivity(
   distance = 10
 )
 #> ℹ Creating barrier mask
-#> ✔ Creating barrier mask [40ms]
+#> ✔ Creating barrier mask [39ms]
 #> 
 #> ℹ Removing habitat underneath barrier
 #> ✔ Removing habitat underneath barrier [17ms]
 #> 
 #> ℹ Adding buffer of 10m to habitat layer
-#> ✔ Adding buffer of 10m to habitat layer [260ms]
+#> ✔ Adding buffer of 10m to habitat layer [240ms]
 #> 
 #> ℹ Fragmenting habitat layer along barrier intersection
-#> ✔ Fragmenting habitat layer along barrier intersection [14ms]
+#> ✔ Fragmenting habitat layer along barrier intersection [13ms]
 #> 
 #> ℹ Assigning patches ID to fragments
-#> ✔ Assigning patches ID to fragments [700ms]
+#> ✔ Assigning patches ID to fragments [669ms]
 #> 
 #> ℹ Summarising area in each patch
-#> ✔ Summarising area in each patch [1.9s]
+#> ✔ Summarising area in each patch [113ms]
 #> 
 
 areas
@@ -152,13 +152,13 @@ Summarise the connectivity metrics:
 
 ``` r
 summarise_connectivity(
-  area_squared     = areas$area_squared,
-  area_total       = areas$area,
+  area_squared = areas$area_squared,
+  area = areas$area,
   buffer_distance  = 100,
   target_resolution = 500,
-  data_resolution  = 10,
+  data_resolution = 10,
   aggregation_factor = 50,
-  species_name     = "Blue-tongued Lizard"
+  species_name = "Blue-tongued Lizard"
 )
 #> # A tibble: 1 × 10
 #>   species_name    buffer_distance n_patches prob_connectedness effective_mesh_ha

@@ -4,10 +4,10 @@
 \alias{n_patches}
 \title{Count number of habitat patches}
 \usage{
-n_patches(area_total)
+n_patches(area)
 }
 \arguments{
-\item{area_total}{Numeric vector. Total areas of habitat patches.}
+\item{area}{Numeric vector. Area of a connected patch.}
 }
 \value{
 Integer. Number of patches.

@@ -4,11 +4,10 @@
 \alias{total_habitat_area}
 \title{Calculate total habitat area}
 \usage{
-total_habitat_area(area_total)
+total_habitat_area(area)
 }
 \arguments{
-\item{area_total}{Numeric vector. Total areas of habitat patches in square
-meters.}
+\item{area}{Numeric vector. Area of a connected patch.}
 }
 \value{
 Numeric. Total habitat area in hectares.

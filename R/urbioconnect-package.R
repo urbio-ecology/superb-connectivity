@@ -8,7 +8,6 @@ NULL
 globalVariables(
   c(
     "area",
-    "area_total",
     "buffer_distance",
     "effective_mesh_ha",
     "geometry",

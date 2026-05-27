@@ -10,8 +10,7 @@ sf_aggregate_connected_patches(patch_areas)
 \item{patch_areas}{SF object. Habitat patches with area column.}
 }
 \value{
-Data frame with \code{patch_id}, \code{area_total}, and \code{area_squared}
-columns.
+Data frame with \code{patch_id}, \code{area}, and \code{area_squared} columns.
 }
 \description{
 Groups habitat patches by their connected fragment ID and calculates total

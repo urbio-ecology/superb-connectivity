@@ -132,8 +132,7 @@ sf_add_patch_area <- function(patches) {
 #'
 #' @param patch_areas SF object. Habitat patches with area column.
 #'
-#' @returns Data frame with `patch_id`, `area_total`, and `area_squared`
-#'   columns.
+#' @returns Data frame with `patch_id`, `area`, and `area_squared` columns.
 #' @examples
 #' lizard_habitat_sf <- terra::as.polygons(example_habitat(), dissolve = TRUE) |>
 #'   sf::st_as_sf()
@@ -168,7 +167,7 @@ sf_aggregate_connected_patches <- function(patch_areas) {
 #'   Habitat patches within this distance are considered connected.
 #'
 #' @returns Data frame with connectivity metrics for each connected patch,
-#'   including `patch_id`, `area_total`, and `area_squared`.
+#'   including `patch_id`, `area`, and `area_squared`.
 #'
 #' @examples
 #' lizard_barrier_shp <- example_barrier_shp()

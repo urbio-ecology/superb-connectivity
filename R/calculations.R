@@ -5,16 +5,16 @@
 #'   remain connected. Intended for usage from objects created by
 #'   [habitat_connectivity()]. See examples below.
 #'
-#' @param area_squared Numeric vector. Squared areas of connected patches.
-#' @param area_total Numeric vector. Total areas of connected patches.
+#' @param area_squared Numeric vector. Squared area of connected patches.
+#' @param area Numeric vector. Area of a connected patch.
 #'
 #' @returns Numeric. Effective mesh size in hectares.
 #'
 #' @examples
 #' effective_mesh_size(lizard_areas_connected$area_squared, lizard_areas_connected$area)
 #' @export
-effective_mesh_size <- function(area_squared, area_total) {
-  effective_mesh <- sum(area_squared) / sum(area_total)
+effective_mesh_size <- function(area_squared, area) {
+  effective_mesh <- sum(area_squared) / sum(area)
   effective_mesh_hectares <- effective_mesh * 0.0001
   effective_mesh_hectares
 }
@@ -25,15 +25,15 @@ effective_mesh_size <- function(area_squared, area_total) {
 #'   identify it's usage in the context of the area data. Intended for usage
 #'   from objects created by [habitat_connectivity()]. See examples below.
 #'
-#' @param area_total Numeric vector. Total areas of habitat patches.
+#' @param area Numeric vector. Area of a connected patch.
 #' @param ... extra arguments to pass to `mean()`.
 #'
 #' @returns Numeric. Mean patch size.
 #' @examples
 #' mean_patch_size(lizard_areas_connected$area)
 #' @export
-mean_patch_size <- function(area_total, ...) {
-  mean_size <- mean(area_total, ...)
+mean_patch_size <- function(area, ...) {
+  mean_size <- mean(area, ...)
   mean_size
 }
 
@@ -43,14 +43,14 @@ mean_patch_size <- function(area_total, ...) {
 #'   named to establish its context. Intended for usage from objects created by
 #'   [habitat_connectivity()]. See examples below.
 #'
-#' @param area_total Numeric vector. Total areas of habitat patches.
+#' @param area Numeric vector. Area of a connected patch.
 #'
 #' @returns Integer. Number of patches.
 #' @examples
 #' n_patches(lizard_areas_connected$area)
 #' @export
-n_patches <- function(area_total) {
-  n_areas <- length(area_total)
+n_patches <- function(area) {
+  n_areas <- length(area)
   n_areas
 }
 
@@ -61,15 +61,14 @@ n_patches <- function(area_total) {
 #'   for usage from objects created by [habitat_connectivity()]. See examples
 #'   below.
 #'
-#' @param area_total Numeric vector. Total areas of habitat patches in square
-#'   meters.
+#' @param area Numeric vector. Area of a connected patch.
 #'
 #' @returns Numeric. Total habitat area in hectares.
 #' @examples
 #' total_habitat_area(lizard_areas_connected$area)
 #' @export
-total_habitat_area <- function(area_total) {
-  total <- sum(area_total)
+total_habitat_area <- function(area) {
+  total <- sum(area)
   total_hectares <- total * 0.0001
   total_hectares
 }
@@ -77,22 +76,36 @@ total_habitat_area <- function(area_total) {
 #' Calculate connectivity probability
 #'
 #' Computes the probability two randomly chosen points within habitat
-#' are connected, accounting for fragmentation. This is given by calulating
-#' effective mesh size (via [effective_mesh_size()]), then dividing by
-#' total area. Intended for usage from objects created by
-#' [habitat_connectivity()]. See examples below.
+#' are connected, accounting for fragmentation. This requires the effective
+#' mesh size (via [effective_mesh_size()]), and the area of patches. This means
+#' that you can calculate the change in connectivity if you calculate the
+#' effective mesh size of a new habitat/barrier plan, and then use the baseline
 #'
-#' @param area_squared Numeric vector. Squared areas of connected patches.
-#' @param area_total Numeric vector. Total areas of connected patches.
+#' @param effective_mesh_size As calculated by [effective_mesh_size()]
+#' @param area Numeric vector. Area of a connected patch.
 #'
 #' @returns Numeric. Probability of connectedness (0-1).
 #' @examples
-#' connectivity_probability(lizard_areas_connected$area_squared, lizard_areas_connected$area)
+#' effective_mesh <- effective_mesh_size(
+#'   area_squared = lizard_areas_connected$area_squared,
+#'   area = lizard_areas_connected$area
+#'   )
+#' connectivity_probability(
+#'   effective_mesh_size = effective_mesh,
+#'   area = lizard_areas_connected$area
+#'   )
+#' # if you wanted to compare to a scenario, you would consider the effective
+#' # mesh size to be the new scenario level, and the baseline would be "area"
+#' connectivity_probability(
+#' # scenario 1
+#'   effective_mesh_size = effective_mesh,
+#' # baseline
+#'   area = lizard_areas_connected$area
+#'   )
 #' @export
-connectivity_probability <- function(area_squared, area_total) {
-  total_habitat <- sum(area_total)
-  connect_value <- effective_mesh_size(area_squared, area_total)
-  prob_connect <- connect_value / total_habitat
+connectivity_probability <- function(effective_mesh_size, area) {
+  total_habitat <- sum(area)
+  prob_connect <- effective_mesh_size / total_habitat
   prob_connect
 }
 
@@ -104,7 +117,7 @@ connectivity_probability <- function(area_squared, area_total) {
 #' See examples below.
 #'
 #' @param area_squared Numeric vector. Squared areas of connected patches.
-#' @param area_total Numeric vector. Total areas of connected patches.
+#' @param area Numeric vector. Area of a connected patch.
 #' @param buffer_distance Numeric. Buffer distance used in analysis (meters).
 #' @param target_resolution Numeric. Target resolution in meters.
 #' @param data_resolution Numeric. Data resolution in meters.
@@ -118,7 +131,7 @@ connectivity_probability <- function(area_squared, area_total) {
 #' @examples
 #' summarise_connectivity(
 #'   area_squared = lizard_areas_connected$area_squared,
-#'   area_total = lizard_areas_connected$area,
+#'   area = lizard_areas_connected$area,
 #'   buffer_distance = 10,
 #'   target_resolution = 500,
 #'   data_resolution = 10,
@@ -128,7 +141,7 @@ connectivity_probability <- function(area_squared, area_total) {
 #' @export
 summarise_connectivity <- function(
   area_squared,
-  area_total,
+  area,
   buffer_distance,
   target_resolution,
   data_resolution,
@@ -138,11 +151,11 @@ summarise_connectivity <- function(
   results <- tibble::tibble(
     species_name = species_name,
     buffer_distance = buffer_distance,
-    n_patches = n_patches(area_total),
-    prob_connectedness = connectivity_probability(area_squared, area_total),
-    effective_mesh_ha = effective_mesh_size(area_squared, area_total),
-    patch_area_mean = mean_patch_size(area_total),
-    patch_area_total_ha = total_habitat_area(area_total),
+    n_patches = n_patches(area),
+    effective_mesh_ha = effective_mesh_size(area_squared, area),
+    prob_connectedness = connectivity_probability(effective_mesh_ha, area),
+    patch_area_mean = mean_patch_size(area),
+    patch_area_total_ha = total_habitat_area(area),
     target_resolution = target_resolution,
     data_resolution = data_resolution,
     aggregation_factor = aggregation_factor

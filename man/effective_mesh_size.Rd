@@ -4,12 +4,12 @@
 \alias{effective_mesh_size}
 \title{Calculate effective mesh size}
 \usage{
-effective_mesh_size(area_squared, area_total)
+effective_mesh_size(area_squared, area)
 }
 \arguments{
-\item{area_squared}{Numeric vector. Squared areas of connected patches.}
+\item{area_squared}{Numeric vector. Squared area of connected patches.}
 
-\item{area_total}{Numeric vector. Total areas of connected patches.}
+\item{area}{Numeric vector. Area of a connected patch.}
 }
 \value{
 Numeric. Effective mesh size in hectares.

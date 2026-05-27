@@ -24,7 +24,7 @@ rast_areas_connected <- habitat_connectivity(
 
 connectivity_summary <- summarise_connectivity(
   area_squared = rast_areas_connected$area_squared,
-  area_total = rast_areas_connected$area
+  area = rast_areas_connected$area
 )
 
 # this is used later
@@ -131,7 +131,7 @@ for (i in seq_len(5)) {
   loo_effective_mesh_ha <- effective_mesh_size(
     area_squared = loo_rast_areas_connected$area_squared,
     # original area measurement, which will get summed
-    area_total = rast_areas_connected$area
+    area = rast_areas_connected$area
   )
 
   # store in rasters

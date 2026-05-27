@@ -16,7 +16,7 @@ Habitat patches within this distance are considered connected.}
 }
 \value{
 Data frame with connectivity metrics for each connected patch,
-including \code{patch_id}, \code{area_total}, and \code{area_squared}.
+including \code{patch_id}, \code{area}, and \code{area_squared}.
 }
 \description{
 Performs complete habitat connectivity analysis using vector-based spatial

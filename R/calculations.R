@@ -81,14 +81,14 @@ total_habitat_area <- function(area) {
 #' that you can calculate the change in connectivity if you calculate the
 #' effective mesh size of a new habitat/barrier plan, and then use the baseline
 #'
-#' @param area_squared Numeric vector. Squared areas of connected patches.
+#' @param effective_mesh_size As calculated by [effective_mesh_size()]
 #' @param area Numeric vector. Area of a connected patch.
 #'
 #' @returns Numeric. Probability of connectedness (0-1).
 #' @examples
 #' effective_mesh <- effective_mesh_size(
 #'   area_squared = lizard_areas_connected$area_squared,
-#'   area = lizard_areas_connected$area,
+#'   area = lizard_areas_connected$area
 #'   )
 #' connectivity_probability(
 #'   effective_mesh_size = effective_mesh,
@@ -151,14 +151,11 @@ summarise_connectivity <- function(
   results <- tibble::tibble(
     species_name = species_name,
     buffer_distance = buffer_distance,
-    n_patches = n_patches(area_total),
-    effective_mesh_ha = effective_mesh_size(area_squared, area_total),
-    prob_connectedness = connectivity_probability(
-      effective_mesh_ha,
-      area_total
-    ),
-    patch_area_mean = mean_patch_size(area_total),
-    patch_area_total_ha = total_habitat_area(area_total),
+    n_patches = n_patches(area),
+    effective_mesh_ha = effective_mesh_size(area_squared, area),
+    prob_connectedness = connectivity_probability(effective_mesh_ha, area),
+    patch_area_mean = mean_patch_size(area),
+    patch_area_total_ha = total_habitat_area(area),
     target_resolution = target_resolution,
     data_resolution = data_resolution,
     aggregation_factor = aggregation_factor

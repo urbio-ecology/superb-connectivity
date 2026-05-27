@@ -163,7 +163,7 @@ the <code>tictoc</code> package</p>
 <span>  verbose <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span>
 <span><span class="va">rast_time</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/tictoc/man/tic.html" class="external-link">toc</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; 2.392 sec elapsed</span></span>
+<span><span class="co">#&gt; 2.439 sec elapsed</span></span>
 <span></span>
 <span><span class="va">raster_result</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 163 × 3</span></span></span>
@@ -194,7 +194,7 @@ the <code>tictoc</code> package</p>
 <span>  distance <span class="op">=</span> <span class="va">buffer_dist</span></span>
 <span><span class="op">)</span></span>
 <span><span class="va">vect_time</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/tictoc/man/tic.html" class="external-link">toc</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; 15.457 sec elapsed</span></span>
+<span><span class="co">#&gt; 16.349 sec elapsed</span></span>
 <span></span>
 <span><span class="va">vector_result</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 136 × 3</span></span></span>
@@ -231,9 +231,9 @@ approximated at the chosen resolution. The vector approach preserves
 exact polygon geometry, so it typically produces slightly different (and
 arguably more precise) patch boundaries, particularly along curved or
 irregular barrier edges.</p>
-<pre><code><span><span class="co">#&gt; [1] 2.392</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; [1] 2.439</span></span></code></pre>
 <p>Timings for the methods are also important to consider. The raster
-approach took 2.392 seconds, and the vector approach took 15.457
+approach took 2.439 seconds, and the vector approach took 16.349
 seconds.</p>
 </div>
 <div class="section level2">
@@ -253,9 +253,9 @@ approach. You simply pass the appropriate area columns as vectors.</p>
 <span>  species_name <span class="op">=</span> <span class="st">"Blue-tongued Lizard (raster)"</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 10</span></span></span>
-<span><span class="co">#&gt;   species_name    buffer_distance n_patches prob_connectedness effective_mesh_ha</span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> Blue-tongued L…              10       163           0.000<span style="text-decoration: underline;">017</span>                 4</span></span>
+<span><span class="co">#&gt;   species_name    buffer_distance n_patches effective_mesh_ha prob_connectedness</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> Blue-tongued L…              10       163                 4           0.000<span style="text-decoration: underline;">017</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 5 more variables: patch_area_mean &lt;dbl&gt;, patch_area_total_ha &lt;dbl&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   target_resolution &lt;dbl&gt;, data_resolution &lt;dbl&gt;, aggregation_factor &lt;dbl&gt;</span></span></span></code></pre></div>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
@@ -271,9 +271,9 @@ approach. You simply pass the appropriate area columns as vectors.</p>
 <span>  species_name <span class="op">=</span> <span class="st">"Blue-tongued Lizard (vector)"</span></span>
 <span><span class="op">)</span> </span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 10</span></span></span>
-<span><span class="co">#&gt;   species_name    buffer_distance n_patches prob_connectedness effective_mesh_ha</span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> Blue-tongued L…              10       136           0.000<span style="text-decoration: underline;">017</span>                 4</span></span>
+<span><span class="co">#&gt;   species_name    buffer_distance n_patches effective_mesh_ha prob_connectedness</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> Blue-tongued L…              10       136                 4           0.000<span style="text-decoration: underline;">017</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 5 more variables: patch_area_mean &lt;dbl&gt;, patch_area_total_ha &lt;dbl&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   target_resolution &lt;lgl&gt;, data_resolution &lt;lgl&gt;, aggregation_factor &lt;lgl&gt;</span></span></span></code></pre></div>
 <p>The metrics — effective mesh size, probability of connectedness, mean

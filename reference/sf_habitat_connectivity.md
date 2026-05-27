@@ -28,7 +28,7 @@ sf_habitat_connectivity(habitat, barrier, distance)
 ## Value
 
 Data frame with connectivity metrics for each connected patch, including
-`patch_id`, `area_total`, and `area_squared`.
+`patch_id`, `area`, and `area_squared`.
 
 ## Examples
 

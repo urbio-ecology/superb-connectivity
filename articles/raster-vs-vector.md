@@ -114,7 +114,7 @@ raster_result <- habitat_connectivity(
   verbose = FALSE
 )
 rast_time <- toc()
-#> 2.392 sec elapsed
+#> 2.439 sec elapsed
 
 raster_result
 #> # A tibble: 163 × 3
@@ -147,7 +147,7 @@ vector_result <- sf_habitat_connectivity(
   distance = buffer_dist
 )
 vect_time <- toc()
-#> 15.457 sec elapsed
+#> 16.349 sec elapsed
 
 vector_result
 #> # A tibble: 136 × 3
@@ -188,10 +188,10 @@ exact polygon geometry, so it typically produces slightly different (and
 arguably more precise) patch boundaries, particularly along curved or
 irregular barrier edges.
 
-    #> [1] 2.392
+    #> [1] 2.439
 
 Timings for the methods are also important to consider. The raster
-approach took 2.392 seconds, and the vector approach took 15.457
+approach took 2.439 seconds, and the vector approach took 16.349
 seconds.
 
 ## Summarising connectivity metrics
@@ -213,9 +213,9 @@ summarise_connectivity(
   species_name = "Blue-tongued Lizard (raster)"
 )
 #> # A tibble: 1 × 10
-#>   species_name    buffer_distance n_patches prob_connectedness effective_mesh_ha
-#>   <chr>                     <dbl>     <int>              <dbl>             <dbl>
-#> 1 Blue-tongued L…              10       163           0.000017                 4
+#>   species_name    buffer_distance n_patches effective_mesh_ha prob_connectedness
+#>   <chr>                     <dbl>     <int>             <dbl>              <dbl>
+#> 1 Blue-tongued L…              10       163                 4           0.000017
 #> # ℹ 5 more variables: patch_area_mean <dbl>, patch_area_total_ha <dbl>,
 #> #   target_resolution <dbl>, data_resolution <dbl>, aggregation_factor <dbl>
 ```
@@ -234,9 +234,9 @@ summarise_connectivity(
   species_name = "Blue-tongued Lizard (vector)"
 ) 
 #> # A tibble: 1 × 10
-#>   species_name    buffer_distance n_patches prob_connectedness effective_mesh_ha
-#>   <chr>                     <dbl>     <int>              <dbl>             <dbl>
-#> 1 Blue-tongued L…              10       136           0.000017                 4
+#>   species_name    buffer_distance n_patches effective_mesh_ha prob_connectedness
+#>   <chr>                     <dbl>     <int>             <dbl>              <dbl>
+#> 1 Blue-tongued L…              10       136                 4           0.000017
 #> # ℹ 5 more variables: patch_area_mean <dbl>, patch_area_total_ha <dbl>,
 #> #   target_resolution <lgl>, data_resolution <lgl>, aggregation_factor <lgl>
 ```

@@ -1,24 +1,25 @@
 # Calculate connectivity probability
 
 Computes the probability two randomly chosen points within habitat are
-connected, accounting for fragmentation. This is given by calulating
-effective mesh size (via
+connected, accounting for fragmentation. This requires the effective
+mesh size (via
 [`effective_mesh_size()`](https://urbio-ecology.github.io/urbioconnect/reference/effective_mesh_size.md)),
-then dividing by total area. Intended for usage from objects created by
-[`habitat_connectivity()`](https://urbio-ecology.github.io/urbioconnect/reference/habitat_connectivity.md).
-See examples below.
+and the area of patches. This means that you can calculate the change in
+connectivity if you calculate the effective mesh size of a new
+habitat/barrier plan, and then use the baseline
 
 ## Usage
 
 ``` r
-connectivity_probability(area_squared, area)
+connectivity_probability(effective_mesh_size, area)
 ```
 
 ## Arguments
 
-- area_squared:
+- effective_mesh_size:
 
-  Numeric vector. Squared areas of connected patches.
+  As calculated by
+  [`effective_mesh_size()`](https://urbio-ecology.github.io/urbioconnect/reference/effective_mesh_size.md)
 
 - area:
 
@@ -31,6 +32,22 @@ Numeric. Probability of connectedness (0-1).
 ## Examples
 
 ``` r
-connectivity_probability(lizard_areas_connected$area_squared, lizard_areas_connected$area)
+effective_mesh <- effective_mesh_size(
+  area_squared = lizard_areas_connected$area_squared,
+  area = lizard_areas_connected$area
+  )
+connectivity_probability(
+  effective_mesh_size = effective_mesh,
+  area = lizard_areas_connected$area
+  )
+#> [1] 1.708751e-05
+# if you wanted to compare to a scenario, you would consider the effective
+# mesh size to be the new scenario level, and the baseline would be "area"
+connectivity_probability(
+# scenario 1
+  effective_mesh_size = effective_mesh,
+# baseline
+  area = lizard_areas_connected$area
+  )
 #> [1] 1.708751e-05
 ```

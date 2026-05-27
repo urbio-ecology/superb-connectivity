@@ -69,9 +69,9 @@ summarise_connectivity(
   species_name = "Blue-tongued Lizard"
 )
 #> # A tibble: 1 × 10
-#>   species_name    buffer_distance n_patches prob_connectedness effective_mesh_ha
-#>   <chr>                     <dbl>     <int>              <dbl>             <dbl>
-#> 1 Blue-tongued L…              10        59           0.000017                 4
+#>   species_name    buffer_distance n_patches effective_mesh_ha prob_connectedness
+#>   <chr>                     <dbl>     <int>             <dbl>              <dbl>
+#> 1 Blue-tongued L…              10        59                 4           0.000017
 #> # ℹ 5 more variables: patch_area_mean <dbl>, patch_area_total_ha <dbl>,
 #> #   target_resolution <dbl>, data_resolution <dbl>, aggregation_factor <dbl>
 ```

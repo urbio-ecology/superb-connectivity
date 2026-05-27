@@ -332,9 +332,9 @@ results <- summarise_connectivity(
 
 results
 #> # A tibble: 1 × 10
-#>   species_name    buffer_distance n_patches prob_connectedness effective_mesh_ha
-#>   <chr>                     <dbl>     <int>              <dbl>             <dbl>
-#> 1 Blue-tongued L…              10       163           0.000017                 4
+#>   species_name    buffer_distance n_patches effective_mesh_ha prob_connectedness
+#>   <chr>                     <dbl>     <int>             <dbl>              <dbl>
+#> 1 Blue-tongued L…              10       163                 4           0.000017
 #> # ℹ 5 more variables: patch_area_mean <dbl>, patch_area_total_ha <dbl>,
 #> #   target_resolution <dbl>, data_resolution <dbl>, aggregation_factor <dbl>
 ```
@@ -383,16 +383,16 @@ areas_connected <- habitat_connectivity(
 #> ✔ Removing habitat underneath barrier [24ms]
 #> 
 #> ℹ Adding buffer of 10m to habitat layer
-#> ✔ Adding buffer of 10m to habitat layer [576ms]
+#> ✔ Adding buffer of 10m to habitat layer [575ms]
 #> 
 #> ℹ Fragmenting habitat layer along barrier intersection
-#> ✔ Fragmenting habitat layer along barrier intersection [19ms]
+#> ✔ Fragmenting habitat layer along barrier intersection [20ms]
 #> 
 #> ℹ Assigning patches ID to fragments
 #> ✔ Assigning patches ID to fragments [1.4s]
 #> 
 #> ℹ Summarising area in each patch
-#> ✔ Summarising area in each patch [44ms]
+#> ✔ Summarising area in each patch [43ms]
 #> 
 ```
 
@@ -475,11 +475,11 @@ all_results <- purrr::map(
 
 all_results
 #> # A tibble: 3 × 10
-#>   species_name    buffer_distance n_patches prob_connectedness effective_mesh_ha
-#>   <chr>                     <dbl>     <int>              <dbl>             <dbl>
-#> 1 Blue-tongued L…              10       163           0.000017                 4
-#> 2 Blue-tongued L…              25        73           0.000017                 4
-#> 3 Blue-tongued L…              50        59           0.000017                 4
+#>   species_name    buffer_distance n_patches effective_mesh_ha prob_connectedness
+#>   <chr>                     <dbl>     <int>             <dbl>              <dbl>
+#> 1 Blue-tongued L…              10       163                 4           0.000017
+#> 2 Blue-tongued L…              25        73                 4           0.000017
+#> 3 Blue-tongued L…              50        59                 4           0.000017
 #> # ℹ 5 more variables: patch_area_mean <dbl>, patch_area_total_ha <dbl>,
 #> #   target_resolution <dbl>, data_resolution <dbl>, aggregation_factor <dbl>
 ```

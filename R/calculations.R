@@ -85,29 +85,28 @@ total_habitat_area <- function(area) {
 #' effective mesh size of a new habitat/barrier plan, and then use the baseline
 #'
 #' @param effective_mesh_size As calculated by [effective_mesh_size()]
-#' @param area Numeric vector. Area of a connected patch.
+#' @param area_baseline Numeric vector. Area of a connected patch.
 #'
 #' @returns Numeric. Probability of connectedness (0-1).
 #' @examples
 #' effective_mesh <- effective_mesh_size(
-#'   area_squared = lizard_areas_connected$area_squared,
-#'   area = lizard_areas_connected$area
+#'   area_baseline = lizard_areas_connected$area_squared
 #'   )
 #' connectivity_probability(
 #'   effective_mesh_size = effective_mesh,
-#'   area = lizard_areas_connected$area
+#'   area_baseline = lizard_areas_connected$area
 #'   )
 #' # if you wanted to compare to a scenario, you would consider the effective
-#' # mesh size to be the new scenario level, and the baseline would be "area"
+#' # mesh size to be the new scenario level, and the baseline as so:
 #' connectivity_probability(
 #' # scenario 1
 #'   effective_mesh_size = effective_mesh,
 #' # baseline
-#'   area = lizard_areas_connected$area
+#'   area_baseline = lizard_areas_connected$area
 #'   )
 #' @export
-connectivity_probability <- function(effective_mesh_size, area) {
-  total_habitat <- sum(area)
+connectivity_probability <- function(effective_mesh_size, area_baseline) {
+  total_habitat <- sum(area_baseline)
   prob_connect <- effective_mesh_size / total_habitat
   prob_connect
 }

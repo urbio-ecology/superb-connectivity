@@ -4,12 +4,12 @@
 \alias{connectivity_probability}
 \title{Calculate connectivity probability}
 \usage{
-connectivity_probability(effective_mesh_size, area)
+connectivity_probability(effective_mesh_size, area_baseline)
 }
 \arguments{
 \item{effective_mesh_size}{As calculated by \code{\link[=effective_mesh_size]{effective_mesh_size()}}}
 
-\item{area}{Numeric vector. Area of a connected patch.}
+\item{area_baseline}{Numeric vector. Area of a connected patch.}
 }
 \value{
 Numeric. Probability of connectedness (0-1).
@@ -23,19 +23,18 @@ effective mesh size of a new habitat/barrier plan, and then use the baseline
 }
 \examples{
 effective_mesh <- effective_mesh_size(
-  area_squared = lizard_areas_connected$area_squared,
-  area = lizard_areas_connected$area
+  area_baseline = lizard_areas_connected$area_squared
   )
 connectivity_probability(
   effective_mesh_size = effective_mesh,
-  area = lizard_areas_connected$area
+  area_baseline = lizard_areas_connected$area
   )
 # if you wanted to compare to a scenario, you would consider the effective
-# mesh size to be the new scenario level, and the baseline would be "area"
+# mesh size to be the new scenario level, and the baseline as so:
 connectivity_probability(
 # scenario 1
   effective_mesh_size = effective_mesh,
 # baseline
-  area = lizard_areas_connected$area
+  area_baseline = lizard_areas_connected$area
   )
 }

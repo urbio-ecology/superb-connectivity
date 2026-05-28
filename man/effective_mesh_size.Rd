@@ -4,15 +4,17 @@
 \alias{effective_mesh_size}
 \title{Calculate effective mesh size}
 \usage{
-effective_mesh_size(area_squared, area)
+effective_mesh_size(area_baseline, area_new = NULL)
 }
 \arguments{
-\item{area_squared}{Numeric vector. Squared area of connected patches.}
+\item{area_baseline}{Numeric vector. Area of connected patches.}
 
-\item{area}{Numeric vector. Area of a connected patch.}
+\item{area_new}{Optional. Defaults to \code{area_baseline} if not specified.
+Numeric vector of connected patches of a baseline area. This is to allow
+for comparing the effective mesh size when comparing different scenarios.}
 }
 \value{
-Numeric. Effective mesh size in hectares.
+Numeric. Effective mesh size, in hectares.
 }
 \description{
 Computes the effective mesh size metric for habitat connectivity, This

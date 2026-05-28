@@ -5,16 +5,19 @@
 #'   remain connected. Intended for usage from objects created by
 #'   [habitat_connectivity()]. See examples below.
 #'
-#' @param area_squared Numeric vector. Squared area of connected patches.
-#' @param area Numeric vector. Area of a connected patch.
+#' @param area_baseline Numeric vector. Area of connected patches.
+#' @param area_new Optional. Defaults to `area_baseline` if not specified.
+#'   Numeric vector of connected patches of a baseline area. This is to allow
+#'   for comparing the effective mesh size when comparing different scenarios.
 #'
-#' @returns Numeric. Effective mesh size in hectares.
+#' @returns Numeric. Effective mesh size, in hectares.
 #'
 #' @examples
 #' effective_mesh_size(lizard_areas_connected$area_squared, lizard_areas_connected$area)
 #' @export
-effective_mesh_size <- function(area_squared, area) {
-  effective_mesh <- sum(area_squared) / sum(area)
+effective_mesh_size <- function(area_baseline, area_new = NULL) {
+  area_new <- area_new %||% area_baseline
+  effective_mesh <- sum(area_baseline) / sum(area_new)
   effective_mesh_hectares <- effective_mesh * 0.0001
   effective_mesh_hectares
 }

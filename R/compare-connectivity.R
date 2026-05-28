@@ -11,11 +11,9 @@
 #' @param new_area Numeric vector. Total areas of new connected patch areas.
 #' @param baseline_area Numeric vector. Total areas of original connected patch
 #'   areas.
-#' @param buffer_distance Numeric. Buffer distance used in analysis (meters).
-#' @param species_name Character. Name of species analysed.
 #'
-#' @returns tibble with "species_name", "buffer_distance", "n_patches",
-#'   "effective_mesh_ha", and "prob_connectedness".
+#' @returns tibble with "scenario", "n_patches", "effective_mesh", and
+#'   "prob_connectedness".
 #' @export
 #'
 #' @examples
@@ -24,15 +22,11 @@
 #' new_areas <- baseline_areas[-1] * 0.8
 #' compare_connectivity(
 #'   new_area = new_areas,
-#'   baseline_area = baseline_areas,
-#'   buffer_distance = 10,
-#'   species_name = "Blue-Tongued Lizard"
+#'   baseline_area = baseline_areas
 #' )
 compare_connectivity <- function(
   new_area,
-  baseline_area,
-  buffer_distance,
-  species_name
+  baseline_area
 ) {
   new_area_squared <- new_area * new_area
 

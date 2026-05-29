@@ -150,7 +150,6 @@ Timings for the methods are also important to consider. The raster approach took
 #| label: summarise-raster
 # Raster approach output uses the `area` column
 summarise_connectivity(
-  area_squared = raster_result$area_squared,
   area = raster_result$area,
   buffer_distance = buffer_dist,
   target_resolution = 500,
@@ -165,7 +164,6 @@ summarise_connectivity(
 # Vector approach output uses the `area` column
 # Strip units before passing to summarise_connectivity
 summarise_connectivity(
-  area_squared = vector_result$area_squared,
   area = vector_result$area,
   buffer_distance = buffer_dist,
   target_resolution = NA,

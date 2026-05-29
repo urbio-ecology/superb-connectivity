@@ -4,14 +4,15 @@
 \alias{effective_mesh_size}
 \title{Calculate effective mesh size}
 \usage{
-effective_mesh_size(area_baseline, area_new = NULL)
+effective_mesh_size(area, area_baseline = area)
 }
 \arguments{
-\item{area_baseline}{Numeric vector. Area of connected patches.}
+\item{area}{Numeric vector. Area of connected patches.}
 
-\item{area_new}{Optional. Defaults to \code{area_baseline} if not specified.
+\item{area_baseline}{Optional. Defaults to \code{area} if not specified.
 Numeric vector of connected patches of a baseline area. This is to allow
-for comparing the effective mesh size when comparing different scenarios.}
+for comparing the effective mesh size when comparing different scenarios.
+See future vignette on this topic (TODO).}
 }
 \value{
 Numeric. Effective mesh size, in hectares.
@@ -23,5 +24,5 @@ remain connected. Intended for usage from objects created by
 \code{\link[=habitat_connectivity]{habitat_connectivity()}}. See examples below.
 }
 \examples{
-effective_mesh_size(lizard_areas_connected$area_squared, lizard_areas_connected$area)
+effective_mesh_size(lizard_areas_connected$area)
 }

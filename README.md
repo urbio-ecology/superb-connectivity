@@ -113,22 +113,22 @@ areas <- habitat_connectivity(
   distance = 10
 )
 #> ℹ Creating barrier mask
-#> ✔ Creating barrier mask [39ms]
+#> ✔ Creating barrier mask [42ms]
 #> 
 #> ℹ Removing habitat underneath barrier
 #> ✔ Removing habitat underneath barrier [17ms]
 #> 
 #> ℹ Adding buffer of 10m to habitat layer
-#> ✔ Adding buffer of 10m to habitat layer [240ms]
+#> ✔ Adding buffer of 10m to habitat layer [249ms]
 #> 
 #> ℹ Fragmenting habitat layer along barrier intersection
-#> ✔ Fragmenting habitat layer along barrier intersection [13ms]
+#> ✔ Fragmenting habitat layer along barrier intersection [14ms]
 #> 
 #> ℹ Assigning patches ID to fragments
-#> ✔ Assigning patches ID to fragments [669ms]
+#> ✔ Assigning patches ID to fragments [713ms]
 #> 
 #> ℹ Summarising area in each patch
-#> ✔ Summarising area in each patch [113ms]
+#> ✔ Summarising area in each patch [122ms]
 #> 
 
 areas
@@ -152,7 +152,6 @@ Summarise the connectivity metrics:
 
 ``` r
 summarise_connectivity(
-  area_squared = areas$area_squared,
   area = areas$area,
   buffer_distance  = 100,
   target_resolution = 500,
@@ -161,9 +160,9 @@ summarise_connectivity(
   species_name = "Blue-tongued Lizard"
 )
 #> # A tibble: 1 × 10
-#>   species_name    buffer_distance n_patches prob_connectedness effective_mesh_ha
-#>   <chr>                     <dbl>     <int>              <dbl>             <dbl>
-#> 1 Blue-tongued L…             100       163           0.000017                 4
+#>   species_name    buffer_distance n_patches effective_mesh_ha prob_connectedness
+#>   <chr>                     <dbl>     <int>             <dbl>              <dbl>
+#> 1 Blue-tongued L…             100       163                 4           0.000017
 #> # ℹ 5 more variables: patch_area_mean <dbl>, patch_area_total_ha <dbl>,
 #> #   target_resolution <dbl>, data_resolution <dbl>, aggregation_factor <dbl>
 ```

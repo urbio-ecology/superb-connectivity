@@ -2,8 +2,8 @@ test_that("effective_mesh_size with many equal patches scales correctly", {
   # 10 patches of 1000 sq m each vs 1 patch of 10000 sq m
   # With 10 equal patches: sum(1000^2 * 10) / 10000 * 0.0001 = 1e7/1e4 * 1e-4 = 0.1
   # With 1 patch of 10000: 1e8/1e4 * 1e-4 = 1.0
-  many <- effective_mesh_size(rep(1000^2, 10), rep(1000, 10))
-  one <- effective_mesh_size(10000^2, 10000)
+  many <- effective_mesh_size(area = rep(1000, 10))
+  one <- effective_mesh_size(area = 10000)
 
   expect_lt(many, one)
   expect_equal(many, 0.1)
@@ -30,7 +30,6 @@ test_that("summarise_connectivity with multiple buffer distances stays one row e
   # Called once per buffer distance — should always return exactly 1 row
   purrr::walk(c(50, 100, 200), function(dist) {
     result <- summarise_connectivity(
-      area_squared = c(5000^2, 5000^2),
       area = c(5000, 5000),
       buffer_distance = dist,
       target_resolution = 500,
@@ -47,11 +46,9 @@ test_that("connectivity_probability with single large patch equals single small 
   small_area <- 1000
   large_area <- 100000
   effective_mesh_small <- effective_mesh_size(
-    area_squared = small_area^2,
     area = small_area
   )
   effective_mesh_large <- effective_mesh_size(
-    area_squared = large_area^2,
     area = large_area
   )
   # For one patch: prob = (A^2/A * 0.0001) / A = 0.0001 regardless of area

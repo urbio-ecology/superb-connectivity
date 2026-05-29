@@ -113,7 +113,6 @@ Summarise the connectivity metrics:
 
 ```{r summarise}
 summarise_connectivity(
-  area_squared = areas$area_squared,
   area = areas$area,
   buffer_distance  = 100,
   target_resolution = 500,

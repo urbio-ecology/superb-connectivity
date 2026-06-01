@@ -25,6 +25,9 @@ areas.}
 
 \item{species_name}{Character. Name of species analysed.}
 }
+\value{
+a tibble with comparison of the measurements of connectivity
+}
 \description{
 We can measure the connectivity of a given habitat and barrier with
 \code{\link[=habitat_connectivity]{habitat_connectivity()}}. We can also compare the connectivity, say for

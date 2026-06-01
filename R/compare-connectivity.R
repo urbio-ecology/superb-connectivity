@@ -14,7 +14,7 @@
 #' @param buffer_distance Numeric. Buffer distance used in analysis (meters).
 #' @param species_name Character. Name of species analysed.
 #'
-#' @returns
+#' @returns a tibble with comparison of the measurements of connectivity
 #' @export
 #'
 #' @examples

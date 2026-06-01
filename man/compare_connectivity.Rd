@@ -4,18 +4,9 @@
 \alias{compare_connectivity}
 \title{Compare measurements the connectivity of different scenarios}
 \usage{
-compare_connectivity(
-  new_area_squared,
-  new_area,
-  baseline_area,
-  buffer_distance,
-  species_name
-)
+compare_connectivity(new_area, baseline_area, buffer_distance, species_name)
 }
 \arguments{
-\item{new_area_squared}{Numeric vector. Squared areas of the new connected
-areas.}
-
 \item{new_area}{Numeric vector. Total areas of new connected patch areas.}
 
 \item{baseline_area}{Numeric vector. Total areas of original connected patch
@@ -24,6 +15,9 @@ areas.}
 \item{buffer_distance}{Numeric. Buffer distance used in analysis (meters).}
 
 \item{species_name}{Character. Name of species analysed.}
+
+\item{new_area_squared}{Numeric vector. Squared areas of the new connected
+areas.}
 }
 \value{
 a tibble with comparison of the measurements of connectivity
@@ -36,10 +30,12 @@ understand what the change in connectedness is when you remove, or add
 some habitat, or some barrier(s), or both. This function help you do that.
 }
 \examples{
+# for demonstration purposes - let's imagine the area decreases by 20\%
+baseline_areas <- round(lizard_areas_connected$area)
+new_areas <- baseline_areas[-1] * 0.8
 compare_connectivity(
-  new_area_squared = lizard_areas_connected$area_squared,
-  new_area = lizard_areas_connected$area,
-  baseline_area = lizard_areas_connected$area,
+  new_area = new_areas,
+  baseline_area = baseline_areas,
   buffer_distance = 10,
   species_name = "Blue-Tongued Lizard"
 )

@@ -18,36 +18,57 @@
 #' @export
 #'
 #' @examples
+#' # for demonstration purposes - let's imagine the area decreases by 20%
+#' baseline_areas <- round(lizard_areas_connected$area)
+#' new_areas <- baseline_areas[-1] * 0.8
 #' compare_connectivity(
-#'   new_area_squared = lizard_areas_connected$area_squared,
-#'   new_area = lizard_areas_connected$area,
-#'   baseline_area = lizard_areas_connected$area,
+#'   new_area = new_areas,
+#'   baseline_area = baseline_areas,
 #'   buffer_distance = 10,
 #'   species_name = "Blue-Tongued Lizard"
 #' )
 compare_connectivity <- function(
-  new_area_squared,
   new_area,
   baseline_area,
   buffer_distance,
   species_name
 ) {
-  results <- tibble::tibble(
-    species_name = species_name,
-    buffer_distance = buffer_distance,
-    n_patches = n_patches(new_area),
-    effective_mesh_ha = effective_mesh_size(
-      new_area_squared,
-      baseline_area
+  new_area_squared <- new_area * new_area
+
+  baseline_results <- tibble::tibble(
+    n_patches = n_patches(baseline_area),
+    effective_mesh = effective_mesh_size(
+      area = baseline_area,
+      area_squared = baseline_area * baseline_area
     ),
     prob_connectedness = connectivity_probability(
-      effective_mesh_size = effective_mesh_ha,
-      area_total = baseline_area
+      effective_mesh_size = effective_mesh,
+      area = baseline_area
     )
+  )
+
+  new_results <- tibble::tibble(
+    n_patches = n_patches(new_area),
+    effective_mesh = effective_mesh_size(
+      # this is the original
+      area = baseline_area,
+      # this is the new
+      area_squared = new_area_squared
+    ),
+    prob_connectedness = connectivity_probability(
+      effective_mesh_size = effective_mesh,
+      area = baseline_area
+    )
+  )
+
+  results <- dplyr::bind_rows(
+    baseline = baseline_results,
+    new = new_results,
+    .id = "scenario"
   ) |>
     dplyr::mutate(
       prob_connectedness = round(prob_connectedness, 6),
-      effective_mesh_ha = round(effective_mesh_ha)
+      effective_mesh = round(effective_mesh)
     )
 
   results

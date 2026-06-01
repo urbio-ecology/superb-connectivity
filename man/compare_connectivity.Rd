@@ -4,7 +4,7 @@
 \alias{compare_connectivity}
 \title{Compare measurements the connectivity of different scenarios}
 \usage{
-compare_connectivity(new_area, baseline_area, buffer_distance, species_name)
+compare_connectivity(new_area, baseline_area)
 }
 \arguments{
 \item{new_area}{Numeric vector. Total areas of new connected patch areas.}
@@ -12,15 +12,12 @@ compare_connectivity(new_area, baseline_area, buffer_distance, species_name)
 \item{baseline_area}{Numeric vector. Total areas of original connected patch
 areas.}
 
-\item{buffer_distance}{Numeric. Buffer distance used in analysis (meters).}
-
-\item{species_name}{Character. Name of species analysed.}
-
 \item{new_area_squared}{Numeric vector. Squared areas of the new connected
 areas.}
 }
 \value{
-a tibble with comparison of the measurements of connectivity
+tibble with "scenario", "n_patches", "effective_mesh", and
+"prob_connectedness".
 }
 \description{
 We can measure the connectivity of a given habitat and barrier with
@@ -35,8 +32,6 @@ baseline_areas <- round(lizard_areas_connected$area)
 new_areas <- baseline_areas[-1] * 0.8
 compare_connectivity(
   new_area = new_areas,
-  baseline_area = baseline_areas,
-  buffer_distance = 10,
-  species_name = "Blue-Tongued Lizard"
+  baseline_area = baseline_areas
 )
 }

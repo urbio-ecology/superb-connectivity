@@ -276,7 +276,6 @@ plot_patches <- function(
 #'     full <- habitat_connectivity_full(lizard_habitat, lizard_barrier,
 #'       distance = d, verbose = FALSE)
 #'     summarise_connectivity(
-#'       area_squared = full$areas_connected$area_squared,
 #'       area = full$areas_connected$area,
 #'       buffer_distance = d,
 #'       target_resolution = 500,

@@ -89,7 +89,6 @@ tar_assign({
     tar_target()
 
   results_connect_habitat <- summarise_connectivity(
-    area_squared = areas_connected$area_squared,
     area = areas_connected$area,
     buffer_distance = buffer_distance,
     target_resolution = target_resolution,

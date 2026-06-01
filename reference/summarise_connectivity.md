@@ -10,8 +10,8 @@ See examples below.
 
 ``` r
 summarise_connectivity(
-  area_squared,
   area,
+  area_baseline = area,
   buffer_distance,
   target_resolution,
   data_resolution,
@@ -22,13 +22,13 @@ summarise_connectivity(
 
 ## Arguments
 
-- area_squared:
-
-  Numeric vector. Squared areas of connected patches.
-
 - area:
 
-  Numeric vector. Area of a connected patch.
+  Numeric vector. Areas of connected patches.
+
+- area_baseline:
+
+  Numeric vector. Areas of connected patch baseline.
 
 - buffer_distance:
 
@@ -60,7 +60,6 @@ areas.
 
 ``` r
 summarise_connectivity(
-  area_squared = lizard_areas_connected$area_squared,
   area = lizard_areas_connected$area,
   buffer_distance = 10,
   target_resolution = 500,

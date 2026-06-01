@@ -133,22 +133,22 @@
 <span>  distance <span class="op">=</span> <span class="fl">10</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; ℹ Creating barrier mask</span></span>
-<span><span class="co">#&gt; ✔ Creating barrier mask [39ms]</span></span>
+<span><span class="co">#&gt; ✔ Creating barrier mask [42ms]</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ℹ Removing habitat underneath barrier</span></span>
 <span><span class="co">#&gt; ✔ Removing habitat underneath barrier [17ms]</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ℹ Adding buffer of 10m to habitat layer</span></span>
-<span><span class="co">#&gt; ✔ Adding buffer of 10m to habitat layer [240ms]</span></span>
+<span><span class="co">#&gt; ✔ Adding buffer of 10m to habitat layer [249ms]</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ℹ Fragmenting habitat layer along barrier intersection</span></span>
-<span><span class="co">#&gt; ✔ Fragmenting habitat layer along barrier intersection [13ms]</span></span>
+<span><span class="co">#&gt; ✔ Fragmenting habitat layer along barrier intersection [14ms]</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ℹ Assigning patches ID to fragments</span></span>
-<span><span class="co">#&gt; ✔ Assigning patches ID to fragments [669ms]</span></span>
+<span><span class="co">#&gt; ✔ Assigning patches ID to fragments [713ms]</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ℹ Summarising area in each patch</span></span>
-<span><span class="co">#&gt; ✔ Summarising area in each patch [113ms]</span></span>
+<span><span class="co">#&gt; ✔ Summarising area in each patch [122ms]</span></span>
 <span><span class="co">#&gt; </span></span>
 <span></span>
 <span><span class="va">areas</span></span>
@@ -169,7 +169,6 @@
 <p>Summarise the connectivity metrics:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/summarise_connectivity.html">summarise_connectivity</a></span><span class="op">(</span></span>
-<span>  area_squared <span class="op">=</span> <span class="va">areas</span><span class="op">$</span><span class="va">area_squared</span>,</span>
 <span>  area <span class="op">=</span> <span class="va">areas</span><span class="op">$</span><span class="va">area</span>,</span>
 <span>  buffer_distance  <span class="op">=</span> <span class="fl">100</span>,</span>
 <span>  target_resolution <span class="op">=</span> <span class="fl">500</span>,</span>
@@ -178,9 +177,9 @@
 <span>  species_name <span class="op">=</span> <span class="st">"Blue-tongued Lizard"</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; # A tibble: 1 × 10</span></span>
-<span><span class="co">#&gt;   species_name    buffer_distance n_patches prob_connectedness effective_mesh_ha</span></span>
-<span><span class="co">#&gt;   &lt;chr&gt;                     &lt;dbl&gt;     &lt;int&gt;              &lt;dbl&gt;             &lt;dbl&gt;</span></span>
-<span><span class="co">#&gt; 1 Blue-tongued L…             100       163           0.000017                 4</span></span>
+<span><span class="co">#&gt;   species_name    buffer_distance n_patches effective_mesh_ha prob_connectedness</span></span>
+<span><span class="co">#&gt;   &lt;chr&gt;                     &lt;dbl&gt;     &lt;int&gt;             &lt;dbl&gt;              &lt;dbl&gt;</span></span>
+<span><span class="co">#&gt; 1 Blue-tongued L…             100       163                 4           0.000017</span></span>
 <span><span class="co">#&gt; # ℹ 5 more variables: patch_area_mean &lt;dbl&gt;, patch_area_total_ha &lt;dbl&gt;,</span></span>
 <span><span class="co">#&gt; #   target_resolution &lt;dbl&gt;, data_resolution &lt;dbl&gt;, aggregation_factor &lt;dbl&gt;</span></span></code></pre></div>
 </div>

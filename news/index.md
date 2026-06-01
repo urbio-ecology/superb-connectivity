@@ -15,6 +15,14 @@
   [`fragment_habitat()`](https://urbio-ecology.github.io/urbioconnect/reference/fragment_habitat.md),
   and
   [`assign_patches_to_fragments()`](https://urbio-ecology.github.io/urbioconnect/reference/assign_patches_to_fragments.md).
+- update
+  [`effective_mesh_size()`](https://urbio-ecology.github.io/urbioconnect/reference/effective_mesh_size.md)
+  and
+  [`connectivity_probability()`](https://urbio-ecology.github.io/urbioconnect/reference/connectivity_probability.md)
+  to go from area_squared –\> area_baseline.
+  [\#128](https://github.com/urbio-ecology/urbioconnect/issues/128).
+  This will help facilitate
+  [\#124](https://github.com/urbio-ecology/urbioconnect/issues/124).
 
 ## urbioconnect 0.1.0
 

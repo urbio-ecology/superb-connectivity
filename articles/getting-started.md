@@ -321,7 +321,6 @@ connectivity metrics:
 ``` r
 
 results <- summarise_connectivity(
-  area_squared = areas_connected$area_squared,
   area = areas_connected$area,
   buffer_distance = buffer_distance,
   target_resolution = 500,
@@ -377,22 +376,22 @@ areas_connected <- habitat_connectivity(
   verbose = TRUE
 )
 #> ℹ Creating barrier mask
-#> ✔ Creating barrier mask [33ms]
+#> ✔ Creating barrier mask [36ms]
 #> 
 #> ℹ Removing habitat underneath barrier
-#> ✔ Removing habitat underneath barrier [24ms]
+#> ✔ Removing habitat underneath barrier [36ms]
 #> 
 #> ℹ Adding buffer of 10m to habitat layer
-#> ✔ Adding buffer of 10m to habitat layer [575ms]
+#> ✔ Adding buffer of 10m to habitat layer [589ms]
 #> 
 #> ℹ Fragmenting habitat layer along barrier intersection
-#> ✔ Fragmenting habitat layer along barrier intersection [20ms]
+#> ✔ Fragmenting habitat layer along barrier intersection [22ms]
 #> 
 #> ℹ Assigning patches ID to fragments
-#> ✔ Assigning patches ID to fragments [1.4s]
+#> ✔ Assigning patches ID to fragments [1.1s]
 #> 
 #> ℹ Summarising area in each patch
-#> ✔ Summarising area in each patch [43ms]
+#> ✔ Summarising area in each patch [47ms]
 #> 
 ```
 
@@ -461,7 +460,6 @@ all_results <- purrr::map(
       verbose = FALSE
     )
     summarise_connectivity(
-      area_squared = areas$area_squared,
       area = areas$area,
       buffer_distance = d,
       target_resolution = 500,

@@ -9,26 +9,29 @@ See examples below.
 ## Usage
 
 ``` r
-effective_mesh_size(area_squared, area)
+effective_mesh_size(area, area_baseline = area)
 ```
 
 ## Arguments
 
-- area_squared:
-
-  Numeric vector. Squared area of connected patches.
-
 - area:
 
-  Numeric vector. Area of a connected patch.
+  Numeric vector. Area of connected patches.
+
+- area_baseline:
+
+  Optional. Defaults to `area` if not specified. Numeric vector of
+  connected patches of a baseline area. This is to allow for comparing
+  the effective mesh size when comparing different scenarios. See future
+  vignette on this topic (TODO).
 
 ## Value
 
-Numeric. Effective mesh size in hectares.
+Numeric. Effective mesh size, in hectares.
 
 ## Examples
 
 ``` r
-effective_mesh_size(lizard_areas_connected$area_squared, lizard_areas_connected$area)
+effective_mesh_size(lizard_areas_connected$area)
 #> [1] 4.491013
 ```

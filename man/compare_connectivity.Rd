@@ -4,16 +4,31 @@
 \alias{compare_connectivity}
 \title{Compare measurements the connectivity of different scenarios}
 \usage{
-compare_connectivity(new_area, baseline_area)
+compare_connectivity(
+  area_new,
+  area_baseline,
+  buffer_distance,
+  target_resolution,
+  data_resolution,
+  aggregation_factor,
+  species_name
+)
 }
 \arguments{
-\item{new_area}{Numeric vector. Total areas of new connected patch areas.}
+\item{area_new}{new area}
 
-\item{baseline_area}{Numeric vector. Total areas of original connected patch
-areas.}
+\item{area_baseline}{Numeric vector. Areas of connected patch baseline.}
 
-\item{new_area_squared}{Numeric vector. Squared areas of the new connected
-areas.}
+\item{buffer_distance}{Numeric. Buffer distance used in analysis (meters).}
+
+\item{target_resolution}{Numeric. Target resolution in meters.}
+
+\item{data_resolution}{Numeric. Data resolution in meters.}
+
+\item{aggregation_factor}{Numeric. Factor by which Data resolution was
+aggregated.}
+
+\item{species_name}{Character. Name of species analysed.}
 }
 \value{
 tibble with "scenario", "n_patches", "effective_mesh", and
@@ -31,7 +46,12 @@ some habitat, or some barrier(s), or both. This function help you do that.
 baseline_areas <- round(lizard_areas_connected$area)
 new_areas <- baseline_areas[-1] * 0.8
 compare_connectivity(
-  new_area = new_areas,
-  baseline_area = baseline_areas
+  area_new = new_areas,
+  area_baseline = baseline_areas,
+  buffer_distance = 10,
+  target_resolution = 10,
+  data_resolution = 10,
+  aggregation_factor = 10,
+  species_name = "blue-tongued lizard"
 )
 }

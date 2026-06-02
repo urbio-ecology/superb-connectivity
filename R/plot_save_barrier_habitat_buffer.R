@@ -5,7 +5,7 @@
 #' @param barrier barrier layer
 #' @param habitat habitat layer
 #' @param buffered buffered layer
-#' @param species_name character, species name, e.g., "Superb Fairy Wren"
+#' @param species character, species name, e.g., "Superb Fairy Wren"
 #' @param col_barrier colour to colour the barrier layer
 #' @param col_buffer colour to colour the buffer layer
 #' @param col_habitat colour to colour the habitat layer
@@ -24,7 +24,7 @@
 #'   buffered = buffered,
 #'   habitat = lizard_habitat,
 #'   distance = 10,
-#'   species_name = "Blue-tongued Lizard",
+#'   species = "Blue-tongued Lizard",
 #'   col_barrier = "white",
 #'   col_buffer = "lightgreen",
 #'   col_habitat = "seagreen",
@@ -37,7 +37,7 @@ plot_barrier_habitat_buffer <- function(
   buffered,
   habitat,
   distance,
-  species_name,
+  species,
   col_barrier,
   col_buffer,
   col_habitat,
@@ -48,7 +48,7 @@ plot_barrier_habitat_buffer <- function(
     habitat = habitat,
     buffered = buffered,
     distance = distance,
-    species_name = species_name,
+    species = species,
     col_barrier = col_barrier,
     col_buffer = col_buffer,
     col_habitat = col_habitat,
@@ -56,7 +56,7 @@ plot_barrier_habitat_buffer <- function(
   )
 
   plot_barrier_habitat_name <- glue::glue(
-    "plot-barrier-buffer-habitat-{species_name}-buffer-{distance}.png"
+    "plot-barrier-buffer-habitat-{species}-buffer-{distance}.png"
   )
 
   ggplot2::ggsave(

@@ -43,7 +43,7 @@ habitat <- read_geometry(habitat_file) |>
   st_as_sf()
 
 # input for the user - text
-species_name <- "Superb Fairy Wren"
+species <- "Superb Fairy Wren"
 # input for the user - one number,
 target_resolution <- 500
 # input for the user - one number
@@ -53,8 +53,8 @@ data_resolution <- 10
 aggregation_factor <- target_resolution / data_resolution
 
 # input from the user - can be one number, up to 4 numbers
-# e.g., buffer_distance <- c(100, 250, 400)
-buffer_distance <- 100
+# e.g., distance <- c(100, 250, 400)
+distance <- 100
 
 # These are operations that happen in the background ----
 # convert the vector format into a raster
@@ -103,7 +103,7 @@ barrier_raster <- terra::extend(barrier_rasterised, coarse_template)
 # outputs ----
 # show this output as a DT data table
 areas_connected <- map(
-  .x = buffer_distance,
+  .x = distance,
   .f = function(distances) {
     habitat_connectivity(
       habitat = habitat_raster,
@@ -119,11 +119,11 @@ results_connect_habitat <- map(
   .f = function(areas_connected) {
     summarise_connectivity(
       area = areas_connected$area,
-      buffer_distance = buffer_distance,
+      distance = distance,
       target_resolution = target_resolution,
       data_resolution = data_resolution,
       aggregation_factor = aggregation_factor,
-      species_name = species_name
+      species = species
     )
   }
 ) |>

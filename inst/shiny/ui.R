@@ -30,7 +30,7 @@ ui <- page_navbar(
         card_header("Data Upload"),
         card_body(
           textInput(
-            inputId = "species_name",
+            inputId = "species",
             label = "Species Name",
             value = "Superb Fairy Wren",
             placeholder = "Enter species name"

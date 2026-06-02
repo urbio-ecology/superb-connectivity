@@ -6,12 +6,12 @@
 \usage{
 summarise_connectivity(
   area,
-  area_baseline = area,
-  buffer_distance,
+  area_baseline = NULL,
+  distance,
   target_resolution,
   data_resolution,
   aggregation_factor,
-  species_name
+  species
 )
 }
 \arguments{
@@ -19,7 +19,7 @@ summarise_connectivity(
 
 \item{area_baseline}{Numeric vector. Areas of connected patch baseline.}
 
-\item{buffer_distance}{Numeric. Buffer distance used in analysis (meters).}
+\item{distance}{Numeric. Buffer distance used in analysis (meters).}
 
 \item{target_resolution}{Numeric. Target resolution in meters.}
 
@@ -28,7 +28,7 @@ summarise_connectivity(
 \item{aggregation_factor}{Numeric. Factor by which Data resolution was
 aggregated.}
 
-\item{species_name}{Character. Name of species analysed.}
+\item{species}{Character. Name of species analysed.}
 }
 \value{
 A tibble with connectivity metrics including number of patches,
@@ -44,10 +44,10 @@ See examples below.
 \examples{
 summarise_connectivity(
   area = lizard_areas_connected$area,
-  buffer_distance = 10,
+  distance = 10,
   target_resolution = 500,
   data_resolution = 10,
   aggregation_factor = 50,
-  species_name = "Blue-tongued Lizard"
+  species = "Blue-tongued Lizard"
 )
 }

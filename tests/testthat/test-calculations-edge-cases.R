@@ -31,14 +31,14 @@ test_that("summarise_connectivity with multiple buffer distances stays one row e
   purrr::walk(c(50, 100, 200), function(dist) {
     result <- summarise_connectivity(
       area = c(5000, 5000),
-      buffer_distance = dist,
+      distance = dist,
       target_resolution = 500,
       data_resolution = 10,
       aggregation_factor = 50,
-      species_name = "Wren"
+      species = "Wren"
     )
     expect_equal(nrow(result), 1)
-    expect_equal(result$buffer_distance, dist)
+    expect_equal(result$distance, dist)
   })
 })
 

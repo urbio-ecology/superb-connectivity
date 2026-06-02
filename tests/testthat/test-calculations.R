@@ -60,11 +60,11 @@ test_that("connectivity_probability is higher for unfragmented habitat", {
 test_that("summarise_connectivity returns a tibble with expected columns", {
   result <- summarise_connectivity(
     area = 10000,
-    buffer_distance = 100,
+    distance = 100,
     target_resolution = 500,
     data_resolution = 10,
     aggregation_factor = 50,
-    species_name = "Test Species"
+    species = "Test Species"
   )
 
   expect_s3_class(result, "tbl_df")
@@ -76,11 +76,11 @@ test_that("summarise_connectivity returns a tibble with expected columns", {
 test_that("summarise_connectivity rounds prob_connectedness to 6 decimal places", {
   result <- summarise_connectivity(
     area = c(10000, 20000),
-    buffer_distance = 200,
+    distance = 200,
     target_resolution = 500,
     data_resolution = 10,
     aggregation_factor = 50,
-    species_name = "Test"
+    species = "Test"
   )
   expect_equal(result$prob_connectedness, round(result$prob_connectedness, 6))
 })

@@ -37,11 +37,11 @@ results_connect <- purrr::map(
     )
     summarise_connectivity(
       area = full$areas_connected$area,
-      buffer_distance = d,
+      distance = d,
       target_resolution = 500,
       data_resolution = 10,
       aggregation_factor = 50,
-      species_name = "Lizard"
+      species = "Lizard"
     )
   }
 ) |>
@@ -97,7 +97,7 @@ gg_buffer_plot <- gg_barrier_habitat_buffer(
   buffered = buffered,
   habitat = lizard_habitat,
   distance = buffer_dist,
-  species_name = "Blue Tongue Lizard",
+  species = "Blue Tongue Lizard",
   col_barrier = "white",
   col_buffer = "lightgreen",
   col_habitat = "seagreen",
@@ -127,7 +127,7 @@ test_that("plot_patches renders correctly", {
     plot_patches(
       patch_id_raster,
       distance = buffer_dist,
-      species_name = "Blue Tongue Lizard"
+      species = "Blue Tongue Lizard"
     )
   )
 })

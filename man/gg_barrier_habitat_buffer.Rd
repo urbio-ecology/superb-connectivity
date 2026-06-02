@@ -9,7 +9,7 @@ gg_barrier_habitat_buffer(
   buffered,
   habitat,
   distance,
-  species_name,
+  species,
   col_barrier,
   col_buffer,
   col_habitat,
@@ -25,7 +25,7 @@ gg_barrier_habitat_buffer(
 
 \item{distance}{Numeric. Buffer distance in meters.}
 
-\item{species_name}{Character. Species name for plot title.}
+\item{species}{Character. Species name for plot title.}
 
 \item{col_barrier}{Character. Color for barrier layer.}
 
@@ -51,7 +51,7 @@ gg_bar_hab_buf <- gg_barrier_habitat_buffer(
   buffered = lizard_buffered,
   habitat = lizard_habitat,
   distance = 10,
-  species_name = "Blue Tongue Lizard",
+  species = "Blue Tongue Lizard",
   col_barrier = "black",
   col_buffer = "lightgreen",
   col_habitat = "seagreen"

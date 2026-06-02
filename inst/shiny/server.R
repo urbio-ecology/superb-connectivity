@@ -22,28 +22,28 @@ server <- function(input, output, session) {
   ## review: Should probably use eventReactive here
   observeEvent(input$use_example_data, {
     if (input$use_example_data) {
-      updateTextInput(session, "species_name", value = "Superb Fairy Wren")
+      updateTextInput(session, "species", value = "Superb Fairy Wren")
       # Disable inputs when using example data
-      shinyjs::disable("species_name")
+      shinyjs::disable("species")
       shinyjs::disable("habitat_file")
       shinyjs::disable("barrier_file")
       # Add CSS to grey out the inputs
       shinyjs::runjs(
         "
-        $('#species_name').closest('.form-group').css('opacity', '0.5');
+        $('#species').closest('.form-group').css('opacity', '0.5');
         $('#habitat_file').closest('.form-group').css('opacity', '0.5');
         $('#barrier_file').closest('.form-group').css('opacity', '0.5');
       "
       )
     } else {
       # Enable inputs when not using example data
-      shinyjs::enable("species_name")
+      shinyjs::enable("species")
       shinyjs::enable("habitat_file")
       shinyjs::enable("barrier_file")
       # Remove greying out
       shinyjs::runjs(
         "
-        $('#species_name').closest('.form-group').css('opacity', '1');
+        $('#species').closest('.form-group').css('opacity', '1');
         $('#habitat_file').closest('.form-group').css('opacity', '1');
         $('#barrier_file').closest('.form-group').css('opacity', '1');
       "
@@ -253,11 +253,11 @@ server <- function(input, output, session) {
             .f = function(areas, dist) {
               summarise_connectivity(
                 area = areas$area,
-                buffer_distance = dist,
+                distance = dist,
                 target_resolution = overlay_res,
                 data_resolution = base_res,
                 aggregation_factor = overlay_res / base_res,
-                species_name = input$species_name
+                species = input$species
               )
             }
           ) |>
@@ -298,7 +298,7 @@ server <- function(input, output, session) {
   # Output: Analysis Metadata ----
   output$analysis_species <- renderText({
     req(results$ready)
-    input$species_name
+    input$species
   })
 
   output$analysis_timestamp <- renderText({
@@ -344,11 +344,11 @@ server <- function(input, output, session) {
     tab_panels <- map2(
       .x = results$buffered_habitat,
       .y = results$buffer_distances,
-      .f = function(buffered_habitat, buffer_distance) {
+      .f = function(buffered_habitat, distance) {
         nav_panel(
-          title = paste0("Buffer: ", buffer_distance, "m"),
+          title = paste0("Buffer: ", distance, "m"),
           plotOutput(
-            outputId = paste0("barrier_habitat_buffer_", buffer_distance),
+            outputId = paste0("barrier_habitat_buffer_", distance),
             height = "500px"
           )
         )
@@ -373,11 +373,11 @@ server <- function(input, output, session) {
     walk2(
       .x = results$buffered_habitat,
       .y = results$buffer_distances,
-      .f = function(buffered_habitat, buffer_distance) {
-        output_name <- paste0("barrier_habitat_buffer_", buffer_distance)
+      .f = function(buffered_habitat, distance) {
+        output_name <- paste0("barrier_habitat_buffer_", distance)
         local({
           my_buffered <- buffered_habitat
-          my_distance <- buffer_distance
+          my_distance <- distance
           output[[output_name]] <- renderPlot({
             # review: this is the re-use section, set up module
             gg_barrier_habitat_buffer(
@@ -385,7 +385,7 @@ server <- function(input, output, session) {
               buffered = my_buffered,
               habitat = results$habitat_raster,
               distance = my_distance,
-              species_name = input$species_name,
+              species = input$species,
               col_barrier = urbio_cols$barrier,
               col_buffer = urbio_cols$buffer,
               col_habitat = urbio_cols$habitat,
@@ -404,11 +404,11 @@ server <- function(input, output, session) {
     tab_panels <- map2(
       .x = results$patch_id_raster,
       .y = results$buffer_distances,
-      .f = function(patch_id, buffer_distance) {
+      .f = function(patch_id, distance) {
         nav_panel(
-          title = paste0("Buffer: ", buffer_distance, "m"),
+          title = paste0("Buffer: ", distance, "m"),
           plotOutput(
-            outputId = paste0("patch_plot_", buffer_distance),
+            outputId = paste0("patch_plot_", distance),
             height = "500px"
           )
         )
@@ -425,17 +425,17 @@ server <- function(input, output, session) {
     walk2(
       .x = results$patch_id_raster,
       .y = results$buffer_distances,
-      .f = function(patch_id, buffer_distance) {
-        output_name <- paste0("patch_plot_", buffer_distance)
+      .f = function(patch_id, distance) {
+        output_name <- paste0("patch_plot_", distance)
         local({
           my_patch_id <- patch_id
-          my_distance <- buffer_distance
-          my_species <- input$species_name
+          my_distance <- distance
+          my_species <- input$species
           output[[output_name]] <- renderPlot({
             plot_patches(
               patch_id = my_patch_id,
               distance = my_distance,
-              species_name = my_species
+              species = my_species
             )
           })
         })
@@ -489,7 +489,7 @@ server <- function(input, output, session) {
 
     results$results_connect_habitat |>
       pivot_longer(
-        cols = -c(species_name, buffer_distance)
+        cols = -c(species, distance)
       ) |>
       datatable(
         options = list(
@@ -514,7 +514,7 @@ server <- function(input, output, session) {
     # Create a multi-panel comparison
     p1 <- ggplot(
       results$results_connect_habitat,
-      aes(x = buffer_distance, y = prob_connectedness)
+      aes(x = distance, y = prob_connectedness)
     ) +
       geom_line(linewidth = 1.2, color = "#1976D2") +
       geom_point(size = 3, color = "#1976D2") +
@@ -532,7 +532,7 @@ server <- function(input, output, session) {
 
     p2 <- ggplot(
       results$results_connect_habitat,
-      aes(x = buffer_distance, y = n_patches)
+      aes(x = distance, y = n_patches)
     ) +
       geom_line(linewidth = 1.2, color = "#D32F2F") +
       geom_point(size = 3, color = "#D32F2F") +
@@ -547,7 +547,7 @@ server <- function(input, output, session) {
 
     p3 <- ggplot(
       results$results_connect_habitat,
-      aes(x = buffer_distance, y = effective_mesh_ha)
+      aes(x = distance, y = effective_mesh_ha)
     ) +
       geom_line(linewidth = 1.2, color = "#388E3C") +
       geom_point(size = 3, color = "#388E3C") +
@@ -562,7 +562,7 @@ server <- function(input, output, session) {
 
     p4 <- ggplot(
       results$results_connect_habitat,
-      aes(x = buffer_distance, y = patch_area_mean)
+      aes(x = distance, y = patch_area_mean)
     ) +
       geom_line(linewidth = 1.2, color = "#F57C00") +
       geom_point(size = 3, color = "#F57C00") +
@@ -597,7 +597,7 @@ server <- function(input, output, session) {
       all_patches <- map2(
         results$areas_connected,
         results$buffer_distances,
-        ~ mutate(.x, buffer_distance = .y)
+        ~ mutate(.x, distance = .y)
       ) |>
         list_rbind()
       write_csv(all_patches, file)
@@ -636,7 +636,7 @@ server <- function(input, output, session) {
           theme_minimal() +
           labs(
             title = "Habitat and Barrier Layers",
-            subtitle = paste("Species:", input$species_name)
+            subtitle = paste("Species:", input$species)
           ) +
           theme(
             plot.title = element_text(size = 14, face = "bold"),
@@ -706,7 +706,7 @@ server <- function(input, output, session) {
 
       p1 <- ggplot(
         results$results_connect_habitat,
-        aes(x = buffer_distance, y = prob_connectedness)
+        aes(x = distance, y = prob_connectedness)
       ) +
         geom_line(linewidth = 1.2, color = "#1976D2") +
         geom_point(size = 3, color = "#1976D2") +
@@ -724,7 +724,7 @@ server <- function(input, output, session) {
 
       p2 <- ggplot(
         results$results_connect_habitat,
-        aes(x = buffer_distance, y = n_patches)
+        aes(x = distance, y = n_patches)
       ) +
         geom_line(linewidth = 1.2, color = "#D32F2F") +
         geom_point(size = 3, color = "#D32F2F") +
@@ -739,7 +739,7 @@ server <- function(input, output, session) {
 
       p3 <- ggplot(
         results$results_connect_habitat,
-        aes(x = buffer_distance, y = effective_mesh_ha)
+        aes(x = distance, y = effective_mesh_ha)
       ) +
         geom_line(linewidth = 1.2, color = "#388E3C") +
         geom_point(size = 3, color = "#388E3C") +
@@ -754,7 +754,7 @@ server <- function(input, output, session) {
 
       p4 <- ggplot(
         results$results_connect_habitat,
-        aes(x = buffer_distance, y = patch_area_mean)
+        aes(x = distance, y = patch_area_mean)
       ) +
         geom_line(linewidth = 1.2, color = "#F57C00") +
         geom_point(size = 3, color = "#F57C00") +
@@ -775,7 +775,7 @@ server <- function(input, output, session) {
   # Download connectivity plot (using plot_connectivity function) ----
   output$download_connectivity_plot <- downloadHandler(
     filename = function() {
-      paste0(input$species_name, "_connectivity_plot_", Sys.Date(), ".png")
+      paste0(input$species, "_connectivity_plot_", Sys.Date(), ".png")
     },
     content = function(file) {
       ggsave(
@@ -791,7 +791,7 @@ server <- function(input, output, session) {
   # Download terra areas CSV ----
   output$download_areas_csv <- downloadHandler(
     filename = function() {
-      paste0(input$species_name, "_areas_", Sys.Date(), ".csv")
+      paste0(input$species, "_areas_", Sys.Date(), ".csv")
     },
     content = function(file) {
       results$areas_connected |>

@@ -3,6 +3,17 @@ template:
   bootstrap: 5
   bootswatch: minty
 reference:
+- title: Main functions
+  contents:
+  - habitat_connectivity
+  - summarise_connectivity
+  - compare_connectivity
+  - effective_mesh_size
+  - connectivity_probability
+  - mean_patch_size
+  - n_patches
+  - total_habitat_area
+  - habitat_connectivity_full
 - title: Raster functions
   contents:
   - create_barrier_mask
@@ -29,16 +40,6 @@ reference:
   - plot_barrier_habitat_buffer
   - plot_connectivity
   - plot_patches
-- title: Summaries
-  contents:
-  - effective_mesh_size
-  - connectivity_probability
-  - mean_patch_size
-  - n_patches
-  - summarise_connectivity
-  - total_habitat_area
-  - habitat_connectivity
-  - habitat_connectivity_full
 - title: Data sources
   contents:
   - starts_with("example")

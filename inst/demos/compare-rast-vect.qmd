@@ -46,11 +46,11 @@ aggregation_factor <- overlay_res / base_res
 
 summarise_connectivity(
   area = areas_connected$area,
-  buffer_distance = buffering_dist,
+  distance = buffering_dist,
   target_resolution = overlay_res,
   data_resolution = base_res,
   aggregation_factor = aggregation_factor,
-  species_name = "Superb Fairy Wren"
+  species = "Superb Fairy Wren"
 )
 
 ```
@@ -88,10 +88,10 @@ rast_areas_connected <- rast_habitat_connectivity(
 #| eval: true
 summarise_connectivity(
   area = rast_areas_connected$area,
-  buffer_distance = buffering_dist,
+  distance = buffering_dist,
   target_resolution = overlay_res,
   data_resolution = base_res,
   aggregation_factor = aggregation_factor,
-  species_name = "Superb Fairy Wren"
+  species = "Superb Fairy Wren"
 )
 ```

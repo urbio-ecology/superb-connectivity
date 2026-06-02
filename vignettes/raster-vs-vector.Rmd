@@ -151,11 +151,11 @@ Timings for the methods are also important to consider. The raster approach took
 # Raster approach output uses the `area` column
 summarise_connectivity(
   area = raster_result$area,
-  buffer_distance = buffer_dist,
+  distance = buffer_dist,
   target_resolution = 500,
   data_resolution = 10,
   aggregation_factor = 50,
-  species_name = "Blue-tongued Lizard (raster)"
+  species = "Blue-tongued Lizard (raster)"
 )
 ```
 
@@ -165,11 +165,11 @@ summarise_connectivity(
 # Strip units before passing to summarise_connectivity
 summarise_connectivity(
   area = vector_result$area,
-  buffer_distance = buffer_dist,
+  distance = buffer_dist,
   target_resolution = NA,
   data_resolution = NA,
   aggregation_factor = NA,
-  species_name = "Blue-tongued Lizard (vector)"
+  species = "Blue-tongued Lizard (vector)"
 ) 
 ```
 

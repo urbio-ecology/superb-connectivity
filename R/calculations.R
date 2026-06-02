@@ -112,3 +112,22 @@ connectivity_probability <- function(effective_mesh_size, area_baseline) {
   prob_connect <- effective_mesh_size / total_habitat
   prob_connect
 }
+
+
+#' @noRd
+connectivity_metrics <- function(area, area_baseline = NULL) {
+  area_baseline <- area_baseline %||% area
+  metrics <- tibble::tibble(
+    n_patches = n_patches(area),
+    effective_mesh_ha = effective_mesh_size(
+      area = area,
+      area_baseline = area_baseline
+    ),
+    prob_connectedness = connectivity_probability(
+      effective_mesh_size = effective_mesh_ha,
+      area_baseline = area_baseline
+    )
+  )
+
+  metrics
+}

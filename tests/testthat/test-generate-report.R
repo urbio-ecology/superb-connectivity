@@ -1,7 +1,7 @@
 test_that("generate_connectivity_report errors with an unrecognised output_format", {
   expect_error(
     generate_connectivity_report(
-      species_name = "Test",
+      species = "Test",
       buffer_distances = 100,
       results_connect_habitat = data.frame(),
       areas_connected = list(),
@@ -17,7 +17,7 @@ test_that("generate_connectivity_report errors when report template is missing",
   skip_if_not_installed("quarto")
   expect_error(
     generate_connectivity_report(
-      species_name = "Test",
+      species = "Test",
       buffer_distances = 100,
       results_connect_habitat = data.frame(),
       areas_connected = list(),
@@ -44,7 +44,7 @@ test_that("generate_connectivity_report renders html with mocked quarto", {
 
   result <- withr::with_tempdir(
     generate_connectivity_report(
-      species_name = "Superb Fairy Wren",
+      species = "Superb Fairy Wren",
       buffer_distances = c(100, 200),
       results_connect_habitat = data.frame(),
       areas_connected = list(),
@@ -74,7 +74,7 @@ test_that("generate_connectivity_report renders pdf with mocked quarto", {
 
   result <- withr::with_tempdir(
     generate_connectivity_report(
-      species_name = "Superb Fairy Wren",
+      species = "Superb Fairy Wren",
       buffer_distances = 100,
       results_connect_habitat = data.frame(),
       areas_connected = list(),

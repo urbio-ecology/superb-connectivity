@@ -153,14 +153,14 @@ Summarise the connectivity metrics:
 ``` r
 summarise_connectivity(
   area = areas$area,
-  buffer_distance  = 100,
+  distance  = 100,
   target_resolution = 500,
   data_resolution = 10,
   aggregation_factor = 50,
-  species_name = "Blue-tongued Lizard"
+  species = "Blue-tongued Lizard"
 )
 #> # A tibble: 1 × 10
-#>   species_name    buffer_distance n_patches effective_mesh_ha prob_connectedness
+#>   species    distance n_patches effective_mesh_ha prob_connectedness
 #>   <chr>                     <dbl>     <int>             <dbl>              <dbl>
 #> 1 Blue-tongued L…             100       163                 4           0.000017
 #> # ℹ 5 more variables: patch_area_mean <dbl>, patch_area_total_ha <dbl>,

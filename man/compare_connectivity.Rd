@@ -4,35 +4,20 @@
 \alias{compare_connectivity}
 \title{Compare measurements the connectivity of different scenarios}
 \usage{
-compare_connectivity(
-  area_new,
-  area_baseline,
-  buffer_distance,
-  target_resolution,
-  data_resolution,
-  aggregation_factor,
-  species_name
-)
+compare_connectivity(area_new, area_baseline, distance, species)
 }
 \arguments{
-\item{area_new}{new area}
+\item{area_new}{Numeric vector. Area of a connected patch.}
 
-\item{area_baseline}{Numeric vector. Areas of connected patch baseline.}
+\item{area_baseline}{Numeric vector. Baseline area of a connected patch.}
 
-\item{buffer_distance}{Numeric. Buffer distance used in analysis (meters).}
+\item{distance}{buffered distance}
 
-\item{target_resolution}{Numeric. Target resolution in meters.}
-
-\item{data_resolution}{Numeric. Data resolution in meters.}
-
-\item{aggregation_factor}{Numeric. Factor by which Data resolution was
-aggregated.}
-
-\item{species_name}{Character. Name of species analysed.}
+\item{species}{name of species}
 }
 \value{
-tibble with "scenario", "n_patches", "effective_mesh", and
-"prob_connectedness".
+tibble with "scenario", "distance", "species",
+"n_patches", "effective_mesh_ha", and "prob_connectedness".
 }
 \description{
 We can measure the connectivity of a given habitat and barrier with
@@ -48,10 +33,7 @@ new_areas <- baseline_areas[-1] * 0.8
 compare_connectivity(
   area_new = new_areas,
   area_baseline = baseline_areas,
-  buffer_distance = 10,
-  target_resolution = 10,
-  data_resolution = 10,
-  aggregation_factor = 10,
-  species_name = "blue-tongued lizard"
+  distance = 10,
+  species = "blue-tongued lizard"
 )
 }

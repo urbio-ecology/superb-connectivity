@@ -126,11 +126,11 @@ plot(remaining_habitat, col = "#1b9e77", legend = FALSE, add = TRUE)
 
 ```{r}
 #| label: buffer
-buffer_distance <- 10
+distance <- 10
 
 buffered_habitat <- habitat_buffer(
   habitat = remaining_habitat,
-  distance = buffer_distance
+  distance = distance
 )
 
 plot(barrier_mask, col = scales::alpha("grey", 1), legend = FALSE)
@@ -149,8 +149,8 @@ gg_barrier_habitat_buffer(
   barrier = barrier,
   buffered = buffered_habitat,
   habitat = remaining_habitat,
-  distance = buffer_distance,
-  species_name = "Blue-tongued Lizard",
+  distance = distance,
+  species = "Blue-tongued Lizard",
   col_barrier = "grey30",
   col_buffer = "lightgreen",
   col_habitat = "#1b9e77",
@@ -198,8 +198,8 @@ We can plot the patches, with each connected patch shown in a distinct colour us
 #| fig-height: 5
 plot_patches(
   patch_id = patch_id_raster,
-  distance = buffer_distance,
-  species_name = "Blue-tongued Lizard"
+  distance = distance,
+  species = "Blue-tongued Lizard"
 )
 ```
 
@@ -227,11 +227,11 @@ The result has three columns:
 #| label: summarise
 results <- summarise_connectivity(
   area = areas_connected$area,
-  buffer_distance = buffer_distance,
+  distance = distance,
   target_resolution = 500,
   data_resolution = 10,
   aggregation_factor = 50,
-  species_name = "Blue-tongued Lizard"
+  species = "Blue-tongued Lizard"
 )
 
 results
@@ -291,10 +291,10 @@ A common workflow is to run the analysis at several buffer distances and compare
 ```{r}
 #| label: multi-buffer
 #| 
-buffer_distances <- c(10, 25, 50)
+distances <- c(10, 25, 50)
 
 all_results <- purrr::map(
-  buffer_distances,
+  distances,
   function(d) {
     areas <- habitat_connectivity(
       habitat = habitat,
@@ -304,11 +304,11 @@ all_results <- purrr::map(
     )
     summarise_connectivity(
       area = areas$area,
-      buffer_distance = d,
+      distance = d,
       target_resolution = 500,
       data_resolution = 10,
       aggregation_factor = 50,
-      species_name = "Blue-tongued Lizard"
+      species = "Blue-tongued Lizard"
     )
   }
 ) |>

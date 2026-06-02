@@ -4,14 +4,14 @@
 \alias{plot_patches}
 \title{Plot connected habitat patches}
 \usage{
-plot_patches(patch_id, distance, species_name = "Species", n_cols = 7)
+plot_patches(patch_id, distance, species = "Species", n_cols = 7)
 }
 \arguments{
 \item{patch_id}{Terra SpatRaster. Raster with patch IDs.}
 
 \item{distance}{Numeric. Buffer distance used (for subtitle).}
 
-\item{species_name}{Character. Species name (default: "Species").}
+\item{species}{Character. Species name (default: "Species").}
 
 \item{n_cols}{Integer. Number of colors to cycle through (default: 7).}
 }

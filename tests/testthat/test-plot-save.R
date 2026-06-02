@@ -23,7 +23,7 @@ test_that("plot_barrier_habitat_buffer saves a file and returns a named path", {
       buffered = buffered,
       habitat = small_habitat,
       distance = 10,
-      species_name = "Lizard",
+      species = "Lizard",
       col_barrier = "white",
       col_buffer = "lightgreen",
       col_habitat = "seagreen",

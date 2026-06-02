@@ -21,7 +21,7 @@ col2hex <- function(color_name) {
 #' @param buffered Terra SpatRaster. Buffered habitat layer.
 #' @param habitat Terra SpatRaster. Original habitat layer.
 #' @param distance Numeric. Buffer distance in meters.
-#' @param species_name Character. Species name for plot title.
+#' @param species Character. Species name for plot title.
 #' @param col_barrier Character. Color for barrier layer.
 #' @param col_buffer Character. Color for buffer zone.
 #' @param col_habitat Character. Color for habitat patches.
@@ -38,7 +38,7 @@ col2hex <- function(color_name) {
 #'   buffered = lizard_buffered,
 #'   habitat = lizard_habitat,
 #'   distance = 10,
-#'   species_name = "Blue Tongue Lizard",
+#'   species = "Blue Tongue Lizard",
 #'   col_barrier = "black",
 #'   col_buffer = "lightgreen",
 #'   col_habitat = "seagreen"
@@ -58,7 +58,7 @@ gg_barrier_habitat_buffer <- function(
   buffered,
   habitat,
   distance,
-  species_name,
+  species,
   col_barrier,
   col_buffer,
   col_habitat,
@@ -92,7 +92,7 @@ gg_barrier_habitat_buffer <- function(
       na.translate = FALSE
     ) +
     ggplot2::labs(
-      title = glue::glue("{species_name} Habitat"),
+      title = glue::glue("{species} Habitat"),
       subtitle = glue::glue("With a {distance}m buffer, and barrier shown")
     ) +
     ggplot2::theme_sub_plot(
@@ -177,7 +177,7 @@ to_sentence <- function(x) {
 #'
 #' @param patch_id Terra SpatRaster. Raster with patch IDs.
 #' @param distance Numeric. Buffer distance used (for subtitle).
-#' @param species_name Character. Species name (default: "Species").
+#' @param species Character. Species name (default: "Species").
 #' @param n_cols Integer. Number of colors to cycle through (default: 7).
 #'
 #' @returns A ggplot2 object showing patches with distinct colors.
@@ -211,7 +211,7 @@ to_sentence <- function(x) {
 plot_patches <- function(
   patch_id,
   distance,
-  species_name = "Species",
+  species = "Species",
   n_cols = 7
 ) {
   raster_patches <- patch_id$patch_id |> terra::values()
@@ -244,7 +244,7 @@ plot_patches <- function(
     ) +
     ggplot2::labs(
       title = glue::glue(
-        "Patches of {species_name} habitat"
+        "Patches of {species} habitat"
       ),
       subtitle = glue::glue(
         "# patches: {n_patches}\nBuffer size: {distance}m\n{n_cols} colours"
@@ -264,7 +264,7 @@ plot_patches <- function(
 #' distances, otherwise it will just be a plot with one point.
 #'
 #' @param results_connect_habitat Data frame. Connectivity summary results with
-#'   columns for species_name, buffer_distance, and various metrics.
+#'   columns for species, distance, and various metrics.
 #'
 #' @returns A ggplot2 object with faceted plots of connectivity metrics.
 #' @examples
@@ -277,11 +277,11 @@ plot_patches <- function(
 #'       distance = d, verbose = FALSE)
 #'     summarise_connectivity(
 #'       area = full$areas_connected$area,
-#'       buffer_distance = d,
+#'       distance = d,
 #'       target_resolution = 500,
 #'       data_resolution = 10,
 #'       aggregation_factor = 50,
-#'       species_name = "Blue-tongued Lizard"
+#'       species = "Blue-tongued Lizard"
 #'     )
 #'   }
 #' ) |> purrr::list_rbind()
@@ -300,13 +300,13 @@ plot_connectivity <- function(results_connect_habitat) {
   )
   results_connect_habitat |>
     dplyr::select(
-      species_name:patch_area_total_ha,
+      species:patch_area_total_ha,
       -effective_mesh_ha
     ) |>
     tidyr::pivot_longer(
-      cols = -c(species_name, buffer_distance)
+      cols = -c(species, distance)
     ) |>
-    ggplot2::ggplot(ggplot2::aes(x = buffer_distance, y = value)) +
+    ggplot2::ggplot(ggplot2::aes(x = distance, y = value)) +
     ggplot2::geom_point() +
     ggplot2::geom_line(colour = geo_cols$dark_green) +
     ggplot2::facet_wrap(
@@ -316,7 +316,7 @@ plot_connectivity <- function(results_connect_habitat) {
       labeller = ggplot2::labeller(name = to_sentence)
     ) +
     ggplot2::scale_x_continuous(
-      breaks = results_connect_habitat$buffer_distance,
+      breaks = results_connect_habitat$distance,
       labels = \(x) glue::glue("{x}m")
     ) +
     ggplot2::scale_y_continuous(

@@ -6,11 +6,13 @@
 #'   understand what the change in connectedness is when you remove, or add
 #'   some habitat, or some barrier(s), or both. This function help you do that.
 #'
-#' @inheritParams summarise_connectivity
-#' @param area_new new area
+#' @param area_new Numeric vector. Area of a connected patch.
+#' @param area_baseline Numeric vector. Baseline area of a connected patch.
+#' @param distance buffered distance
+#' @param species name of species
 #'
-#' @returns tibble with "scenario", "n_patches", "effective_mesh", and
-#'   "prob_connectedness".
+#' @returns tibble with "scenario", "distance", "species",
+#'   "n_patches", "effective_mesh_ha", and "prob_connectedness".
 #' @export
 #'
 #' @examples
@@ -20,58 +22,33 @@
 #' compare_connectivity(
 #'   area_new = new_areas,
 #'   area_baseline = baseline_areas,
-#'   buffer_distance = 10,
-#'   target_resolution = 10,
-#'   data_resolution = 10,
-#'   aggregation_factor = 10,
-#'   species_name = "blue-tongued lizard"
+#'   distance = 10,
+#'   species = "blue-tongued lizard"
 #' )
-
 compare_connectivity <- function(
   area_new,
   area_baseline,
-  buffer_distance,
-  target_resolution,
-  data_resolution,
-  aggregation_factor,
-  species_name
+  distance,
+  species
 ) {
-  baseline <- summarise_connectivity(
-    area = area_baseline,
-    # area_baseline defaults to area — standalone case
-    buffer_distance = buffer_distance,
-    target_resolution = target_resolution,
-    data_resolution = data_resolution,
-    aggregation_factor = aggregation_factor,
-    species_name = species_name
-  )
-
-  new <- summarise_connectivity(
-    area = area_new,
-    area_baseline = area_baseline, # comparison: new vs original
-    buffer_distance = buffer_distance,
-    target_resolution = target_resolution,
-    data_resolution = data_resolution,
-    aggregation_factor = aggregation_factor,
-    species_name = species_name
-  )
-
-  numeric_cols <- c(
-    "n_patches",
-    "effective_mesh_ha",
-    "prob_connectedness",
-    "patch_area_mean",
-    "patch_area_total_ha"
-  )
-  difference <- new
-  difference[numeric_cols] <- baseline[numeric_cols] - new[numeric_cols]
+  baseline <- connectivity_metrics(area = area_baseline)
+  new <- connectivity_metrics(area = area_new, area_baseline = area_baseline)
+  # (column-wise subtraction; direction is: baseline - new
+  # positive = more in new vs baseline, connectivity increased in new scenario)
+  difference <- new - baseline
 
   results <- dplyr::bind_rows(
     baseline = baseline,
     new = new,
     difference = difference,
     .id = "scenario"
-  )
+  ) |>
+    dplyr::mutate(
+      distance = distance,
+      species = species,
+      .after = scenario
+    )
   class(results) <- c("compare_connectivity", class(results))
+
   results
 }

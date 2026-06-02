@@ -4,7 +4,7 @@ test_that("multiplication works", {
   expect_snapshot(compare_connectivity(
     new_areas,
     baseline_areas,
-    distance = 10,
+    interpatch_distance = 10,
     species = "Blue-tongued Lizard"
   ))
 })

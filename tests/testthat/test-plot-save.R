@@ -13,7 +13,7 @@ small_barrier <- terra::rast(
   vals = NA
 )
 small_barrier[10, 10] <- 1
-buffered <- habitat_buffer(small_habitat, distance = 100)
+buffered <- habitat_buffer(small_habitat, interpatch_distance = 100)
 
 test_that("plot_barrier_habitat_buffer saves a file and returns a named path", {
   withr::with_tempdir({
@@ -22,7 +22,7 @@ test_that("plot_barrier_habitat_buffer saves a file and returns a named path", {
       barrier = small_barrier,
       buffered = buffered,
       habitat = small_habitat,
-      distance = 10,
+      interpatch_distance = 10,
       species = "Lizard",
       col_barrier = "white",
       col_buffer = "lightgreen",

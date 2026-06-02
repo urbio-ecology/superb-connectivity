@@ -32,12 +32,12 @@ results_connect <- purrr::map(
     full <- habitat_connectivity_full(
       small_habitat,
       small_barrier,
-      distance = d,
+      interpatch_distance = d,
       verbose = FALSE
     )
     summarise_connectivity(
       area = full$areas_connected$area,
-      distance = d,
+      interpatch_distance = d,
       target_resolution = 500,
       data_resolution = 10,
       aggregation_factor = 50,
@@ -96,7 +96,7 @@ gg_buffer_plot <- gg_barrier_habitat_buffer(
   barrier = lizard_barrier,
   buffered = buffered,
   habitat = lizard_habitat,
-  distance = buffer_dist,
+  interpatch_distance = interpatch_dist,
   species = "Blue Tongue Lizard",
   col_barrier = "white",
   col_buffer = "lightgreen",
@@ -116,7 +116,10 @@ test_that("gg_barrier_habitat_buffer renders correctly", {
 # plot_patches ----------------------------------------------------------
 
 test_that("plot_patches returns a ggplot", {
-  result <- plot_patches(patch_id_raster, distance = buffer_dist)
+  result <- plot_patches(
+    patch_id_raster,
+    interpatch_distance = interpatch_dist
+  )
   expect_s3_class(result, "ggplot")
 })
 
@@ -126,7 +129,7 @@ test_that("plot_patches renders correctly", {
     "plot-patches",
     plot_patches(
       patch_id_raster,
-      distance = buffer_dist,
+      interpatch_distance = interpatch_dist,
       species = "Blue Tongue Lizard"
     )
   )

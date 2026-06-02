@@ -4,12 +4,12 @@
 \alias{sf_habitat_buffer}
 \title{Buffer habitat by distance}
 \usage{
-sf_habitat_buffer(habitat, distance)
+sf_habitat_buffer(habitat, interpatch_distance)
 }
 \arguments{
 \item{habitat}{SF object. Habitat spatial data.}
 
-\item{distance}{Numeric. Buffer distance in meters.}
+\item{interpatch_distance}{Numeric. interpatch distance in meters.}
 }
 \value{
 SF object with buffered and unioned habitat geometry.
@@ -22,6 +22,6 @@ a single polygon.
 lizard_habitat_sf <- terra::as.polygons(example_habitat(), dissolve = TRUE) |>
   sf::st_as_sf()
 \dontrun{
-sf_habitat_buffer(lizard_habitat_sf, distance = 10)
+sf_habitat_buffer(lizard_habitat_sf, interpatch_distance = 10)
 }
 }

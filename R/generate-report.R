@@ -3,7 +3,7 @@
 #' Creates a parameterised Quarto report from connectivity analysis results.
 #'
 #' @param species_name Character. Name of the species being analysed.
-#' @param buffer_distances Numeric vector. Buffer distances used in analysis
+#' @param interpatch_distances Numeric vector. Buffer distances used in analysis
 #' (in meters).
 #' @param results_connect_habitat Data frame. Connectivity summary results.
 #' @param areas_connected List of data frames. Connected patch areas for e
@@ -27,7 +27,7 @@
 #' \dontrun{
 #' report_path <- generate_connectivity_report(
 #'   species_name = "Superb Fairy Wren",
-#'   buffer_distances = c(100, 250, 400),
+#'   interpatch_distances = c(100, 250, 400),
 #'   results_connect_habitat = results_df,
 #'   areas_connected = patches_list,
 #'   output_format = "html"
@@ -35,7 +35,7 @@
 #' }
 generate_connectivity_report <- function(
   species_name,
-  buffer_distances,
+  interpatch_distances,
   results_connect_habitat,
   areas_connected,
   habitat = NULL,
@@ -76,7 +76,7 @@ generate_connectivity_report <- function(
   # Prepare parameters
   params <- list(
     species_name = species_name,
-    buffer_distances = buffer_distances,
+    interpatch_distances = interpatch_distances,
     results_connect_habitat = results_connect_habitat,
     areas_connected = areas_connected,
     habitat = habitat,

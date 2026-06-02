@@ -36,7 +36,7 @@ barrier_raster <- prepared_rasters$barrier_raster
 areas_connected <- habitat_connectivity(
   habitat = habitat_raster,
   barrier = barrier_raster,
-  distance = 250
+  interpatch_distance = 250
 )
 
 buffering_dist <- 250
@@ -46,7 +46,7 @@ aggregation_factor <- overlay_res / base_res
 
 summarise_connectivity(
   area = areas_connected$area,
-  distance = buffering_dist,
+  interpatch_distance = interpatch_dist,
   target_resolution = overlay_res,
   data_resolution = base_res,
   aggregation_factor = aggregation_factor,
@@ -80,7 +80,7 @@ barrier_raster <- prepared_rasters$barrier_raster
 rast_areas_connected <- rast_habitat_connectivity(
   habitat = habitat_raster,
   barrier = barrier_raster,
-  distance = buffering_dist
+  interpatch_distance = interpatch_dist
 )
 ```
 
@@ -88,7 +88,7 @@ rast_areas_connected <- rast_habitat_connectivity(
 #| eval: true
 summarise_connectivity(
   area = rast_areas_connected$area,
-  distance = buffering_dist,
+  interpatch_distance = interpatch_dist,
   target_resolution = overlay_res,
   data_resolution = base_res,
   aggregation_factor = aggregation_factor,

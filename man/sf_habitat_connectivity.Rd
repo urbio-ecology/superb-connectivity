@@ -4,15 +4,15 @@
 \alias{sf_habitat_connectivity}
 \title{Calculate habitat connectivity}
 \usage{
-sf_habitat_connectivity(habitat, barrier, distance)
+sf_habitat_connectivity(habitat, barrier, interpatch_distance)
 }
 \arguments{
 \item{habitat}{SF object. Original habitat spatial data.}
 
 \item{barrier}{SF object. Barrier spatial data (e.g., roads, waterways).}
 
-\item{distance}{Numeric. Threshold distance in meters for connectivity.
-Habitat patches within this distance are considered connected.}
+\item{interpatch_distance}{Numeric. Threshold interpatch_distance in meters for connectivity.
+Habitat patches within this interpatch_distance are considered connected.}
 }
 \value{
 Data frame with connectivity metrics for each connected patch,
@@ -27,6 +27,6 @@ areas of connected patches.
 lizard_barrier_shp <- example_barrier_shp()
 lizard_habitat_sf <- terra::as.polygons(example_habitat(), dissolve = TRUE) |>
   sf::st_as_sf()
-result <- sf_habitat_connectivity(lizard_habitat_sf, lizard_barrier_shp, distance = 10)
+result <- sf_habitat_connectivity(lizard_habitat_sf, lizard_barrier_shp, interpatch_distance = 10)
 result
 }

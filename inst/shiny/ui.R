@@ -277,12 +277,12 @@ ui <- page_navbar(
         )
       ),
 
-      # Visualisation of changes in key stats over buffer distance
+      # Visualisation of changes in key stats over interpatch distance
       layout_columns(
         col_widths = 12,
         card(
           card_header(
-            "Visualisation of changes in key stats over buffer distance"
+            "Visualisation of changes in key stats over interpatch distance"
           ),
           card_body(
             plotOutput("plot_connectivity_output", height = "600px")

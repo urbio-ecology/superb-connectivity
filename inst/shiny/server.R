@@ -73,7 +73,7 @@ server <- function(input, output, session) {
     validate(
       need(
         length(distances) > 0,
-        "Please enter at least one valid buffer distance"
+        "Please enter at least one valid interpatch distance"
       ),
       need(all(distances > 0), "Buffer distances must be positive numbers")
     )
@@ -211,7 +211,7 @@ server <- function(input, output, session) {
 
           incProgress(0.3, message = "Calculating connectivity...")
 
-          # Run connectivity analysis for each buffer distance
+          # Run connectivity analysis for each interpatch distance
           # Use _full version to get intermediate results for plotting
           results_list <- map(
             .x = buffer_dists,
@@ -223,7 +223,7 @@ server <- function(input, output, session) {
               habitat_connectivity_full(
                 habitat = results$habitat_raster,
                 barrier = results$barrier_raster,
-                distance = distance,
+                interpatch_distance = distance,
                 verbose = FALSE
               )
             }
@@ -253,7 +253,7 @@ server <- function(input, output, session) {
             .f = function(areas, dist) {
               summarise_connectivity(
                 area = areas$area,
-                distance = dist,
+                interpatch_distance = dist,
                 target_resolution = overlay_res,
                 data_resolution = base_res,
                 aggregation_factor = overlay_res / base_res,
@@ -340,15 +340,15 @@ server <- function(input, output, session) {
       barrier = "#FFFFFF"
     )
 
-    # Create tabs for each buffer distance
+    # Create tabs for each interpatch distance
     tab_panels <- map2(
       .x = results$buffered_habitat,
-      .y = results$buffer_distances,
-      .f = function(buffered_habitat, distance) {
+      .y = results$interpatch_distances,
+      .f = function(interpatch_distance, distance) {
         nav_panel(
           title = paste0("Buffer: ", distance, "m"),
           plotOutput(
-            outputId = paste0("barrier_habitat_buffer_", distance),
+            outputId = paste0("barrier_habitat_interpatch_", distance),
             height = "500px"
           )
         )
@@ -374,17 +374,17 @@ server <- function(input, output, session) {
       .x = results$buffered_habitat,
       .y = results$buffer_distances,
       .f = function(buffered_habitat, distance) {
-        output_name <- paste0("barrier_habitat_buffer_", distance)
+        output_name <- paste0("barrier_habitat_interpatch_", distance)
         local({
           my_buffered <- buffered_habitat
-          my_distance <- distance
+          my_distance <- interpatch_distance
           output[[output_name]] <- renderPlot({
             # review: this is the re-use section, set up module
             gg_barrier_habitat_buffer(
               barrier = results$barrier_raster,
               buffered = my_buffered,
               habitat = results$habitat_raster,
-              distance = my_distance,
+              interpatch_distance = my_distance,
               species = input$species,
               col_barrier = urbio_cols$barrier,
               col_buffer = urbio_cols$buffer,
@@ -404,11 +404,11 @@ server <- function(input, output, session) {
     tab_panels <- map2(
       .x = results$patch_id_raster,
       .y = results$buffer_distances,
-      .f = function(patch_id, distance) {
+      .f = function(patch_id, interpatch_distance) {
         nav_panel(
-          title = paste0("Buffer: ", distance, "m"),
+          title = paste0("Buffer: ", interpatch_distance, "m"),
           plotOutput(
-            outputId = paste0("patch_plot_", distance),
+            outputId = paste0("patch_plot_", interpatch_distance),
             height = "500px"
           )
         )
@@ -425,16 +425,16 @@ server <- function(input, output, session) {
     walk2(
       .x = results$patch_id_raster,
       .y = results$buffer_distances,
-      .f = function(patch_id, distance) {
-        output_name <- paste0("patch_plot_", distance)
+      .f = function(patch_id, interpatch_distance) {
+        output_name <- paste0("patch_plot_", interpatch_distance)
         local({
           my_patch_id <- patch_id
-          my_distance <- distance
+          my_interpatch_distance <- interpatch_distance
           my_species <- input$species
           output[[output_name]] <- renderPlot({
             plot_patches(
               patch_id = my_patch_id,
-              distance = my_distance,
+              interpatch_distance = interpatch_distance,
               species = my_species
             )
           })
@@ -489,7 +489,7 @@ server <- function(input, output, session) {
 
     results$results_connect_habitat |>
       pivot_longer(
-        cols = -c(species, distance)
+        cols = -c(species, interpatch_distance)
       ) |>
       datatable(
         options = list(
@@ -514,16 +514,16 @@ server <- function(input, output, session) {
     # Create a multi-panel comparison
     p1 <- ggplot(
       results$results_connect_habitat,
-      aes(x = distance, y = prob_connectedness)
+      aes(x = interpatch_distance, y = prob_connectedness)
     ) +
       geom_line(linewidth = 1.2, color = "#1976D2") +
       geom_point(size = 3, color = "#1976D2") +
       scale_y_continuous(labels = scales::percent_format()) +
       theme_minimal() +
       labs(
-        x = "Buffer Distance (m)",
+        x = "Interpatch Distance (m)",
         y = "Probability of Connectedness",
-        title = "Connectivity Metrics by Buffer Distance"
+        title = "Connectivity Metrics by Interpatch Distance"
       ) +
       theme(
         plot.title = element_text(size = 13, face = "bold"),
@@ -532,13 +532,13 @@ server <- function(input, output, session) {
 
     p2 <- ggplot(
       results$results_connect_habitat,
-      aes(x = distance, y = n_patches)
+      aes(x = interpatch_distance, y = n_patches)
     ) +
       geom_line(linewidth = 1.2, color = "#D32F2F") +
       geom_point(size = 3, color = "#D32F2F") +
       theme_minimal() +
       labs(
-        x = "Buffer Distance (m)",
+        x = "Interpatch Distance (m)",
         y = "Number of Patches"
       ) +
       theme(
@@ -547,13 +547,13 @@ server <- function(input, output, session) {
 
     p3 <- ggplot(
       results$results_connect_habitat,
-      aes(x = distance, y = effective_mesh_ha)
+      aes(x = interpatch_distance, y = effective_mesh_ha)
     ) +
       geom_line(linewidth = 1.2, color = "#388E3C") +
       geom_point(size = 3, color = "#388E3C") +
       theme_minimal() +
       labs(
-        x = "Buffer Distance (m)",
+        x = "Interpatch Distance (m)",
         y = "Effective Mesh Size (ha)"
       ) +
       theme(
@@ -562,13 +562,13 @@ server <- function(input, output, session) {
 
     p4 <- ggplot(
       results$results_connect_habitat,
-      aes(x = distance, y = patch_area_mean)
+      aes(x = interpatch_distance, y = patch_area_mean)
     ) +
       geom_line(linewidth = 1.2, color = "#F57C00") +
       geom_point(size = 3, color = "#F57C00") +
       theme_minimal() +
       labs(
-        x = "Buffer Distance (m)",
+        x = "Interpatch Distance (m)",
         y = "Mean Patch Area (m²)"
       ) +
       theme(
@@ -597,7 +597,7 @@ server <- function(input, output, session) {
       all_patches <- map2(
         results$areas_connected,
         results$buffer_distances,
-        ~ mutate(.x, distance = .y)
+        ~ mutate(.x, interpatch_distance = .y)
       ) |>
         list_rbind()
       write_csv(all_patches, file)
@@ -683,7 +683,7 @@ server <- function(input, output, session) {
           theme_minimal() +
           labs(
             title = "Connected Habitat Patches by Size",
-            subtitle = paste("Buffer distance:", first_buffer, "m"),
+            subtitle = paste("Interpatch distance:", first_buffer, "m"),
             x = "Patch Rank (by size)",
             y = "Patch Area (m²)",
             fill = "Category"
@@ -706,16 +706,16 @@ server <- function(input, output, session) {
 
       p1 <- ggplot(
         results$results_connect_habitat,
-        aes(x = distance, y = prob_connectedness)
+        aes(x = interpatch_distance, y = prob_connectedness)
       ) +
         geom_line(linewidth = 1.2, color = "#1976D2") +
         geom_point(size = 3, color = "#1976D2") +
         scale_y_continuous(labels = scales::percent_format()) +
         theme_minimal() +
         labs(
-          x = "Buffer Distance (m)",
+          x = "Interpatch Distance (m)",
           y = "Probability of Connectedness",
-          title = "Connectivity Metrics by Buffer Distance"
+          title = "Connectivity Metrics by Interpatch Distance"
         ) +
         theme(
           plot.title = element_text(size = 13, face = "bold"),
@@ -724,13 +724,13 @@ server <- function(input, output, session) {
 
       p2 <- ggplot(
         results$results_connect_habitat,
-        aes(x = distance, y = n_patches)
+        aes(x = interpatch_distance, y = n_patches)
       ) +
         geom_line(linewidth = 1.2, color = "#D32F2F") +
         geom_point(size = 3, color = "#D32F2F") +
         theme_minimal() +
         labs(
-          x = "Buffer Distance (m)",
+          x = "Interpatch Distance (m)",
           y = "Number of Patches"
         ) +
         theme(
@@ -739,13 +739,13 @@ server <- function(input, output, session) {
 
       p3 <- ggplot(
         results$results_connect_habitat,
-        aes(x = distance, y = effective_mesh_ha)
+        aes(x = interpatch_distance, y = effective_mesh_ha)
       ) +
         geom_line(linewidth = 1.2, color = "#388E3C") +
         geom_point(size = 3, color = "#388E3C") +
         theme_minimal() +
         labs(
-          x = "Buffer Distance (m)",
+          x = "Interpatch Distance (m)",
           y = "Effective Mesh Size (ha)"
         ) +
         theme(
@@ -754,13 +754,13 @@ server <- function(input, output, session) {
 
       p4 <- ggplot(
         results$results_connect_habitat,
-        aes(x = distance, y = patch_area_mean)
+        aes(x = interpatch_distance, y = patch_area_mean)
       ) +
         geom_line(linewidth = 1.2, color = "#F57C00") +
         geom_point(size = 3, color = "#F57C00") +
         theme_minimal() +
         labs(
-          x = "Buffer Distance (m)",
+          x = "Interpatch Distance (m)",
           y = "Mean Patch Area (m²)"
         ) +
         theme(

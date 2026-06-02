@@ -19,7 +19,7 @@ barrier_raster <- prepared_rasters$barrier_raster
 rast_areas_connected <- habitat_connectivity(
   habitat = habitat_raster,
   barrier = barrier_raster,
-  distance = 250
+  interpatch_distance = 250
 )
 
 connectivity_summary <- summarise_connectivity(
@@ -103,7 +103,7 @@ for (i in seq_len(5)) {
 
   loo_buffered_habitat <- rast_habitat_buffer(
     habitat = loo_remaining_habitat,
-    distance = 250
+    interpatch_distance = 250
   )
 
   # apply barriers to get the fragmentation

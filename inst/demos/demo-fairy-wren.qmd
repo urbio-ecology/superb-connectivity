@@ -48,7 +48,7 @@ We can then put these inputs into the `habitat_connectivity()` function, which r
 connect_habitat <- habitat_connectivity(
   habitat = habitat,
   barrier = barrier,
-  distance = 250
+  interpatch_distance = 250
 )
 
 connect_habitat
@@ -128,7 +128,7 @@ This is the same as our `habitat_connectivity()` function:
 connect_habitat2 <- habitat_connectivity(
   habitat = habitat,
   barrier = barrier,
-  distance = 250
+  interpatch_distance = 250
 )
 
 all.equal(connect_habitat, connect_habitat2)

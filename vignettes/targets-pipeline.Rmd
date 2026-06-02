@@ -26,7 +26,7 @@ everything from scratch is slowed down, and you can end up being unsure if every
 
 In an ideal world you would only need to run code that has changed, or has had its dependencies change.
 
-The [targets](https://docs.ropensci.org/targets/) package addresses this issue by only running code that has been changed. You can think of this as a kind of **intelligent caching**: it tracks every input and output in your pipeline and only re-runs the steps whose inputs have changed. If you add a new buffer
+The [targets](https://docs.ropensci.org/targets/) package addresses this issue by only running code that has been changed. You can think of this as a kind of **intelligent caching**: it tracks every input and output in your pipeline and only re-runs the steps whose inputs have changed. If you add a new interpatch
 distance, targets re-runs only the connectivity step for that distance — not
 the data preparation or the other buffer distances.
 
@@ -37,7 +37,7 @@ We first discuss a minimal pipeline, before going on to add multiple buffer dist
 ## A minimal `_targets.R`
 
 The following `_targets.R` file uses the built-in lizard example data and runs
-connectivity analysis at one buffer distance.
+connectivity analysis at one interpatch distance.
 
 Place this code in a file in the root of your project directory, and name it `_targets.R`:
 
@@ -58,7 +58,7 @@ tar_assign({
   target_resolution <- tar_target(500)
   data_resolution <- tar_target(10)
   aggregation_factor <- tar_target(target_resolution / data_resolution)
-  distance <- tar_target(10)
+  interpatch_distance <- tar_target(10)
   
   barrier <- example_barrier() |> tar_terra_rast()
   habitat <- example_habitat() |> tar_terra_rast()
@@ -66,7 +66,7 @@ tar_assign({
   barrier_mask <- create_barrier_mask(barrier) |> tar_terra_rast()
   remaining <- drop_habitat_under_barrier(habitat, barrier_mask) |>
     tar_terra_rast()
-  buffered_habitat <- habitat_buffer(remaining, distance = distance) |>
+  buffered_habitat <- habitat_buffer(remaining, interpatch_distance = interpatch_distance) |>
     tar_terra_rast()
   fragmentation_raster <- fragment_habitat(buffered_habitat, barrier_mask) |>
     tar_terra_rast()
@@ -83,13 +83,13 @@ tar_assign({
   areas_connected <- habitat_connectivity(
     habitat = habitat,
     barrier = barrier,
-    distance = distance
+    interpatch_distance = interpatch_distance
   ) |>
     tar_target()
 
   results_connect_habitat <- summarise_connectivity(
     area = areas_connected$area,
-    distance = distance,
+    interpatch_distance = interpatch_distance,
     target_resolution = target_resolution,
     data_resolution = data_resolution,
     aggregation_factor = aggregation_factor,
@@ -117,10 +117,10 @@ We specify that each of these things below are to be watched with targets with `
   target_resolution <- tar_target(500)
   data_resolution <- tar_target(10)
   aggregation_factor <- tar_target(target_resolution / data_resolution)
-  distance <- tar_target(10)
+  interpatch_distance <- tar_target(10)
 ```
 
-This means if any of these variables are changed, say `distance` changes from 10 and 20, then anything using `distance` would need to get rerun.
+This means if any of these variables are changed, say `interpatch_distance` changes from 10 and 20, then anything using `distance` would need to get rerun.
 
 These parts here:
 
@@ -180,7 +180,7 @@ You can load the individual targets back into your R session using `tar_load()`
 targets::tar_load(results_connect_habitat)
 results_connect_habitat
 
-# The connectivity data frame for a specific buffer distance
+# The connectivity data frame for a specific interpatch distance
 targets::tar_load(connectivity_50)
 connectivity_50
 

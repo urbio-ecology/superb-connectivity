@@ -4,14 +4,19 @@
 \alias{habitat_connectivity_full}
 \title{Calculate habitat connectivity with visualization data}
 \usage{
-habitat_connectivity_full(habitat, barrier, distance, verbose = TRUE)
+habitat_connectivity_full(
+  habitat,
+  barrier,
+  interpatch_distance,
+  verbose = TRUE
+)
 }
 \arguments{
 \item{habitat}{Terra SpatRaster. Habitat raster.}
 
 \item{barrier}{Terra SpatRaster. Barrier raster.}
 
-\item{distance}{Numeric. Buffer distance in meters.}
+\item{interpatch_distance}{Numeric. Interpatch distance in meters.}
 
 \item{verbose}{Logical. Display progress messages (default: TRUE).}
 }
@@ -30,7 +35,7 @@ lizard_barrier <- example_barrier()
 result <- habitat_connectivity_full(
   lizard_habitat,
   lizard_barrier,
-  distance = 10,
+  interpatch_distance = 10,
   verbose = FALSE
 )
 names(result)

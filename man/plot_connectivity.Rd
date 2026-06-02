@@ -8,7 +8,7 @@ plot_connectivity(results_connect_habitat)
 }
 \arguments{
 \item{results_connect_habitat}{Data frame. Connectivity summary results with
-columns for species, distance, and various metrics.}
+columns for species, interpatch distance, and various metrics.}
 }
 \value{
 A ggplot2 object with faceted plots of connectivity metrics.
@@ -25,10 +25,10 @@ results <- purrr::map(
   c(10, 20),
   function(d) {
     full <- habitat_connectivity_full(lizard_habitat, lizard_barrier,
-      distance = d, verbose = FALSE)
+      interpatch_distance = d, verbose = FALSE)
     summarise_connectivity(
       area = full$areas_connected$area,
-      distance = d,
+      interpatch_distance = d,
       target_resolution = 500,
       data_resolution = 10,
       aggregation_factor = 50,

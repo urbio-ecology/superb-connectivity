@@ -4,19 +4,19 @@
 \alias{compare_connectivity}
 \title{Compare measurements the connectivity of different scenarios}
 \usage{
-compare_connectivity(area_new, area_baseline, distance, species)
+compare_connectivity(area_new, area_baseline, interpatch_distance, species)
 }
 \arguments{
 \item{area_new}{Numeric vector. Area of a connected patch.}
 
 \item{area_baseline}{Numeric vector. Baseline area of a connected patch.}
 
-\item{distance}{buffered distance}
+\item{interpatch_distance}{Distance between patches}
 
 \item{species}{name of species}
 }
 \value{
-tibble with "scenario", "distance", "species",
+tibble with "scenario", "interpatch_distance", "species",
 "n_patches", "effective_mesh_ha", and "prob_connectedness".
 }
 \description{
@@ -33,7 +33,7 @@ new_areas <- baseline_areas[-1] * 0.8
 compare_connectivity(
   area_new = new_areas,
   area_baseline = baseline_areas,
-  distance = 10,
+  interpatch_distance = 10,
   species = "blue-tongued lizard"
 )
 }

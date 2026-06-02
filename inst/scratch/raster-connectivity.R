@@ -53,10 +53,10 @@ prepare_rasters <- function(
 
 # buffer the habitat by half the threshold distance (the distance past
 # which habitat patches are no longer considered connected)
-rast_habitat_buffer <- function(habitat, distance) {
+rast_habitat_buffer <- function(habitat, interpatch_distance) {
   buffer_window <- raster::focalWeight(
     x = habitat,
-    d = distance,
+    d = interpatch_distance,
     type = "circle"
   )
   buffer_window <- buffer_window / max(buffer_window)
@@ -128,21 +128,25 @@ rast_aggregate_connected_patches <- function(raster) {
 rast_habitat_connectivity <- function(
   habitat,
   barrier,
-  distance,
+  interpatch_distance,
   verbose = TRUE
 ) {
   if (verbose) {
-    res <- .rast_habitat_connectivity(habitat, barrier, distance)
+    res <- .rast_habitat_connectivity(habitat, barrier, interpatch_distance)
   } else {
     quiet_rast_habitat_connectivity <- purrr::quietly(
       .rast_habitat_connectivity
     )
-    res <- quiet_rast_habitat_connectivity(habitat, barrier, distance)
+    res <- quiet_rast_habitat_connectivity(
+      habitat,
+      barrier,
+      interpatch_distance
+    )
   }
   res
 }
 
-.rast_habitat_connectivity <- function(habitat, barrier, distance) {
+.rast_habitat_connectivity <- function(habitat, barrier, interpatch_distance) {
   cli::cli_progress_step("Creating barrier mask")
   barrier_mask <- create_barrier_mask(barrier = barrier)
 
@@ -152,7 +156,9 @@ rast_habitat_connectivity <- function(
     barrier_mask = barrier_mask
   )
 
-  cli::cli_progress_step("Adding buffer of {distance}m to habitat layer")
+  cli::cli_progress_step(
+    "Adding buffer of {interpatch_distance}m to habitat layer"
+  )
   # buffer by radius (metres)
   buffered_habitat <- rast_habitat_buffer(
     habitat = remaining_habitat,

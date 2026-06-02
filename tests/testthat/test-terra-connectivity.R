@@ -95,7 +95,7 @@ lizard_barrier <- example_barrier()
 hcf_quiet <- habitat_connectivity_full(
   lizard_habitat,
   lizard_barrier,
-  distance = 50,
+  interpatch_distance = 50,
   verbose = FALSE
 )
 hc_quiet <- hcf_quiet$areas_connected
@@ -155,7 +155,7 @@ small_barrier[10, 10] <- 1
 hc_verbose <- habitat_connectivity(
   small_habitat,
   small_barrier,
-  distance = 100,
+  interpatch_distance = 100,
   verbose = TRUE
 )
 
@@ -195,7 +195,7 @@ test_that("align_to resamples rasters with mismatched geometry", {
 hcf_verbose <- habitat_connectivity_full(
   small_habitat,
   small_barrier,
-  distance = 100,
+  interpatch_distance = 100,
   verbose = TRUE
 )
 

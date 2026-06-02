@@ -300,14 +300,14 @@ aggregate_connected_patches <- function(raster) {
 #'   The steps are:
 #'   * [create_barrier_mask()]: Creating barrier mask.
 #'   * [drop_habitat_under_barrier()]: Removes Habitat underneath barrier.
-#'   * [habitat_buffer()]: Adds buffer of distance (m) to habitat layer.
+#'   * [habitat_buffer()]: Adds interpatch distance of distance (m) to habitat layer.
 #'   * [fragment_habitat()]: Fragments habitat layer along barrier intersection.
 #'   * [assign_patches_to_fragments()]: Assign patch ID to fragments.
 #'   * [aggregate_connected_patches()]: Summarise area in each patch.
 #'
 #' @param habitat Terra SpatRaster. Habitat raster.
 #' @param barrier Terra SpatRaster. Barrier raster.
-#' @param distance Numeric. Buffer distance in meters.
+#' @param interpatch_distance Numeric. Interpatch distance in meters.
 #' @param verbose Logical. Display progress messages (default: TRUE).
 #' @returns Data frame with connectivity metrics per patch.
 #' @export
@@ -317,20 +317,20 @@ aggregate_connected_patches <- function(raster) {
 #' connectivity <- habitat_connectivity(
 #'     habitat = lizard_habitat,
 #'     barrier = lizard_barrier,
-#'     distance = 10
+#'     interpatch_distance = 10
 #'   )
 #' connectivity
 habitat_connectivity <- function(
   habitat,
   barrier,
-  distance,
+  interpatch_distance,
   verbose = TRUE
 ) {
   if (verbose) {
     habitat_connectivity <- .habitat_connectivity(
       habitat,
       barrier,
-      distance
+      interpatch_distance
     )
   } else {
     quiet_habitat_connectivity <- purrr::quietly(
@@ -339,7 +339,7 @@ habitat_connectivity <- function(
     habitat_connectivity <- quiet_habitat_connectivity(
       habitat,
       barrier,
-      distance
+      interpatch_distance
     )$result
   }
   habitat_connectivity
@@ -347,7 +347,7 @@ habitat_connectivity <- function(
 
 #' @noRd
 #' @note internal
-.habitat_connectivity <- function(habitat, barrier, distance) {
+.habitat_connectivity <- function(habitat, barrier, interpatch_distance) {
   cli::cli_progress_step("Creating barrier mask")
   barrier_mask <- create_barrier_mask(barrier = barrier)
 
@@ -357,10 +357,12 @@ habitat_connectivity <- function(
     barrier_mask = barrier_mask
   )
 
-  cli::cli_progress_step("Adding buffer of {distance}m to habitat layer")
+  cli::cli_progress_step(
+    "Adding buffer of {interpatch_distance}m to habitat layer"
+  )
   buffered_habitat <- habitat_buffer(
     habitat = remaining_habitat,
-    distance = distance
+    interpatch_distance = interpatch_distance
   )
 
   cli::cli_progress_step("Fragmenting habitat layer along barrier intersection")
@@ -397,7 +399,7 @@ habitat_connectivity <- function(
 #' result <- habitat_connectivity_full(
 #'   lizard_habitat,
 #'   lizard_barrier,
-#'   distance = 10,
+#'   interpatch_distance = 10,
 #'   verbose = FALSE
 #' )
 #' names(result)
@@ -405,21 +407,21 @@ habitat_connectivity <- function(
 habitat_connectivity_full <- function(
   habitat,
   barrier,
-  distance,
+  interpatch_distance,
   verbose = TRUE
 ) {
   if (!verbose) {
     quiet_fun <- purrr::quietly(.habitat_connectivity_full)
-    res <- quiet_fun(habitat, barrier, distance)
+    res <- quiet_fun(habitat, barrier, interpatch_distance)
     return(res$result)
   }
 
-  .habitat_connectivity_full(habitat, barrier, distance)
+  .habitat_connectivity_full(habitat, barrier, interpatch_distance)
 }
 
 #' @noRd
 #' @note internal
-.habitat_connectivity_full <- function(habitat, barrier, distance) {
+.habitat_connectivity_full <- function(habitat, barrier, interpatch_distance) {
   cli::cli_progress_step("Creating barrier mask")
   barrier_mask <- create_barrier_mask(barrier = barrier)
 
@@ -429,10 +431,12 @@ habitat_connectivity_full <- function(
     barrier_mask = barrier_mask
   )
 
-  cli::cli_progress_step("Adding buffer of {distance}m to habitat layer")
+  cli::cli_progress_step(
+    "Adding buffer of {interpatch_distance}m to habitat layer"
+  )
   buffered_habitat <- habitat_buffer(
     habitat = remaining_habitat,
-    distance = distance
+    distance = interpatch_distance
   )
 
   cli::cli_progress_step("Fragmenting habitat layer along barrier intersection")

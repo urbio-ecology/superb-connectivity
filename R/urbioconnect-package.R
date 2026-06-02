@@ -9,6 +9,7 @@ globalVariables(
   c(
     "area",
     "distance",
+    "interpatch_distance",
     "effective_mesh_ha",
     "geometry",
     "patch_area_mean",

@@ -8,7 +8,7 @@ gg_barrier_habitat_buffer(
   barrier,
   buffered,
   habitat,
-  distance,
+  interpatch_distance,
   species,
   col_barrier,
   col_buffer,
@@ -23,7 +23,7 @@ gg_barrier_habitat_buffer(
 
 \item{habitat}{Terra SpatRaster. Original habitat layer.}
 
-\item{distance}{Numeric. Buffer distance in meters.}
+\item{interpatch_distance}{Numeric. Interpatch distance in meters.}
 
 \item{species}{Character. Species name for plot title.}
 
@@ -50,7 +50,7 @@ gg_bar_hab_buf <- gg_barrier_habitat_buffer(
   barrier = lizard_barrier,
   buffered = lizard_buffered,
   habitat = lizard_habitat,
-  distance = 10,
+  interpatch_distance = 10,
   species = "Blue Tongue Lizard",
   col_barrier = "black",
   col_buffer = "lightgreen",

@@ -8,7 +8,7 @@ plot_barrier_habitat_buffer(
   barrier,
   buffered,
   habitat,
-  distance,
+  interpatch_distance,
   species,
   col_barrier,
   col_buffer,
@@ -23,7 +23,7 @@ plot_barrier_habitat_buffer(
 
 \item{habitat}{habitat layer}
 
-\item{distance}{buffer distance, numeric}
+\item{interpatch_distance}{interpatch distance, numeric}
 
 \item{species}{character, species name, e.g., "Superb Fairy Wren"}
 
@@ -36,7 +36,8 @@ plot_barrier_habitat_buffer(
 \item{col_paper}{colour to colour the paper layer of ggplot}
 }
 \value{
-Named character vector. The file path, named by the buffer distance.
+Named character vector. The file path, named by the interpatch
+distance.
 }
 \description{
 Saved a plot created by \code{\link[=gg_barrier_habitat_buffer]{gg_barrier_habitat_buffer()}} to file.
@@ -45,13 +46,13 @@ Saved a plot created by \code{\link[=gg_barrier_habitat_buffer]{gg_barrier_habit
 \dontrun{
 lizard_habitat <- example_habitat()
 lizard_barrier <- example_barrier()
-buffered <- habitat_buffer(lizard_habitat, distance = 10)
+buffered <- habitat_buffer(lizard_habitat, interpatch_distance = 10)
 # Creates plot-barrier-buffer-habitat-*.png in the working directory
 plot_barrier_habitat_buffer(
   barrier = lizard_barrier,
   buffered = buffered,
   habitat = lizard_habitat,
-  distance = 10,
+  interpatch_distance = 10,
   species = "Blue-tongued Lizard",
   col_barrier = "white",
   col_buffer = "lightgreen",

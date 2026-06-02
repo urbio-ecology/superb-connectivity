@@ -16,7 +16,7 @@ An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) w
 }
 \source{
 Generated from \code{\link[=example_habitat]{example_habitat()}} and \code{\link[=example_barrier]{example_barrier()}} at
-50 metre buffer distance.
+50 metre interpatch distance.
 }
 \usage{
 lizard_areas_connected
@@ -25,8 +25,8 @@ lizard_areas_connected
 }
 \description{
 Pre-computed output of \code{\link[=habitat_connectivity]{habitat_connectivity()}} run on the lizard example
-data at a 50 metre buffer distance. Contains one row per connected habitat
-patch.
+data at a 50 metre interpatch distance. Contains one row per connected
+habitat patch.
 }
 \examples{
 # This was the code that was run to create this object. We don't run it
@@ -35,7 +35,7 @@ patch.
 lizard_areas_connected <- habitat_connectivity(
     habitat = example_habitat(),
     barrier = example_barrier(),
-    distance = 50,
+    interpatch_distance = 50,
     verbose = FALSE
   )
 }

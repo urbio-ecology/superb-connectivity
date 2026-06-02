@@ -36,7 +36,7 @@ remaining_habitat <- drop_habitat_under_barrier(
 # buffer by radius (metres)
 buffered_habitat <- habitat_buffer(
   habitat = remaining_habitat,
-  distance = 250
+  interpatch_distance = 250
 )
 
 # apply barriers to get the fragmentation
@@ -63,5 +63,5 @@ summarise_connectivity(
 areas_connected2 <- habitat_connectivity(
   habitat = habitat_raster,
   barrier = barrier_raster,
-  distance = 250
+  interpatch_distance = 250
 )

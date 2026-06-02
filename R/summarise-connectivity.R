@@ -7,7 +7,7 @@
 #'
 #' @param area Numeric vector. Areas of connected patches.
 #' @param area_baseline Numeric vector. Areas of connected patch baseline.
-#' @param distance Numeric. Buffer distance used in analysis (meters).
+#' @param interpatch_distance Numeric. Interpatch distance used in analysis (meters).
 #' @param target_resolution Numeric. Target resolution in meters.
 #' @param data_resolution Numeric. Data resolution in meters.
 #' @param aggregation_factor Numeric. Factor by which Data resolution was
@@ -20,7 +20,7 @@
 #' @examples
 #' summarise_connectivity(
 #'   area = lizard_areas_connected$area,
-#'   distance = 10,
+#'   interpatch_distance = 10,
 #'   target_resolution = 500,
 #'   data_resolution = 10,
 #'   aggregation_factor = 50,
@@ -30,7 +30,7 @@
 summarise_connectivity <- function(
   area,
   area_baseline = NULL,
-  distance,
+  interpatch_distance,
   target_resolution,
   data_resolution,
   aggregation_factor,
@@ -43,7 +43,7 @@ summarise_connectivity <- function(
   )
 
   extras <- tibble::tibble(
-    distance = distance,
+    interpatch_distance = interpatch_distance,
     species = species,
     patch_area_mean = mean_patch_size(area),
     patch_area_total_ha = total_habitat_area(area),
@@ -67,7 +67,7 @@ summarise_connectivity <- function(
     ) |>
     dplyr::relocate(
       species,
-      distance,
+      interpatch_distance,
       .before = everything()
     )
   full_results

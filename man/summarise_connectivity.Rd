@@ -7,7 +7,7 @@
 summarise_connectivity(
   area,
   area_baseline = NULL,
-  distance,
+  interpatch_distance,
   target_resolution,
   data_resolution,
   aggregation_factor,
@@ -19,7 +19,7 @@ summarise_connectivity(
 
 \item{area_baseline}{Numeric vector. Areas of connected patch baseline.}
 
-\item{distance}{Numeric. Buffer distance used in analysis (meters).}
+\item{interpatch_distance}{Numeric. Interpatch distance used in analysis (meters).}
 
 \item{target_resolution}{Numeric. Target resolution in meters.}
 
@@ -44,7 +44,7 @@ See examples below.
 \examples{
 summarise_connectivity(
   area = lizard_areas_connected$area,
-  distance = 10,
+  interpatch_distance = 10,
   target_resolution = 500,
   data_resolution = 10,
   aggregation_factor = 50,

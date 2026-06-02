@@ -8,10 +8,10 @@
 #'
 #' @param area_new Numeric vector. Area of a connected patch.
 #' @param area_baseline Numeric vector. Baseline area of a connected patch.
-#' @param distance buffered distance
+#' @param interpatch_distance Distance between patches
 #' @param species name of species
 #'
-#' @returns tibble with "scenario", "distance", "species",
+#' @returns tibble with "scenario", "interpatch_distance", "species",
 #'   "n_patches", "effective_mesh_ha", and "prob_connectedness".
 #' @export
 #'
@@ -22,13 +22,13 @@
 #' compare_connectivity(
 #'   area_new = new_areas,
 #'   area_baseline = baseline_areas,
-#'   distance = 10,
+#'   interpatch_distance = 10,
 #'   species = "blue-tongued lizard"
 #' )
 compare_connectivity <- function(
   area_new,
   area_baseline,
-  distance,
+  interpatch_distance,
   species
 ) {
   baseline <- connectivity_metrics(area = area_baseline)
@@ -44,7 +44,7 @@ compare_connectivity <- function(
     .id = "scenario"
   ) |>
     dplyr::mutate(
-      distance = distance,
+      interpatch_distance = interpatch_distance,
       species = species,
       .after = scenario
     )

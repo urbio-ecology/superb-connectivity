@@ -114,11 +114,11 @@ name it <code>_targets.R</code>:</p>
 <span></span>
 <span><span class="co">## Assign like regular R, just make sure to pipe into a tar_ operation</span></span>
 <span><span class="fu"><a href="https://docs.ropensci.org/tarchetypes/reference/tar_assign.html" class="external-link">tar_assign</a></span><span class="op">(</span><span class="op">{</span></span>
-<span>  <span class="va">species_name</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://docs.ropensci.org/targets/reference/tar_target.html" class="external-link">tar_target</a></span><span class="op">(</span><span class="st">"Blue-Tongued-Lizard"</span><span class="op">)</span></span>
+<span>  <span class="va">species</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://docs.ropensci.org/targets/reference/tar_target.html" class="external-link">tar_target</a></span><span class="op">(</span><span class="st">"Blue-Tongued-Lizard"</span><span class="op">)</span></span>
 <span>  <span class="va">target_resolution</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://docs.ropensci.org/targets/reference/tar_target.html" class="external-link">tar_target</a></span><span class="op">(</span><span class="fl">500</span><span class="op">)</span></span>
 <span>  <span class="va">data_resolution</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://docs.ropensci.org/targets/reference/tar_target.html" class="external-link">tar_target</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span></span>
 <span>  <span class="va">aggregation_factor</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://docs.ropensci.org/targets/reference/tar_target.html" class="external-link">tar_target</a></span><span class="op">(</span><span class="va">target_resolution</span> <span class="op">/</span> <span class="va">data_resolution</span><span class="op">)</span></span>
-<span>  <span class="va">buffer_distance</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://docs.ropensci.org/targets/reference/tar_target.html" class="external-link">tar_target</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span></span>
+<span>  <span class="va">distance</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://docs.ropensci.org/targets/reference/tar_target.html" class="external-link">tar_target</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span></span>
 <span>  </span>
 <span>  <span class="va">barrier</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/example-lizard-data.html">example_barrier</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu">tar_terra_rast</span><span class="op">(</span><span class="op">)</span></span>
 <span>  <span class="va">habitat</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/example-lizard-data.html">example_habitat</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu">tar_terra_rast</span><span class="op">(</span><span class="op">)</span></span>
@@ -126,7 +126,7 @@ name it <code>_targets.R</code>:</p>
 <span>  <span class="va">barrier_mask</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_barrier_mask.html">create_barrier_mask</a></span><span class="op">(</span><span class="va">barrier</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu">tar_terra_rast</span><span class="op">(</span><span class="op">)</span></span>
 <span>  <span class="va">remaining</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/drop_habitat_under_barrier.html">drop_habitat_under_barrier</a></span><span class="op">(</span><span class="va">habitat</span>, <span class="va">barrier_mask</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>    <span class="fu">tar_terra_rast</span><span class="op">(</span><span class="op">)</span></span>
-<span>  <span class="va">buffered_habitat</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/habitat_buffer.html">habitat_buffer</a></span><span class="op">(</span><span class="va">remaining</span>, distance <span class="op">=</span> <span class="va">buffer_distance</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="va">buffered_habitat</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/habitat_buffer.html">habitat_buffer</a></span><span class="op">(</span><span class="va">remaining</span>, distance <span class="op">=</span> <span class="va">distance</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>    <span class="fu">tar_terra_rast</span><span class="op">(</span><span class="op">)</span></span>
 <span>  <span class="va">fragmentation_raster</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fragment_habitat.html">fragment_habitat</a></span><span class="op">(</span><span class="va">buffered_habitat</span>, <span class="va">barrier_mask</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>    <span class="fu">tar_terra_rast</span><span class="op">(</span><span class="op">)</span></span>
@@ -143,17 +143,17 @@ name it <code>_targets.R</code>:</p>
 <span>  <span class="va">areas_connected</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/habitat_connectivity.html">habitat_connectivity</a></span><span class="op">(</span></span>
 <span>    habitat <span class="op">=</span> <span class="va">habitat</span>,</span>
 <span>    barrier <span class="op">=</span> <span class="va">barrier</span>,</span>
-<span>    distance <span class="op">=</span> <span class="va">buffer_distance</span></span>
+<span>    distance <span class="op">=</span> <span class="va">distance</span></span>
 <span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>    <span class="fu"><a href="https://docs.ropensci.org/targets/reference/tar_target.html" class="external-link">tar_target</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span>  <span class="va">results_connect_habitat</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/summarise_connectivity.html">summarise_connectivity</a></span><span class="op">(</span></span>
 <span>    area <span class="op">=</span> <span class="va">areas_connected</span><span class="op">$</span><span class="va">area</span>,</span>
-<span>    buffer_distance <span class="op">=</span> <span class="va">buffer_distance</span>,</span>
+<span>    distance <span class="op">=</span> <span class="va">distance</span>,</span>
 <span>    target_resolution <span class="op">=</span> <span class="va">target_resolution</span>,</span>
 <span>    data_resolution <span class="op">=</span> <span class="va">data_resolution</span>,</span>
 <span>    aggregation_factor <span class="op">=</span> <span class="va">aggregation_factor</span>,</span>
-<span>    species_name <span class="op">=</span> <span class="va">species_name</span></span>
+<span>    species <span class="op">=</span> <span class="va">species</span></span>
 <span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>    <span class="fu"><a href="https://docs.ropensci.org/targets/reference/tar_target.html" class="external-link">tar_target</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span></code></pre></div>
@@ -169,14 +169,14 @@ it marks it as something that is part of a targets pipeline.</p>
 <p>We specify that each of these things below are to be watched with
 targets with <code><a href="https://docs.ropensci.org/targets/reference/tar_target.html" class="external-link">tar_target()</a></code>:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span>  <span class="va">species_name</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://docs.ropensci.org/targets/reference/tar_target.html" class="external-link">tar_target</a></span><span class="op">(</span><span class="st">"Blue-Tongued-Lizard"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span>  <span class="va">species</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://docs.ropensci.org/targets/reference/tar_target.html" class="external-link">tar_target</a></span><span class="op">(</span><span class="st">"Blue-Tongued-Lizard"</span><span class="op">)</span></span>
 <span>  <span class="va">target_resolution</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://docs.ropensci.org/targets/reference/tar_target.html" class="external-link">tar_target</a></span><span class="op">(</span><span class="fl">500</span><span class="op">)</span></span>
 <span>  <span class="va">data_resolution</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://docs.ropensci.org/targets/reference/tar_target.html" class="external-link">tar_target</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span></span>
 <span>  <span class="va">aggregation_factor</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://docs.ropensci.org/targets/reference/tar_target.html" class="external-link">tar_target</a></span><span class="op">(</span><span class="va">target_resolution</span> <span class="op">/</span> <span class="va">data_resolution</span><span class="op">)</span></span>
-<span>  <span class="va">buffer_distance</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://docs.ropensci.org/targets/reference/tar_target.html" class="external-link">tar_target</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="va">distance</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://docs.ropensci.org/targets/reference/tar_target.html" class="external-link">tar_target</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span></span></code></pre></div>
 <p>This means if any of these variables are changed, say
-<code>buffer_distance</code> changes from 10 and 20, then anything using
-<code>buffer_distance</code> would need to get rerun.</p>
+<code>distance</code> changes from 10 and 20, then anything using
+<code>distance</code> would need to get rerun.</p>
 <p>These parts here:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/example-lizard-data.html">example_habitat</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu">tar_terra_rast</span><span class="op">(</span><span class="op">)</span></span>

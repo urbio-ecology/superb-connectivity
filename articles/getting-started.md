@@ -168,11 +168,11 @@ small example dataset.
 
 ``` r
 
-buffer_distance <- 10
+distance <- 10
 
 buffered_habitat <- habitat_buffer(
   habitat = remaining_habitat,
-  distance = buffer_distance
+  distance = distance
 )
 
 plot(barrier_mask, col = scales::alpha("grey", 1), legend = FALSE)
@@ -191,8 +191,8 @@ gg_barrier_habitat_buffer(
   barrier = barrier,
   buffered = buffered_habitat,
   habitat = remaining_habitat,
-  distance = buffer_distance,
-  species_name = "Blue-tongued Lizard",
+  distance = distance,
+  species = "Blue-tongued Lizard",
   col_barrier = "grey30",
   col_buffer = "lightgreen",
   col_habitat = "#1b9e77",
@@ -272,8 +272,8 @@ colour using
 
 plot_patches(
   patch_id = patch_id_raster,
-  distance = buffer_distance,
-  species_name = "Blue-tongued Lizard"
+  distance = distance,
+  species = "Blue-tongued Lizard"
 )
 #> <SpatRaster> resampled to 500554 cells.
 ```
@@ -322,18 +322,18 @@ connectivity metrics:
 
 results <- summarise_connectivity(
   area = areas_connected$area,
-  buffer_distance = buffer_distance,
+  distance = distance,
   target_resolution = 500,
   data_resolution = 10,
   aggregation_factor = 50,
-  species_name = "Blue-tongued Lizard"
+  species = "Blue-tongued Lizard"
 )
 
 results
 #> # A tibble: 1 × 10
-#>   species_name    buffer_distance n_patches effective_mesh_ha prob_connectedness
-#>   <chr>                     <dbl>     <int>             <dbl>              <dbl>
-#> 1 Blue-tongued L…              10       163                 4           0.000017
+#>   species             distance n_patches effective_mesh_ha prob_connectedness
+#>   <chr>                  <dbl>     <int>             <dbl>              <dbl>
+#> 1 Blue-tongued Lizard       10       163                 4           0.000017
 #> # ℹ 5 more variables: patch_area_mean <dbl>, patch_area_total_ha <dbl>,
 #> #   target_resolution <dbl>, data_resolution <dbl>, aggregation_factor <dbl>
 ```
@@ -376,22 +376,22 @@ areas_connected <- habitat_connectivity(
   verbose = TRUE
 )
 #> ℹ Creating barrier mask
-#> ✔ Creating barrier mask [36ms]
+#> ✔ Creating barrier mask [32ms]
 #> 
 #> ℹ Removing habitat underneath barrier
-#> ✔ Removing habitat underneath barrier [36ms]
+#> ✔ Removing habitat underneath barrier [24ms]
 #> 
 #> ℹ Adding buffer of 10m to habitat layer
-#> ✔ Adding buffer of 10m to habitat layer [589ms]
+#> ✔ Adding buffer of 10m to habitat layer [582ms]
 #> 
 #> ℹ Fragmenting habitat layer along barrier intersection
-#> ✔ Fragmenting habitat layer along barrier intersection [22ms]
+#> ✔ Fragmenting habitat layer along barrier intersection [20ms]
 #> 
 #> ℹ Assigning patches ID to fragments
 #> ✔ Assigning patches ID to fragments [1.1s]
 #> 
 #> ℹ Summarising area in each patch
-#> ✔ Summarising area in each patch [47ms]
+#> ✔ Summarising area in each patch [43ms]
 #> 
 ```
 
@@ -448,10 +448,10 @@ to combine:
 
 ``` r
 
-buffer_distances <- c(10, 25, 50)
+distances <- c(10, 25, 50)
 
 all_results <- purrr::map(
-  buffer_distances,
+  distances,
   function(d) {
     areas <- habitat_connectivity(
       habitat = habitat,
@@ -461,11 +461,11 @@ all_results <- purrr::map(
     )
     summarise_connectivity(
       area = areas$area,
-      buffer_distance = d,
+      distance = d,
       target_resolution = 500,
       data_resolution = 10,
       aggregation_factor = 50,
-      species_name = "Blue-tongued Lizard"
+      species = "Blue-tongued Lizard"
     )
   }
 ) |>
@@ -473,11 +473,11 @@ all_results <- purrr::map(
 
 all_results
 #> # A tibble: 3 × 10
-#>   species_name    buffer_distance n_patches effective_mesh_ha prob_connectedness
-#>   <chr>                     <dbl>     <int>             <dbl>              <dbl>
-#> 1 Blue-tongued L…              10       163                 4           0.000017
-#> 2 Blue-tongued L…              25        73                 4           0.000017
-#> 3 Blue-tongued L…              50        59                 4           0.000017
+#>   species             distance n_patches effective_mesh_ha prob_connectedness
+#>   <chr>                  <dbl>     <int>             <dbl>              <dbl>
+#> 1 Blue-tongued Lizard       10       163                 4           0.000017
+#> 2 Blue-tongued Lizard       25        73                 4           0.000017
+#> 3 Blue-tongued Lizard       50        59                 4           0.000017
 #> # ℹ 5 more variables: patch_area_mean <dbl>, patch_area_total_ha <dbl>,
 #> #   target_resolution <dbl>, data_resolution <dbl>, aggregation_factor <dbl>
 ```

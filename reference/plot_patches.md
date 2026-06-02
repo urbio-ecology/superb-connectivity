@@ -5,7 +5,7 @@ Visualizes habitat patches colored by their connected fragment ID.
 ## Usage
 
 ``` r
-plot_patches(patch_id, distance, species_name = "Species", n_cols = 7)
+plot_patches(patch_id, distance, species = "Species", n_cols = 7)
 ```
 
 ## Arguments
@@ -18,7 +18,7 @@ plot_patches(patch_id, distance, species_name = "Species", n_cols = 7)
 
   Numeric. Buffer distance used (for subtitle).
 
-- species_name:
+- species:
 
   Character. Species name (default: "Species").
 

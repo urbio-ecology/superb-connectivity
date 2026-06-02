@@ -148,14 +148,14 @@ Summarise the connectivity metrics:
 
 summarise_connectivity(
   area = areas$area,
-  buffer_distance  = 100,
+  distance  = 100,
   target_resolution = 500,
   data_resolution = 10,
   aggregation_factor = 50,
-  species_name = "Blue-tongued Lizard"
+  species = "Blue-tongued Lizard"
 )
 #> # A tibble: 1 × 10
-#>   species_name    buffer_distance n_patches effective_mesh_ha prob_connectedness
+#>   species    distance n_patches effective_mesh_ha prob_connectedness
 #>   <chr>                     <dbl>     <int>             <dbl>              <dbl>
 #> 1 Blue-tongued L…             100       163                 4           0.000017
 #> # ℹ 5 more variables: patch_area_mean <dbl>, patch_area_total_ha <dbl>,
@@ -191,6 +191,27 @@ Kneebone, and Nicholas Golding for their comments and insight during the
 development of the methods and software.
 
 # Package index
+
+## Main functions
+
+- [`habitat_connectivity()`](https://urbio-ecology.github.io/urbioconnect/reference/habitat_connectivity.md)
+  : Calculate habitat connectivity using terra
+- [`summarise_connectivity()`](https://urbio-ecology.github.io/urbioconnect/reference/summarise_connectivity.md)
+  : Summarise connectivity metrics
+- [`compare_connectivity()`](https://urbio-ecology.github.io/urbioconnect/reference/compare_connectivity.md)
+  : Compare measurements the connectivity of different scenarios
+- [`effective_mesh_size()`](https://urbio-ecology.github.io/urbioconnect/reference/effective_mesh_size.md)
+  : Calculate effective mesh size
+- [`connectivity_probability()`](https://urbio-ecology.github.io/urbioconnect/reference/connectivity_probability.md)
+  : Calculate connectivity probability
+- [`mean_patch_size()`](https://urbio-ecology.github.io/urbioconnect/reference/mean_patch_size.md)
+  : Calculate mean patch size
+- [`n_patches()`](https://urbio-ecology.github.io/urbioconnect/reference/n_patches.md)
+  : Count number of habitat patches
+- [`total_habitat_area()`](https://urbio-ecology.github.io/urbioconnect/reference/total_habitat_area.md)
+  : Calculate total habitat area
+- [`habitat_connectivity_full()`](https://urbio-ecology.github.io/urbioconnect/reference/habitat_connectivity_full.md)
+  : Calculate habitat connectivity with visualization data
 
 ## Raster functions
 
@@ -240,25 +261,6 @@ development of the methods and software.
   : Plot connectivity metrics across buffer distances
 - [`plot_patches()`](https://urbio-ecology.github.io/urbioconnect/reference/plot_patches.md)
   : Plot connected habitat patches
-
-## Summaries
-
-- [`effective_mesh_size()`](https://urbio-ecology.github.io/urbioconnect/reference/effective_mesh_size.md)
-  : Calculate effective mesh size
-- [`connectivity_probability()`](https://urbio-ecology.github.io/urbioconnect/reference/connectivity_probability.md)
-  : Calculate connectivity probability
-- [`mean_patch_size()`](https://urbio-ecology.github.io/urbioconnect/reference/mean_patch_size.md)
-  : Calculate mean patch size
-- [`n_patches()`](https://urbio-ecology.github.io/urbioconnect/reference/n_patches.md)
-  : Count number of habitat patches
-- [`summarise_connectivity()`](https://urbio-ecology.github.io/urbioconnect/reference/summarise_connectivity.md)
-  : Summarise connectivity metrics
-- [`total_habitat_area()`](https://urbio-ecology.github.io/urbioconnect/reference/total_habitat_area.md)
-  : Calculate total habitat area
-- [`habitat_connectivity()`](https://urbio-ecology.github.io/urbioconnect/reference/habitat_connectivity.md)
-  : Calculate habitat connectivity using terra
-- [`habitat_connectivity_full()`](https://urbio-ecology.github.io/urbioconnect/reference/habitat_connectivity_full.md)
-  : Calculate habitat connectivity with visualization data
 
 ## Data sources
 

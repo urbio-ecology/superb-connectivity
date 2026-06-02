@@ -11,12 +11,12 @@ See examples below.
 ``` r
 summarise_connectivity(
   area,
-  area_baseline = area,
-  buffer_distance,
+  area_baseline = NULL,
+  distance,
   target_resolution,
   data_resolution,
   aggregation_factor,
-  species_name
+  species
 )
 ```
 
@@ -30,7 +30,7 @@ summarise_connectivity(
 
   Numeric vector. Areas of connected patch baseline.
 
-- buffer_distance:
+- distance:
 
   Numeric. Buffer distance used in analysis (meters).
 
@@ -46,7 +46,7 @@ summarise_connectivity(
 
   Numeric. Factor by which Data resolution was aggregated.
 
-- species_name:
+- species:
 
   Character. Name of species analysed.
 
@@ -61,16 +61,16 @@ areas.
 ``` r
 summarise_connectivity(
   area = lizard_areas_connected$area,
-  buffer_distance = 10,
+  distance = 10,
   target_resolution = 500,
   data_resolution = 10,
   aggregation_factor = 50,
-  species_name = "Blue-tongued Lizard"
+  species = "Blue-tongued Lizard"
 )
 #> # A tibble: 1 × 10
-#>   species_name    buffer_distance n_patches effective_mesh_ha prob_connectedness
-#>   <chr>                     <dbl>     <int>             <dbl>              <dbl>
-#> 1 Blue-tongued L…              10        59                 4           0.000017
+#>   species             distance n_patches effective_mesh_ha prob_connectedness
+#>   <chr>                  <dbl>     <int>             <dbl>              <dbl>
+#> 1 Blue-tongued Lizard       10        59                 4           0.000017
 #> # ℹ 5 more variables: patch_area_mean <dbl>, patch_area_total_ha <dbl>,
 #> #   target_resolution <dbl>, data_resolution <dbl>, aggregation_factor <dbl>
 ```

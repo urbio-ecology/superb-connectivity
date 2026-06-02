@@ -55,11 +55,11 @@ tar_source()
 
 ## Assign like regular R, just make sure to pipe into a tar_ operation
 tar_assign({
-  species_name <- tar_target("Blue-Tongued-Lizard")
+  species <- tar_target("Blue-Tongued-Lizard")
   target_resolution <- tar_target(500)
   data_resolution <- tar_target(10)
   aggregation_factor <- tar_target(target_resolution / data_resolution)
-  buffer_distance <- tar_target(10)
+  distance <- tar_target(10)
   
   barrier <- example_barrier() |> tar_terra_rast()
   habitat <- example_habitat() |> tar_terra_rast()
@@ -67,7 +67,7 @@ tar_assign({
   barrier_mask <- create_barrier_mask(barrier) |> tar_terra_rast()
   remaining <- drop_habitat_under_barrier(habitat, barrier_mask) |>
     tar_terra_rast()
-  buffered_habitat <- habitat_buffer(remaining, distance = buffer_distance) |>
+  buffered_habitat <- habitat_buffer(remaining, distance = distance) |>
     tar_terra_rast()
   fragmentation_raster <- fragment_habitat(buffered_habitat, barrier_mask) |>
     tar_terra_rast()
@@ -84,17 +84,17 @@ tar_assign({
   areas_connected <- habitat_connectivity(
     habitat = habitat,
     barrier = barrier,
-    distance = buffer_distance
+    distance = distance
   ) |>
     tar_target()
 
   results_connect_habitat <- summarise_connectivity(
     area = areas_connected$area,
-    buffer_distance = buffer_distance,
+    distance = distance,
     target_resolution = target_resolution,
     data_resolution = data_resolution,
     aggregation_factor = aggregation_factor,
-    species_name = species_name
+    species = species
   ) |>
     tar_target()
 })
@@ -119,16 +119,15 @@ targets with
 
 ``` r
 
-  species_name <- tar_target("Blue-Tongued-Lizard")
+  species <- tar_target("Blue-Tongued-Lizard")
   target_resolution <- tar_target(500)
   data_resolution <- tar_target(10)
   aggregation_factor <- tar_target(target_resolution / data_resolution)
-  buffer_distance <- tar_target(10)
+  distance <- tar_target(10)
 ```
 
-This means if any of these variables are changed, say `buffer_distance`
-changes from 10 and 20, then anything using `buffer_distance` would need
-to get rerun.
+This means if any of these variables are changed, say `distance` changes
+from 10 and 20, then anything using `distance` would need to get rerun.
 
 These parts here:
 

@@ -114,7 +114,7 @@ raster_result <- habitat_connectivity(
   verbose = FALSE
 )
 rast_time <- toc()
-#> 2.109 sec elapsed
+#> 2.063 sec elapsed
 
 raster_result
 #> # A tibble: 163 × 3
@@ -147,7 +147,7 @@ vector_result <- sf_habitat_connectivity(
   distance = buffer_dist
 )
 vect_time <- toc()
-#> 13.947 sec elapsed
+#> 13.316 sec elapsed
 
 vector_result
 #> # A tibble: 136 × 3
@@ -188,10 +188,10 @@ exact polygon geometry, so it typically produces slightly different (and
 arguably more precise) patch boundaries, particularly along curved or
 irregular barrier edges.
 
-    #> [1] 2.109
+    #> [1] 2.063
 
 Timings for the methods are also important to consider. The raster
-approach took 2.109 seconds, and the vector approach took 13.947
+approach took 2.063 seconds, and the vector approach took 13.316
 seconds.
 
 ## Summarising connectivity metrics
@@ -205,16 +205,16 @@ area columns as vectors.
 # Raster approach output uses the `area` column
 summarise_connectivity(
   area = raster_result$area,
-  buffer_distance = buffer_dist,
+  distance = buffer_dist,
   target_resolution = 500,
   data_resolution = 10,
   aggregation_factor = 50,
-  species_name = "Blue-tongued Lizard (raster)"
+  species = "Blue-tongued Lizard (raster)"
 )
 #> # A tibble: 1 × 10
-#>   species_name    buffer_distance n_patches effective_mesh_ha prob_connectedness
+#>   species                distance n_patches effective_mesh_ha prob_connectedness
 #>   <chr>                     <dbl>     <int>             <dbl>              <dbl>
-#> 1 Blue-tongued L…              10       163                 4           0.000017
+#> 1 Blue-tongued Lizard (…       10       163                 4           0.000017
 #> # ℹ 5 more variables: patch_area_mean <dbl>, patch_area_total_ha <dbl>,
 #> #   target_resolution <dbl>, data_resolution <dbl>, aggregation_factor <dbl>
 ```
@@ -225,16 +225,16 @@ summarise_connectivity(
 # Strip units before passing to summarise_connectivity
 summarise_connectivity(
   area = vector_result$area,
-  buffer_distance = buffer_dist,
+  distance = buffer_dist,
   target_resolution = NA,
   data_resolution = NA,
   aggregation_factor = NA,
-  species_name = "Blue-tongued Lizard (vector)"
+  species = "Blue-tongued Lizard (vector)"
 ) 
 #> # A tibble: 1 × 10
-#>   species_name    buffer_distance n_patches effective_mesh_ha prob_connectedness
+#>   species                distance n_patches effective_mesh_ha prob_connectedness
 #>   <chr>                     <dbl>     <int>             <dbl>              <dbl>
-#> 1 Blue-tongued L…              10       136                 4           0.000017
+#> 1 Blue-tongued Lizard (…       10       136                 4           0.000017
 #> # ℹ 5 more variables: patch_area_mean <dbl>, patch_area_total_ha <dbl>,
 #> #   target_resolution <lgl>, data_resolution <lgl>, aggregation_factor <lgl>
 ```

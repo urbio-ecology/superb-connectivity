@@ -12,7 +12,7 @@ plot_barrier_habitat_buffer(
   buffered,
   habitat,
   distance,
-  species_name,
+  species,
   col_barrier,
   col_buffer,
   col_habitat,
@@ -38,7 +38,7 @@ plot_barrier_habitat_buffer(
 
   buffer distance, numeric
 
-- species_name:
+- species:
 
   character, species name, e.g., "Superb Fairy Wren"
 
@@ -75,7 +75,7 @@ plot_barrier_habitat_buffer(
   buffered = buffered,
   habitat = lizard_habitat,
   distance = 10,
-  species_name = "Blue-tongued Lizard",
+  species = "Blue-tongued Lizard",
   col_barrier = "white",
   col_buffer = "lightgreen",
   col_habitat = "seagreen",

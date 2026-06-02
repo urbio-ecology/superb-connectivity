@@ -170,14 +170,14 @@
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/summarise_connectivity.html">summarise_connectivity</a></span><span class="op">(</span></span>
 <span>  area <span class="op">=</span> <span class="va">areas</span><span class="op">$</span><span class="va">area</span>,</span>
-<span>  buffer_distance  <span class="op">=</span> <span class="fl">100</span>,</span>
+<span>  distance  <span class="op">=</span> <span class="fl">100</span>,</span>
 <span>  target_resolution <span class="op">=</span> <span class="fl">500</span>,</span>
 <span>  data_resolution <span class="op">=</span> <span class="fl">10</span>,</span>
 <span>  aggregation_factor <span class="op">=</span> <span class="fl">50</span>,</span>
-<span>  species_name <span class="op">=</span> <span class="st">"Blue-tongued Lizard"</span></span>
+<span>  species <span class="op">=</span> <span class="st">"Blue-tongued Lizard"</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; # A tibble: 1 × 10</span></span>
-<span><span class="co">#&gt;   species_name    buffer_distance n_patches effective_mesh_ha prob_connectedness</span></span>
+<span><span class="co">#&gt;   species    distance n_patches effective_mesh_ha prob_connectedness</span></span>
 <span><span class="co">#&gt;   &lt;chr&gt;                     &lt;dbl&gt;     &lt;int&gt;             &lt;dbl&gt;              &lt;dbl&gt;</span></span>
 <span><span class="co">#&gt; 1 Blue-tongued L…             100       163                 4           0.000017</span></span>
 <span><span class="co">#&gt; # ℹ 5 more variables: patch_area_mean &lt;dbl&gt;, patch_area_total_ha &lt;dbl&gt;,</span></span>

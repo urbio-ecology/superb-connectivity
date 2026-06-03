@@ -19,7 +19,7 @@ test_that("sf_habitat_buffer expands area", {
 test_that("sf_habitat_buffer with large interpatch_distance unions separate patches", {
   habitat <- sf::st_sfc(square(0, 0), square(1000, 0), crs = 32754)
 
-  # Buffer of 600m spans the 1000m gap between patches
+  # Interpatch distance of 600m spans the 1000m gap between patches
   buffered <- sf_habitat_buffer(habitat, interpatch_distance = 600)
 
   expect_equal(length(buffered), 1)
@@ -28,7 +28,7 @@ test_that("sf_habitat_buffer with large interpatch_distance unions separate patc
 test_that("sf_habitat_buffer with small interpatch_distance keeps patches separate", {
   habitat <- sf::st_sfc(square(0, 0), square(1000, 0), crs = 32754)
 
-  # Buffer of 50m does not span the 1000m gap
+  # Interpatch distance of 50m does not span the 1000m gap
   buffered <- sf_habitat_buffer(habitat, interpatch_distance = 50)
 
   # Should be a multipolygon (still two separate blobs)

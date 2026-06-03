@@ -67,7 +67,7 @@ test_that("drop_habitat_under_barrier removes habitat cells covered by barriers"
   expect_true(all(vals[-centre_cell_idx] == 1, na.rm = TRUE))
 })
 
-test_that("fragment_habitat cuts buffer at barrier cells", {
+test_that("fragment_habitat cuts interpatch distance at barrier cells", {
   buffered <- small_rast(val = 1)
 
   # Vertical barrier through centre column (col 3 of 5)

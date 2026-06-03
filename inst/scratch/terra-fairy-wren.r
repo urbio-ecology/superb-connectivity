@@ -33,7 +33,7 @@ remaining_habitat <- drop_habitat_under_barrier(
   barrier_mask = barrier_mask
 )
 
-# buffer by radius (metres)
+# interpatch distance by radius (metres)
 buffered_habitat <- habitat_buffer(
   habitat = remaining_habitat,
   interpatch_distance = 250

@@ -101,14 +101,14 @@ ui <- page_navbar(
           ),
 
           textInput(
-            inputId = "buffer_distances",
-            label = "Buffer Distances (m)",
+            inputId = "interpatch_distances",
+            label = "Interpatch Distances (m)",
             value = "100",
             placeholder = "e.g., 50, 100, 200"
           ),
 
           helpText(
-            "Enter buffer distances as comma-separated values.",
+            "Enter interpatch distances as comma-separated values.",
             "These represent the maximum dispersal distances to analyze."
           )
         )
@@ -192,7 +192,7 @@ ui <- page_navbar(
             layout_columns(
               col_widths = c(6, 6),
               div(
-                strong("Buffer Distances: "),
+                strong("Interpatch Distances: "),
                 textOutput("analysis_buffers", inline = TRUE)
               ),
               div(
@@ -226,11 +226,13 @@ ui <- page_navbar(
         )
       ),
 
-      # Area and patch information for each buffer
+      # Area and patch information for each interpatch distance
       layout_columns(
         col_widths = 12,
         card(
-          card_header("Area and patch information for each buffer"),
+          card_header(
+            "Area and patch information for each interpatch distance"
+          ),
           card_body(
             DTOutput("summary_table")
           ),
@@ -244,12 +246,12 @@ ui <- page_navbar(
         )
       ),
 
-      # Prob connectedness and summary information for each buffer
+      # Prob connectedness and summary information for each interpatch distance
       layout_columns(
         col_widths = 12,
         card(
           card_header(
-            "Prob connectedness and summary information for each buffer"
+            "Prob connectedness and summary information for each interpatch distance"
           ),
           card_body(
             DTOutput("results_connect_habitat_table")
@@ -264,12 +266,13 @@ ui <- page_navbar(
         )
       ),
 
-      # Longer: Prob connectedness and summary information for each buffer
+      # Longer: Prob connectedness and summary information for each interpatch
+      # distance
       layout_columns(
         col_widths = 12,
         card(
           card_header(
-            "Longer: Prob connectedness and summary information for each buffer"
+            "Longer: Prob connectedness and summary information for each interpatch distance"
           ),
           card_body(
             DTOutput("results_connect_habitat_longer_table")
@@ -342,14 +345,14 @@ ui <- page_navbar(
             "This application analyzes habitat connectivity for urban \\
             biodiversity.",
             "It calculates how habitat patches are connected across different \\
-            buffer distances,",
+            interpatch distances,",
             "accounting for barriers like roads and urban infrastructure."
           ),
           hr(),
           h4("How It Works"),
           tags$ol(
             tags$li("Upload habitat and barrier raster data"),
-            tags$li("Specify species name and buffer distances"),
+            tags$li("Specify species name and interpatch distances"),
             tags$li("Run the analysis to calculate connectivity metrics"),
             tags$li(
               "View results including patch ID and connectivity statistics"

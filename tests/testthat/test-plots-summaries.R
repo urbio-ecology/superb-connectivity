@@ -69,8 +69,8 @@ test_that("show_tabs outputs markdown headers and calls print", {
     "200m" = ggplot2::ggplot()
   )
   expect_output(
-    show_tabs(plots, message = "Buffer"),
-    "## Buffer 100m"
+    show_tabs(plots, message = "Interpatch distance"),
+    "## Interpatch distance 100m"
   )
 })
 
@@ -84,15 +84,15 @@ test_that("show_image_tabs outputs markdown headers", {
   images <- c("100m" = tmp)
   suppressWarnings(
     expect_output(
-      show_image_tabs(images, message = "Buffer"),
-      "## Buffer 100m"
+      show_image_tabs(images, message = "Interpatch Distance"),
+      "## Interpatch Distance 100m"
     )
   )
 })
 
-# gg_barrier_habitat_buffer ---------------------------------------------
+# gg_barrier_habitat_interpatch_dist ---------------------------------------------
 
-gg_buffer_plot <- gg_barrier_habitat_buffer(
+gg_buffer_plot <- gg_barrier_habitat_interpatch_dist(
   barrier = lizard_barrier,
   buffered = buffered,
   habitat = lizard_habitat,
@@ -104,13 +104,13 @@ gg_buffer_plot <- gg_barrier_habitat_buffer(
   col_paper = "grey50"
 )
 
-test_that("gg_barrier_habitat_buffer returns a ggplot", {
+test_that("gg_barrier_habitat_interpatch_dist returns a ggplot", {
   expect_s3_class(gg_buffer_plot, "ggplot")
 })
 
-test_that("gg_barrier_habitat_buffer renders correctly", {
+test_that("gg_barrier_habitat_interpatch_dist renders correctly", {
   skip_on_ci()
-  vdiffr::expect_doppelganger("gg-barrier-habitat-buffer", gg_buffer_plot)
+  vdiffr::expect_doppelganger("gg-barrier-habitat-interpatch", gg_buffer_plot)
 })
 
 # plot_patches ----------------------------------------------------------

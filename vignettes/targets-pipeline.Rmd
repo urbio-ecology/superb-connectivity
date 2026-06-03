@@ -28,11 +28,11 @@ In an ideal world you would only need to run code that has changed, or has had i
 
 The [targets](https://docs.ropensci.org/targets/) package addresses this issue by only running code that has been changed. You can think of this as a kind of **intelligent caching**: it tracks every input and output in your pipeline and only re-runs the steps whose inputs have changed. If you add a new interpatch
 distance, targets re-runs only the connectivity step for that distance — not
-the data preparation or the other buffer distances.
+the data preparation or the other interpatch distances.
 
 `urbioconnect` is works well in a targets pipeline, and this vignette unpacks an example pipeline, describing how it works.
 
-We first discuss a minimal pipeline, before going on to add multiple buffer distances, and then finally demonstrate how to take advantage of parallel processing.
+We first discuss a minimal pipeline, before going on to add multiple interpatch distances, and then finally demonstrate how to take advantage of parallel processing.
 
 ## A minimal `_targets.R`
 
@@ -206,6 +206,7 @@ That repository demonstrates:
 
 - Loading real habitat and barrier shapefiles and converting them with
   `prepare_rasters()`
-- Saving habitat buffer plots to files with `plot_barrier_habitat_buffer()`
+- Saving habitat interpatch distance plots to files with 
+  `plot_barrier_habitat_interpatch_dist()`
 - Rendering a quarto report as a targets artefact
 - Using `geotargets` to store terra rasters natively in the targets cache

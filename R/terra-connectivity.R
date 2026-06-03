@@ -358,7 +358,7 @@ habitat_connectivity <- function(
   )
 
   cli::cli_progress_step(
-    "Adding buffer of {interpatch_distance}m to habitat layer"
+    "Interpatch dist: Adding buffer of {interpatch_distance}m to habitat layer"
   )
   buffered_habitat <- habitat_buffer(
     habitat = remaining_habitat,

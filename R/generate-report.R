@@ -3,8 +3,8 @@
 #' Creates a parameterised Quarto report from connectivity analysis results.
 #'
 #' @param species_name Character. Name of the species being analysed.
-#' @param interpatch_distances Numeric vector. Buffer distances used in analysis
-#' (in meters).
+#' @param interpatch_distances Numeric vector. The interpatch distances used in
+#'   analysis (in meters).
 #' @param results_connect_habitat Data frame. Connectivity summary results.
 #' @param areas_connected List of data frames. Connected patch areas for e
 #'   ach buffer distance.

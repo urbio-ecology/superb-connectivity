@@ -2,7 +2,7 @@
 % Please edit documentation in R/plots-summaries.R
 \name{plot_connectivity}
 \alias{plot_connectivity}
-\title{Plot connectivity metrics across buffer distances}
+\title{Plot connectivity metrics across interpatch distances}
 \usage{
 plot_connectivity(results_connect_habitat)
 }
@@ -15,8 +15,8 @@ A ggplot2 object with faceted plots of connectivity metrics.
 }
 \description{
 Creates faceted line plots showing how connectivity metrics change with
-different buffer distances. This works best when you have multiple buffer
-distances, otherwise it will just be a plot with one point.
+different interpatch distances. This works best when you have multiple
+interpatch distances, otherwise it will just be a plot with one point.
 }
 \examples{
 lizard_habitat <- example_habitat()

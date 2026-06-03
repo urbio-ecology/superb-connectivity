@@ -63,7 +63,7 @@ server <- function(input, output, session) {
     analysis_time = NULL
   )
 
-  # Parse buffer distances ----
+  # Parse interpatch distances ----
   buffer_distances_parsed <- reactive({
     req(input$buffer_distances)
     distances_text <- input$buffer_distances
@@ -75,7 +75,7 @@ server <- function(input, output, session) {
         length(distances) > 0,
         "Please enter at least one valid interpatch distance"
       ),
-      need(all(distances > 0), "Buffer distances must be positive numbers")
+      need(all(distances > 0), "Unterpatch distances must be positive numbers")
     )
 
     distances
@@ -218,7 +218,11 @@ server <- function(input, output, session) {
             .f = function(distance) {
               incProgress(
                 0.1 / length(buffer_dists),
-                message = paste("Processing buffer:", distance, "m")
+                message = paste(
+                  "Processing interpatch distance:",
+                  distance,
+                  "m"
+                )
               )
               habitat_connectivity_full(
                 habitat = results$habitat_raster,
@@ -233,8 +237,8 @@ server <- function(input, output, session) {
           areas_list <- map(results_list, ~ .$areas_connected)
           results$areas_connected <- areas_list
 
-          # Store buffered_habitat and patch_id for the first buffer
-          # (for plotting)
+          # Store buffered_habitat and patch_id for the first interpatch
+          # distance (for plotting)
           results$buffered_habitat <- map(
             results_list,
             ~ .$buffered_habitat
@@ -246,7 +250,7 @@ server <- function(input, output, session) {
 
           incProgress(0.4, message = "Summarizing results...")
 
-          # Summarise connectivity for each buffer
+          # Summarise connectivity for each interpatch distance
           results$results_connect_habitat <- map2(
             .x = areas_list,
             .y = buffer_dists,
@@ -321,7 +325,7 @@ server <- function(input, output, session) {
     getwd()
   })
 
-  # Output: Show buffer comparison flag ----
+  # Output: Show interpatch distance comparison flag ----
   output$show_buffer_comparison <- reactive({
     results$ready && length(results$buffer_distances) > 1
   })
@@ -336,7 +340,7 @@ server <- function(input, output, session) {
     urbio_pal_cut <- urbio_pal[c(6:11)]
     urbio_cols <- list(
       habitat = urbio_pal_cut[2],
-      buffer = urbio_pal_cut[5],
+      interpatch = urbio_pal_cut[5],
       barrier = "#FFFFFF"
     )
 
@@ -346,7 +350,7 @@ server <- function(input, output, session) {
       .y = results$interpatch_distances,
       .f = function(interpatch_distance, distance) {
         nav_panel(
-          title = paste0("Buffer: ", distance, "m"),
+          title = paste0("Interpatch: ", distance, "m"),
           plotOutput(
             outputId = paste0("barrier_habitat_interpatch_", distance),
             height = "500px"
@@ -358,7 +362,7 @@ server <- function(input, output, session) {
     do.call(navset_tab, c(id = "barrier_habitat_tabs", tab_panels))
   })
 
-  # Render each barrier/habitat/buffer plot dynamically ----
+  # Render each barrier/habitat/interpatch plot dynamically ----
   observe({
     req(results$ready)
 
@@ -366,7 +370,7 @@ server <- function(input, output, session) {
     urbio_pal_cut <- urbio_pal[c(6:11)]
     urbio_cols <- list(
       habitat = urbio_pal_cut[2],
-      buffer = urbio_pal_cut[5],
+      interpatch_distance = urbio_pal_cut[5],
       barrier = "#FFFFFF"
     )
 
@@ -380,14 +384,14 @@ server <- function(input, output, session) {
           my_distance <- interpatch_distance
           output[[output_name]] <- renderPlot({
             # review: this is the re-use section, set up module
-            gg_barrier_habitat_buffer(
+            gg_barrier_habitat_interpatch_dist(
               barrier = results$barrier_raster,
               buffered = my_buffered,
               habitat = results$habitat_raster,
               interpatch_distance = my_distance,
               species = input$species,
               col_barrier = urbio_cols$barrier,
-              col_buffer = urbio_cols$buffer,
+              col_interpatch_distance = urbio_cols$buffer,
               col_habitat = urbio_cols$habitat,
               col_paper = "grey96"
             )
@@ -406,7 +410,7 @@ server <- function(input, output, session) {
       .y = results$buffer_distances,
       .f = function(patch_id, interpatch_distance) {
         nav_panel(
-          title = paste0("Buffer: ", interpatch_distance, "m"),
+          title = paste0("Interpatch Distance: ", interpatch_distance, "m"),
           plotOutput(
             outputId = paste0("patch_plot_", interpatch_distance),
             height = "500px"
@@ -448,8 +452,8 @@ server <- function(input, output, session) {
     req(results$areas_connected)
 
     results$areas_connected |>
-      setNames(results$buffer_distances) |>
-      bind_rows(.id = "buffer") |>
+      setNames(results$interpatch_distances) |>
+      bind_rows(.id = "interpatch") |>
       datatable(
         options = list(
           pageLength = 10,
@@ -795,8 +799,8 @@ server <- function(input, output, session) {
     },
     content = function(file) {
       results$areas_connected |>
-        setNames(results$buffer_distances) |>
-        bind_rows(.id = "buffer") |>
+        setNames(results$interpatch_distances) |>
+        bind_rows(.id = "interpatch") |>
         write_csv(file)
     }
   )

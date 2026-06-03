@@ -22,8 +22,8 @@ generate_connectivity_report(
 \arguments{
 \item{species_name}{Character. Name of the species being analysed.}
 
-\item{interpatch_distances}{Numeric vector. Buffer distances used in analysis
-(in meters).}
+\item{interpatch_distances}{Numeric vector. The interpatch distances used in
+analysis (in meters).}
 
 \item{results_connect_habitat}{Data frame. Connectivity summary results.}
 

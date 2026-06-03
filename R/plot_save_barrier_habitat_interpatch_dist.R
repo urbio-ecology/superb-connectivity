@@ -1,6 +1,6 @@
 #' Save barrier habitat buffer plot
 #'
-#' Saved a plot created by [gg_barrier_habitat_buffer()] to file.
+#' Saved a plot created by [gg_barrier_habitat_interpatch_dist()] to file.
 #'
 #' @param barrier barrier layer
 #' @param habitat habitat layer
@@ -33,7 +33,7 @@
 #' )
 #' }
 #' @export
-plot_barrier_habitat_buffer <- function(
+plot_barrier_habitat_interpatch_dist <- function(
   barrier,
   buffered,
   habitat,
@@ -44,7 +44,7 @@ plot_barrier_habitat_buffer <- function(
   col_habitat,
   col_paper
 ) {
-  plot_barrier_habitat <- gg_barrier_habitat_buffer(
+  plot_barrier_habitat <- gg_barrier_habitat_interpatch_dist(
     barrier = barrier,
     habitat = habitat,
     buffered = buffered,
@@ -57,7 +57,8 @@ plot_barrier_habitat_buffer <- function(
   )
 
   plot_barrier_habitat_name <- glue::glue(
-    "plot-barrier-buffer-habitat-{species}-buffer-{interpatch_distance}.png"
+    "plot-barrier-interpatch-distance-habitat-{species}-\\
+    -{interpatch_distance}.png"
   )
 
   ggplot2::ggsave(

@@ -30,7 +30,7 @@ library(terra)
 
 > Kirk, H., Soanes, K., Amati, M., Bekessy, S., Harrison, L., Parris, K., Ramalho, C., van de Ree, R., & Threlfall, C. (2023). Ecological connectivity as a planning tool for the conservation of wildlife in cities. *MethodsX*, 10, 101989. <https://doi.org/10.1016/j.mex.2022.101989>
 
-The core idea is two habitat patches are considered connected if an animal can travel between them without crossing a barrier (e.g., a road). We buffer the habitat by a species-specific movement distance, then cut those buffers wherever barriers exist. The remaining pieces of habitat that are connected become **patches**, and we summarise their areas to compute connectivity metrics. This workflow is represented visually in the figure below, from the paper by Kirk et al.:
+The core idea is two habitat patches are considered connected if an animal can travel between them without crossing a barrier (e.g., a road). We buffer the habitat by a species-specific **interpatch distance**, then cut those buffers wherever barriers exist. The remaining pieces of habitat that are connected become **patches**, and we summarise their areas to compute connectivity metrics. This workflow is represented visually in the figure below, from the paper by Kirk et al.:
 
 ```{r}
 #| label: "Effective-mesh-demonstration"
@@ -122,10 +122,10 @@ plot(remaining_habitat, col = "#1b9e77", legend = FALSE, add = TRUE)
 
 ### Step 3: Buffer the habitat
 
-`habitat_buffer()` expands the habitat outward using a circular focal window. The **interpatch_distance** should be *half* the species' connectivity threshold. For example, if two patches are considered connected when within 200 m of each other, use a 100 m buffer, as the buffers overlap when patches are within 200 m. For the blue-tongued lizard in urban Melbourne, the median dispersal distance is 1000 m (Kirk et al., 2023), so we would use a buffer of 500 m. However, we use 10 for a faster demonstration on the small example dataset.
+`habitat_buffer()` expands the habitat outward using a circular focal window. This is the spatial operation of buffering, which we use to represent the interpatch distance - here the **interpatch_distance** should be *half* the species' connectivity threshold. For example, if two patches are considered connected when within 200 m of each other, use a 100 m buffer, as the buffers overlap when patches are within 200 m. For the blue-tongued lizard in urban Melbourne, the median dispersal distance is 1000 m (Kirk et al., 2023), so we would use a buffer of 500 m. However, we use 10 for a faster demonstration on the small example dataset.
 
 ```{r}
-#| label: buffer
+#| label: interpatch
 interpatch_distance <- 10
 
 buffered_habitat <- habitat_buffer(
@@ -139,13 +139,13 @@ plot(remaining_habitat, col = "#1b9e77", legend = FALSE, add = TRUE)
 ```
 
 
-We can now visualise the three layers together using `gg_barrier_habitat_buffer()`:
+We can now visualise the three layers together using `gg_barrier_habitat_interpatch_dist()`:
 
 ```{r}
 #| label: plot-layers
 #| fig-width: 6
 #| fig-height: 5
-gg_barrier_habitat_buffer(
+gg_barrier_habitat_interpatch_dist(
   barrier = barrier,
   buffered = buffered_habitat,
   habitat = remaining_habitat,
@@ -284,12 +284,12 @@ result <- habitat_connectivity_full(
 names(result)
 ```
 
-## Comparing multiple buffer distances
+## Comparing multiple interpatch distances
 
-A common workflow is to run the analysis at several buffer distances and compare the results. Use `purrr::map()` to iterate, then `purrr::list_rbind()` to combine:
+A common workflow is to run the analysis at several interpatch distances and compare the results. Use `purrr::map()` to iterate, then `purrr::list_rbind()` to combine:
 
 ```{r}
-#| label: multi-buffer
+#| label: multi-interpatch
 #| 
 distances <- c(10, 25, 50)
 
@@ -333,7 +333,7 @@ The core raster workflow in `urbioconnect` is:
 
 1. `create_barrier_mask()` - invert the barrier raster into a passability mask
 2. `drop_habitat_under_barrier()` - remove habitat beneath barriers
-3. `habitat_buffer()` - expand habitat by the movement distance (half the connectivity threshold)
+3. `habitat_buffer()` - expand habitat by the interpatch distance (half the connectivity threshold)
 4. `fragment_habitat()` - cut the buffer where barriers exist
 5. `assign_patches_to_fragments()` + `add_patch_area()` - label and measure connected patches
 6. `aggregate_connected_patches()` - summarise patch areas

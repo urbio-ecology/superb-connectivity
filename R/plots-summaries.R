@@ -12,10 +12,10 @@ col2hex <- function(color_name) {
   grDevices::rgb(t(grDevices::col2rgb(color_name)), maxColorValue = 255)
 }
 
-#' Plot barrier, habitat, and buffer layers
+#' Plot barrier, habitat, and interpatch distance layers
 #'
-#' Creates a visualisation of habitat, buffer zone, and barriers using
-#' terra rasters.
+#' Creates a visualisation of habitat, interpatch distance zone, and barriers
+#' using terra rasters.
 #'
 #' @param barrier Terra SpatRaster. Barrier layer (e.g., roads).
 #' @param buffered Terra SpatRaster. Buffered habitat layer.
@@ -23,7 +23,7 @@ col2hex <- function(color_name) {
 #' @param interpatch_distance Numeric. Interpatch distance in meters.
 #' @param species Character. Species name for plot title.
 #' @param col_barrier Character. Color for barrier layer.
-#' @param col_buffer Character. Color for buffer zone.
+#' @param col_interpatch_distance Character. Color for interpatch distance zone.
 #' @param col_habitat Character. Color for habitat patches.
 #' @param col_paper Character. Background color (default: "white").
 #'
@@ -33,7 +33,7 @@ col2hex <- function(color_name) {
 #' lizard_habitat <- example_habitat()
 #' lizard_barrier <- example_barrier()
 #' lizard_buffered <- habitat_buffer(lizard_habitat, 10)
-#' gg_bar_hab_buf <- gg_barrier_habitat_buffer(
+#' gg_bar_hab_buf <- gg_barrier_habitat_interpatch_dist(
 #'   barrier = lizard_barrier,
 #'   buffered = lizard_buffered,
 #'   habitat = lizard_habitat,
@@ -53,7 +53,7 @@ col2hex <- function(color_name) {
 #'    style = north_arrow_fancy_orienteering()
 #'   ) +
 #'   annotation_scale()
-gg_barrier_habitat_buffer <- function(
+gg_barrier_habitat_interpatch_dist <- function(
   barrier,
   buffered,
   habitat,
@@ -80,7 +80,7 @@ gg_barrier_habitat_buffer <- function(
       guide = "legend",
       labels = c(
         stats::setNames("Habitat", col_habitat),
-        stats::setNames("Buffer", col_buffer),
+        stats::setNames("Interpatch-Distance", col_interpatch_distance),
         stats::setNames("Barrier", col_barrier)
       ),
       breaks = c(
@@ -94,7 +94,7 @@ gg_barrier_habitat_buffer <- function(
     ggplot2::labs(
       title = glue::glue("{species} Habitat"),
       subtitle = glue::glue(
-        "With a {interpatch_distance}m buffer, and barrier shown"
+        "With a {interpatch_distance}m interpatch distance, and barrier shown"
       )
     ) +
     ggplot2::theme_sub_plot(
@@ -259,11 +259,11 @@ plot_patches <- function(
 }
 
 
-#' Plot connectivity metrics across buffer distances
+#' Plot connectivity metrics across interpatch distances
 #'
 #' Creates faceted line plots showing how connectivity metrics change with
-#' different buffer distances. This works best when you have multiple buffer
-#' distances, otherwise it will just be a plot with one point.
+#' different interpatch distances. This works best when you have multiple
+#' interpatch distances, otherwise it will just be a plot with one point.
 #'
 #' @param results_connect_habitat Data frame. Connectivity summary results with
 #'   columns for species, interpatch distance, and various metrics.

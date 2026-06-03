@@ -26,7 +26,7 @@ test_that("mean_patch_size with identical patches equals that patch size", {
   expect_equal(mean_patch_size(rep(500, 10)), 500)
 })
 
-test_that("summarise_connectivity with multiple buffer distances stays one row each", {
+test_that("summarise_connectivity with multiple Interpatch distance distances stays one row each", {
   # Called once per interpatch distance — should always return exactly 1 row
   purrr::walk(c(50, 100, 200), function(dist) {
     result <- summarise_connectivity(

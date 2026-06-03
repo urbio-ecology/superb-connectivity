@@ -159,7 +159,7 @@ rast_habitat_connectivity <- function(
   cli::cli_progress_step(
     "Adding buffer of {interpatch_distance}m to habitat layer"
   )
-  # buffer by radius (metres)
+  # Interpatch distance by radius (metres)
   buffered_habitat <- rast_habitat_buffer(
     habitat = remaining_habitat,
     distance = distance

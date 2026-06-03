@@ -8,7 +8,6 @@ NULL
 globalVariables(
   c(
     "area",
-    "distance",
     "interpatch_distance",
     "effective_mesh_ha",
     "geometry",

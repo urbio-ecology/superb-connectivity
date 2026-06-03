@@ -11,7 +11,7 @@ gg_barrier_habitat_interpatch_dist(
   interpatch_distance,
   species,
   col_barrier,
-  col_buffer,
+  col_interpatch_dist,
   col_habitat,
   col_paper = NA
 )
@@ -29,11 +29,11 @@ gg_barrier_habitat_interpatch_dist(
 
 \item{col_barrier}{Character. Color for barrier layer.}
 
+\item{col_interpatch_dist}{Character. Color for interpatch distance zone.}
+
 \item{col_habitat}{Character. Color for habitat patches.}
 
 \item{col_paper}{Character. Background color (default: "white").}
-
-\item{col_interpatch_distance}{Character. Color for interpatch distance zone.}
 }
 \value{
 A ggplot2 object.
@@ -53,7 +53,7 @@ gg_bar_hab_buf <- gg_barrier_habitat_interpatch_dist(
   interpatch_distance = 10,
   species = "Blue Tongue Lizard",
   col_barrier = "black",
-  col_buffer = "lightgreen",
+  col_interpatch_dist = "lightgreen",
   col_habitat = "seagreen"
 )
 gg_bar_hab_buf

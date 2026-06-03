@@ -99,7 +99,7 @@ gg_buffer_plot <- gg_barrier_habitat_interpatch_dist(
   interpatch_distance = interpatch_dist,
   species = "Blue Tongue Lizard",
   col_barrier = "white",
-  col_buffer = "lightgreen",
+  col_interpatch_dist = "lightgreen",
   col_habitat = "seagreen",
   col_paper = "grey50"
 )

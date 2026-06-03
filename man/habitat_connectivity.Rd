@@ -24,7 +24,7 @@ The steps are:
 \itemize{
 \item \code{\link[=create_barrier_mask]{create_barrier_mask()}}: Creating barrier mask.
 \item \code{\link[=drop_habitat_under_barrier]{drop_habitat_under_barrier()}}: Removes Habitat underneath barrier.
-\item \code{\link[=habitat_buffer]{habitat_buffer()}}: Adds interpatch distance of distance (m) to habitat layer.
+\item \code{\link[=habitat_buffer]{habitat_buffer()}}: Buffers the habitat layer by the interpatch distance (m).
 \item \code{\link[=fragment_habitat]{fragment_habitat()}}: Fragments habitat layer along barrier intersection.
 \item \code{\link[=assign_patches_to_fragments]{assign_patches_to_fragments()}}: Assign patch ID to fragments.
 \item \code{\link[=aggregate_connected_patches]{aggregate_connected_patches()}}: Summarise area in each patch.

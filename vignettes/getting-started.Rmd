@@ -152,7 +152,7 @@ gg_barrier_habitat_interpatch_dist(
   interpatch_distance = interpatch_distance,
   species = "Blue-tongued Lizard",
   col_barrier = "grey30",
-  col_buffer = "lightgreen",
+  col_interpatch_dist = "lightgreen",
   col_habitat = "#1b9e77",
   col_paper = "white"
 )

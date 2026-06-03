@@ -57,16 +57,16 @@ server <- function(input, output, session) {
     barrier_raster = NULL,
     buffered_habitat = NULL,
     patch_id_raster = NULL,
-    buffer_distances = NULL,
+    interpatch_distances = NULL,
     results_connect_habitat = NULL,
     areas_connected = NULL,
     analysis_time = NULL
   )
 
   # Parse interpatch distances ----
-  buffer_distances_parsed <- reactive({
-    req(input$buffer_distances)
-    distances_text <- input$buffer_distances
+  interpatch_distances_parsed <- reactive({
+    req(input$interpatch_distances)
+    distances_text <- input$interpatch_distances
     distances <- as.numeric(unlist(strsplit(distances_text, ",")))
     distances <- distances[!is.na(distances)]
 
@@ -193,8 +193,8 @@ server <- function(input, output, session) {
           # Get parameters
           base_res <- input$data_resolution
           overlay_res <- input$target_resolution
-          buffer_dists <- buffer_distances_parsed()
-          results$buffer_distances <- buffer_dists
+          interpatch_dists <- interpatch_distances_parsed()
+          results$interpatch_distances <- interpatch_dists
 
           incProgress(0.2, message = "Preparing rasters...")
 
@@ -317,7 +317,7 @@ server <- function(input, output, session) {
 
   output$analysis_buffers <- renderText({
     req(results$ready)
-    paste(results$buffer_distances, collapse = ", ")
+    paste(results$interpatch_distances, collapse = ", ")
   })
 
   output$analysis_workdir <- renderText({
@@ -327,7 +327,7 @@ server <- function(input, output, session) {
 
   # Output: Show interpatch distance comparison flag ----
   output$show_buffer_comparison <- reactive({
-    results$ready && length(results$buffer_distances) > 1
+    results$ready && length(results$interpatch_distances) > 1
   })
   outputOptions(output, "show_buffer_comparison", suspendWhenHidden = FALSE)
 
@@ -376,7 +376,7 @@ server <- function(input, output, session) {
 
     walk2(
       .x = results$buffered_habitat,
-      .y = results$buffer_distances,
+      .y = results$interpatch_distances,
       .f = function(buffered_habitat, distance) {
         output_name <- paste0("barrier_habitat_interpatch_", distance)
         local({
@@ -391,7 +391,7 @@ server <- function(input, output, session) {
               interpatch_distance = my_distance,
               species = input$species,
               col_barrier = urbio_cols$barrier,
-              col_interpatch_distance = urbio_cols$buffer,
+              col_interpatch_dist = urbio_cols$interpatch_distance,
               col_habitat = urbio_cols$habitat,
               col_paper = "grey96"
             )
@@ -407,7 +407,7 @@ server <- function(input, output, session) {
 
     tab_panels <- map2(
       .x = results$patch_id_raster,
-      .y = results$buffer_distances,
+      .y = results$interpatch_distances,
       .f = function(patch_id, interpatch_distance) {
         nav_panel(
           title = paste0("Interpatch Distance: ", interpatch_distance, "m"),
@@ -428,7 +428,7 @@ server <- function(input, output, session) {
 
     walk2(
       .x = results$patch_id_raster,
-      .y = results$buffer_distances,
+      .y = results$interpatch_distances,
       .f = function(patch_id, interpatch_distance) {
         output_name <- paste0("patch_plot_", interpatch_distance)
         local({
@@ -513,7 +513,7 @@ server <- function(input, output, session) {
   # Output: Buffer comparison plot ----
   output$plot_buffer_comparison <- renderPlot({
     req(results$results_connect_habitat)
-    req(length(results$buffer_distances) > 1)
+    req(length(results$interpatch_distances) > 1)
 
     # Create a multi-panel comparison
     p1 <- ggplot(
@@ -600,7 +600,7 @@ server <- function(input, output, session) {
     content = function(file) {
       all_patches <- map2(
         results$areas_connected,
-        results$buffer_distances,
+        results$interpatch_distances,
         ~ mutate(.x, interpatch_distance = .y)
       ) |>
         list_rbind()
@@ -657,7 +657,7 @@ server <- function(input, output, session) {
     },
     content = function(file) {
       first_result <- results$areas_connected[[1]]
-      first_buffer <- results$buffer_distances[1]
+      first_buffer <- results$interpatch_distances[1]
 
       patch_summary <- first_result |>
         arrange(desc(area)) |>

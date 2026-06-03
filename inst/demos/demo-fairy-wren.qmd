@@ -66,8 +66,8 @@ There are a few steps that go on behind the scenes in `habitat_connectivity()` -
 First we create a 250 buffer around the environment, which tells us that the fairy wren have a range of 500m. We can see the habitat in darker green, and the buffer in lighter green.
 
 ```{r}
-# buffer the habitat by distance
-buffer <- habitat_buffer(habitat, distance = 250)
+# buffer the habitat by the interpatch distance
+buffer <- habitat_buffer(habitat, interpatch_distance = 250)
 ```
 
 

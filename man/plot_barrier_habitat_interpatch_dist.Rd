@@ -11,7 +11,7 @@ plot_barrier_habitat_interpatch_dist(
   interpatch_distance,
   species,
   col_barrier,
-  col_buffer,
+  col_interpatch_dist,
   col_habitat,
   col_paper
 )
@@ -29,7 +29,7 @@ plot_barrier_habitat_interpatch_dist(
 
 \item{col_barrier}{colour to colour the barrier layer}
 
-\item{col_buffer}{colour to colour the buffer layer}
+\item{col_interpatch_dist}{colour to colour the buffer layer}
 
 \item{col_habitat}{colour to colour the habitat layer}
 
@@ -48,14 +48,14 @@ lizard_habitat <- example_habitat()
 lizard_barrier <- example_barrier()
 buffered <- habitat_buffer(lizard_habitat, interpatch_distance = 10)
 # Creates plot-barrier-buffer-habitat-*.png in the working directory
-plot_barrier_habitat_buffer(
+plot_barrier_habitat_interpatch_dist(
   barrier = lizard_barrier,
   buffered = buffered,
   habitat = lizard_habitat,
   interpatch_distance = 10,
   species = "Blue-tongued Lizard",
   col_barrier = "white",
-  col_buffer = "lightgreen",
+  col_interpatch_dist = "lightgreen",
   col_habitat = "seagreen",
   col_paper = "grey50"
 )

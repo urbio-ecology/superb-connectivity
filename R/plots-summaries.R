@@ -23,7 +23,7 @@ col2hex <- function(color_name) {
 #' @param interpatch_distance Numeric. Interpatch distance in meters.
 #' @param species Character. Species name for plot title.
 #' @param col_barrier Character. Color for barrier layer.
-#' @param col_interpatch_distance Character. Color for interpatch distance zone.
+#' @param col_interpatch_dist Character. Color for interpatch distance zone.
 #' @param col_habitat Character. Color for habitat patches.
 #' @param col_paper Character. Background color (default: "white").
 #'
@@ -40,7 +40,7 @@ col2hex <- function(color_name) {
 #'   interpatch_distance = 10,
 #'   species = "Blue Tongue Lizard",
 #'   col_barrier = "black",
-#'   col_buffer = "lightgreen",
+#'   col_interpatch_dist = "lightgreen",
 #'   col_habitat = "seagreen"
 #' )
 #' gg_bar_hab_buf
@@ -60,18 +60,18 @@ gg_barrier_habitat_interpatch_dist <- function(
   interpatch_distance,
   species,
   col_barrier,
-  col_buffer,
+  col_interpatch_dist,
   col_habitat,
   col_paper = NA
 ) {
   # First, reclassify your rasters to assign actual color values
   barrier_coloured <- terra::subst(barrier, 1, col_barrier)
-  buffer_coloured <- terra::subst(buffered, 1, col_buffer)
+  interpatch_coloured <- terra::subst(buffered, 1, col_interpatch_dist)
   habitat_coloured <- terra::subst(habitat, 1, col_habitat)
 
   # Now plot them in layers (bottom to top)
   ggplot2::ggplot() +
-    tidyterra::geom_spatraster(data = buffer_coloured) +
+    tidyterra::geom_spatraster(data = interpatch_coloured) +
     tidyterra::geom_spatraster(data = barrier_coloured) +
     tidyterra::geom_spatraster(data = habitat_coloured) +
     ggplot2::theme_minimal(paper = col_paper) +
@@ -80,12 +80,12 @@ gg_barrier_habitat_interpatch_dist <- function(
       guide = "legend",
       labels = c(
         stats::setNames("Habitat", col_habitat),
-        stats::setNames("Interpatch-Distance", col_interpatch_distance),
+        stats::setNames("Interpatch", col_interpatch_dist),
         stats::setNames("Barrier", col_barrier)
       ),
       breaks = c(
         col_habitat,
-        col_buffer,
+        col_interpatch_dist,
         col_barrier
       ),
       na.value = NA,

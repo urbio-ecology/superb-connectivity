@@ -92,7 +92,7 @@ prepare_rasters <- function(
 #'  distance past which habitat patches are no longer considered connected).
 #'
 #' @param habitat Terra SpatRaster. Habitat raster.
-#' @param distance Numeric. Buffer distance in meters.
+#' @param interpatch_distance Numeric. Interpatch distance in metres.
 #' @returns Terra SpatRaster with buffered habitat.
 #' @export
 #' @examples
@@ -103,10 +103,10 @@ prepare_rasters <- function(
 #' lizard_buff <- habitat_buffer(lizard_habitat, 10)
 #' plot(lizard_buff, col = "lightgreen", legend = FALSE)
 #' plot(lizard_habitat, col = "darkgreen", legend = FALSE, add = TRUE)
-habitat_buffer <- function(habitat, distance) {
+habitat_buffer <- function(habitat, interpatch_distance) {
   buffer_window <- terra::focalMat(
     x = habitat,
-    d = distance,
+    d = interpatch_distance,
     type = "circle"
   )
   buffer_window <- buffer_window / max(buffer_window)
@@ -300,7 +300,7 @@ aggregate_connected_patches <- function(raster) {
 #'   The steps are:
 #'   * [create_barrier_mask()]: Creating barrier mask.
 #'   * [drop_habitat_under_barrier()]: Removes Habitat underneath barrier.
-#'   * [habitat_buffer()]: Adds interpatch distance of distance (m) to habitat layer.
+#'   * [habitat_buffer()]: Buffers the habitat layer by the interpatch distance (m).
 #'   * [fragment_habitat()]: Fragments habitat layer along barrier intersection.
 #'   * [assign_patches_to_fragments()]: Assign patch ID to fragments.
 #'   * [aggregate_connected_patches()]: Summarise area in each patch.
@@ -436,7 +436,7 @@ habitat_connectivity_full <- function(
   )
   buffered_habitat <- habitat_buffer(
     habitat = remaining_habitat,
-    distance = interpatch_distance
+    interpatch_distance = interpatch_distance
   )
 
   cli::cli_progress_step("Fragmenting habitat layer along barrier intersection")

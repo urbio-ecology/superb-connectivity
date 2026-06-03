@@ -4,12 +4,12 @@
 \alias{habitat_buffer}
 \title{Buffer habitat raster}
 \usage{
-habitat_buffer(habitat, distance)
+habitat_buffer(habitat, interpatch_distance)
 }
 \arguments{
 \item{habitat}{Terra SpatRaster. Habitat raster.}
 
-\item{distance}{Numeric. Buffer distance in meters.}
+\item{interpatch_distance}{Numeric. Interpatch distance in metres.}
 }
 \value{
 Terra SpatRaster with buffered habitat.

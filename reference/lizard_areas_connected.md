@@ -2,8 +2,8 @@
 
 Pre-computed output of
 [`habitat_connectivity()`](https://urbio-ecology.github.io/urbioconnect/reference/habitat_connectivity.md)
-run on the lizard example data at a 50 metre buffer distance. Contains
-one row per connected habitat patch.
+run on the lizard example data at a 50 metre interpatch distance.
+Contains one row per connected habitat patch.
 
 ## Usage
 
@@ -38,7 +38,7 @@ Generated from
 [`example_habitat()`](https://urbio-ecology.github.io/urbioconnect/reference/example-lizard-data.md)
 and
 [`example_barrier()`](https://urbio-ecology.github.io/urbioconnect/reference/example-lizard-data.md)
-at 50 metre buffer distance.
+at 50 metre interpatch distance.
 
 ## See also
 
@@ -54,7 +54,7 @@ if (FALSE) { # \dontrun{
 lizard_areas_connected <- habitat_connectivity(
     habitat = example_habitat(),
     barrier = example_barrier(),
-    distance = 50,
+    interpatch_distance = 50,
     verbose = FALSE
   )
 } # }

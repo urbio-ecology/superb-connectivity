@@ -27,6 +27,7 @@ some habitat, or some barrier(s), or both. This function help you do that."></he
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/getting-started.html">Getting started</a></li>
+    <li><a class="dropdown-item" href="../articles/interpatch-distance-and-resolution.html">Interpatch distance and raster resolution</a></li>
     <li><a class="dropdown-item" href="../articles/raster-vs-vector.html">Using raster vs vector</a></li>
     <li><a class="dropdown-item" href="../articles/targets-pipeline.html">Using urbioconnect in a targets pipeline</a></li>
   </ul></li>
@@ -57,7 +58,7 @@ some habitat, or some barrier(s), or both. This function help you do that.</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">compare_connectivity</span><span class="op">(</span><span class="va">area_new</span>, <span class="va">area_baseline</span>, <span class="va">distance</span>, <span class="va">species</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">compare_connectivity</span><span class="op">(</span><span class="va">area_new</span>, <span class="va">area_baseline</span>, <span class="va">interpatch_distance</span>, <span class="va">species</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -72,8 +73,14 @@ some habitat, or some barrier(s), or both. This function help you do that.</p>
 <dd><p>Numeric vector. Baseline area of a connected patch.</p></dd>
 
 
-<dt id="arg-distance">distance<a class="anchor" aria-label="anchor" href="#arg-distance"></a></dt>
-<dd><p>buffered distance</p></dd>
+<dt id="arg-interpatch-distance">interpatch_distance<a class="anchor" aria-label="anchor" href="#arg-interpatch-distance"></a></dt>
+<dd><p>Numeric. The distance (in meters) where habitat
+patches are considered connected. E.g., if set to 500, patches 498m apart
+are connected, those 501m apart are not connected. This is passed
+internally to a spatial operation known as "buffering", where this
+distance is used as a radius from the edge of the habitat zone. This means
+the specified <code>interpatch_distance</code> is halved exactly. So an interpatch
+distance of 500 will be converted to 250.</p></dd>
 
 
 <dt id="arg-species">species<a class="anchor" aria-label="anchor" href="#arg-species"></a></dt>
@@ -82,7 +89,7 @@ some habitat, or some barrier(s), or both. This function help you do that.</p>
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>tibble with "scenario", "distance", "species",
+    <p>tibble with "scenario", "interpatch_distance", "species",
 "n_patches", "effective_mesh_ha", and "prob_connectedness".</p>
     </div>
 
@@ -94,15 +101,16 @@ some habitat, or some barrier(s), or both. This function help you do that.</p>
 <span class="r-in"><span><span class="fu">compare_connectivity</span><span class="op">(</span></span></span>
 <span class="r-in"><span>  area_new <span class="op">=</span> <span class="va">new_areas</span>,</span></span>
 <span class="r-in"><span>  area_baseline <span class="op">=</span> <span class="va">baseline_areas</span>,</span></span>
-<span class="r-in"><span>  distance <span class="op">=</span> <span class="fl">10</span>,</span></span>
+<span class="r-in"><span>  interpatch_distance <span class="op">=</span> <span class="fl">10</span>,</span></span>
 <span class="r-in"><span>  species <span class="op">=</span> <span class="st">"blue-tongued lizard"</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 3 × 6</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   scenario   distance species     n_patches effective_mesh_ha prob_connectedness</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> baseline         10 blue-tongu…        59              4.49         0.000<span style="text-decoration: underline;">017</span>1 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> new              10 blue-tongu…        58              2.87         0.000<span style="text-decoration: underline;">010</span>9 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> difference       10 blue-tongu…        -<span style="color: #BB0000;">1</span>             -<span style="color: #BB0000;">1.62</span>        -<span style="color: #BB0000;">0.000</span><span style="color: #BB0000; text-decoration: underline;">006</span><span style="color: #BB0000;">18</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   scenario   interpatch_distance species             n_patches effective_mesh_ha</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> baseline                    10 blue-tongued lizard        59              4.49</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> new                         10 blue-tongued lizard        58              2.87</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> difference                  10 blue-tongued lizard        -<span style="color: #BB0000;">1</span>             -<span style="color: #BB0000;">1.62</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 1 more variable: prob_connectedness &lt;dbl&gt;</span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

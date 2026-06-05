@@ -1,8 +1,8 @@
-# Plot connectivity metrics across buffer distances
+# Plot connectivity metrics across interpatch distances
 
 Creates faceted line plots showing how connectivity metrics change with
-different buffer distances. This works best when you have multiple
-buffer distances, otherwise it will just be a plot with one point.
+different interpatch distances. This works best when you have multiple
+interpatch distances, otherwise it will just be a plot with one point.
 
 ## Usage
 
@@ -15,7 +15,7 @@ plot_connectivity(results_connect_habitat)
 - results_connect_habitat:
 
   Data frame. Connectivity summary results with columns for species,
-  distance, and various metrics.
+  interpatch distance, and various metrics.
 
 ## Value
 
@@ -30,10 +30,10 @@ results <- purrr::map(
   c(10, 20),
   function(d) {
     full <- habitat_connectivity_full(lizard_habitat, lizard_barrier,
-      distance = d, verbose = FALSE)
+      interpatch_distance = d, verbose = FALSE)
     summarise_connectivity(
       area = full$areas_connected$area,
-      distance = d,
+      interpatch_distance = d,
       target_resolution = 500,
       data_resolution = 10,
       aggregation_factor = 50,

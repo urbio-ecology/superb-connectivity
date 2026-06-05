@@ -34,6 +34,7 @@
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
 <li><a class="dropdown-item" href="../articles/getting-started.html">Getting started</a></li>
+    <li><a class="dropdown-item" href="../articles/interpatch-distance-and-resolution.html">Interpatch distance and raster resolution</a></li>
     <li><a class="dropdown-item" href="../articles/raster-vs-vector.html">Using raster vs vector</a></li>
     <li><a class="dropdown-item" href="../articles/targets-pipeline.html">Using urbioconnect in a targets pipeline</a></li>
   </ul>
@@ -85,20 +86,21 @@ or has had its dependencies change.</p>
 addresses this issue by only running code that has been changed. You can
 think of this as a kind of <strong>intelligent caching</strong>: it
 tracks every input and output in your pipeline and only re-runs the
-steps whose inputs have changed. If you add a new buffer distance,
+steps whose inputs have changed. If you add a new interpatch distance,
 targets re-runs only the connectivity step for that distance — not the
-data preparation or the other buffer distances.</p>
+data preparation or the other interpatch distances.</p>
 <p><code>urbioconnect</code> is works well in a targets pipeline, and
 this vignette unpacks an example pipeline, describing how it works.</p>
 <p>We first discuss a minimal pipeline, before going on to add multiple
-buffer distances, and then finally demonstrate how to take advantage of
-parallel processing.</p>
+interpatch distances, and then finally demonstrate how to take advantage
+of parallel processing.</p>
 </div>
 <div class="section level2">
 <h2 id="a-minimal-_targets-r">A minimal <code>_targets.R</code><a class="anchor" aria-label="anchor" href="#a-minimal-_targets-r"></a>
 </h2>
 <p>The following <code>_targets.R</code> file uses the built-in lizard
-example data and runs connectivity analysis at one buffer distance.</p>
+example data and runs connectivity analysis at one interpatch
+distance.</p>
 <p>Place this code in a file in the root of your project directory, and
 name it <code>_targets.R</code>:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
@@ -118,7 +120,7 @@ name it <code>_targets.R</code>:</p>
 <span>  <span class="va">target_resolution</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://docs.ropensci.org/targets/reference/tar_target.html" class="external-link">tar_target</a></span><span class="op">(</span><span class="fl">500</span><span class="op">)</span></span>
 <span>  <span class="va">data_resolution</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://docs.ropensci.org/targets/reference/tar_target.html" class="external-link">tar_target</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span></span>
 <span>  <span class="va">aggregation_factor</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://docs.ropensci.org/targets/reference/tar_target.html" class="external-link">tar_target</a></span><span class="op">(</span><span class="va">target_resolution</span> <span class="op">/</span> <span class="va">data_resolution</span><span class="op">)</span></span>
-<span>  <span class="va">distance</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://docs.ropensci.org/targets/reference/tar_target.html" class="external-link">tar_target</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span></span>
+<span>  <span class="va">interpatch_distance</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://docs.ropensci.org/targets/reference/tar_target.html" class="external-link">tar_target</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span></span>
 <span>  </span>
 <span>  <span class="va">barrier</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/example-lizard-data.html">example_barrier</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu">tar_terra_rast</span><span class="op">(</span><span class="op">)</span></span>
 <span>  <span class="va">habitat</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/example-lizard-data.html">example_habitat</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu">tar_terra_rast</span><span class="op">(</span><span class="op">)</span></span>
@@ -126,7 +128,7 @@ name it <code>_targets.R</code>:</p>
 <span>  <span class="va">barrier_mask</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_barrier_mask.html">create_barrier_mask</a></span><span class="op">(</span><span class="va">barrier</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu">tar_terra_rast</span><span class="op">(</span><span class="op">)</span></span>
 <span>  <span class="va">remaining</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/drop_habitat_under_barrier.html">drop_habitat_under_barrier</a></span><span class="op">(</span><span class="va">habitat</span>, <span class="va">barrier_mask</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>    <span class="fu">tar_terra_rast</span><span class="op">(</span><span class="op">)</span></span>
-<span>  <span class="va">buffered_habitat</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/habitat_buffer.html">habitat_buffer</a></span><span class="op">(</span><span class="va">remaining</span>, distance <span class="op">=</span> <span class="va">distance</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="va">buffered_habitat</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/habitat_buffer.html">habitat_buffer</a></span><span class="op">(</span><span class="va">remaining</span>, interpatch_distance <span class="op">=</span> <span class="va">interpatch_distance</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>    <span class="fu">tar_terra_rast</span><span class="op">(</span><span class="op">)</span></span>
 <span>  <span class="va">fragmentation_raster</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fragment_habitat.html">fragment_habitat</a></span><span class="op">(</span><span class="va">buffered_habitat</span>, <span class="va">barrier_mask</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>    <span class="fu">tar_terra_rast</span><span class="op">(</span><span class="op">)</span></span>
@@ -143,13 +145,13 @@ name it <code>_targets.R</code>:</p>
 <span>  <span class="va">areas_connected</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/habitat_connectivity.html">habitat_connectivity</a></span><span class="op">(</span></span>
 <span>    habitat <span class="op">=</span> <span class="va">habitat</span>,</span>
 <span>    barrier <span class="op">=</span> <span class="va">barrier</span>,</span>
-<span>    distance <span class="op">=</span> <span class="va">distance</span></span>
+<span>    interpatch_distance <span class="op">=</span> <span class="va">interpatch_distance</span></span>
 <span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>    <span class="fu"><a href="https://docs.ropensci.org/targets/reference/tar_target.html" class="external-link">tar_target</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span>  <span class="va">results_connect_habitat</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/summarise_connectivity.html">summarise_connectivity</a></span><span class="op">(</span></span>
 <span>    area <span class="op">=</span> <span class="va">areas_connected</span><span class="op">$</span><span class="va">area</span>,</span>
-<span>    distance <span class="op">=</span> <span class="va">distance</span>,</span>
+<span>    interpatch_distance <span class="op">=</span> <span class="va">interpatch_distance</span>,</span>
 <span>    target_resolution <span class="op">=</span> <span class="va">target_resolution</span>,</span>
 <span>    data_resolution <span class="op">=</span> <span class="va">data_resolution</span>,</span>
 <span>    aggregation_factor <span class="op">=</span> <span class="va">aggregation_factor</span>,</span>
@@ -173,10 +175,10 @@ targets with <code><a href="https://docs.ropensci.org/targets/reference/tar_targ
 <span>  <span class="va">target_resolution</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://docs.ropensci.org/targets/reference/tar_target.html" class="external-link">tar_target</a></span><span class="op">(</span><span class="fl">500</span><span class="op">)</span></span>
 <span>  <span class="va">data_resolution</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://docs.ropensci.org/targets/reference/tar_target.html" class="external-link">tar_target</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span></span>
 <span>  <span class="va">aggregation_factor</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://docs.ropensci.org/targets/reference/tar_target.html" class="external-link">tar_target</a></span><span class="op">(</span><span class="va">target_resolution</span> <span class="op">/</span> <span class="va">data_resolution</span><span class="op">)</span></span>
-<span>  <span class="va">distance</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://docs.ropensci.org/targets/reference/tar_target.html" class="external-link">tar_target</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="va">interpatch_distance</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://docs.ropensci.org/targets/reference/tar_target.html" class="external-link">tar_target</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span></span></code></pre></div>
 <p>This means if any of these variables are changed, say
-<code>distance</code> changes from 10 and 20, then anything using
-<code>distance</code> would need to get rerun.</p>
+<code>interpatch_distance</code> changes from 10 and 20, then anything
+using <code>distance</code> would need to get rerun.</p>
 <p>These parts here:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/example-lizard-data.html">example_habitat</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu">tar_terra_rast</span><span class="op">(</span><span class="op">)</span></span>
@@ -241,7 +243,7 @@ following:</p>
 <span><span class="fu">targets</span><span class="fu">::</span><span class="fu"><a href="https://docs.ropensci.org/targets/reference/tar_load.html" class="external-link">tar_load</a></span><span class="op">(</span><span class="va">results_connect_habitat</span><span class="op">)</span></span>
 <span><span class="va">results_connect_habitat</span></span>
 <span></span>
-<span><span class="co"># The connectivity data frame for a specific buffer distance</span></span>
+<span><span class="co"># The connectivity data frame for a specific interpatch distance</span></span>
 <span><span class="fu">targets</span><span class="fu">::</span><span class="fu"><a href="https://docs.ropensci.org/targets/reference/tar_load.html" class="external-link">tar_load</a></span><span class="op">(</span><span class="va">connectivity_50</span><span class="op">)</span></span>
 <span><span class="va">connectivity_50</span></span></code></pre></div>
 </div>
@@ -266,8 +268,8 @@ execution, see:</p>
 <li>Loading real habitat and barrier shapefiles and converting them with
 <code><a href="../reference/prepare_rasters.html">prepare_rasters()</a></code>
 </li>
-<li>Saving habitat buffer plots to files with
-<code><a href="../reference/plot_barrier_habitat_buffer.html">plot_barrier_habitat_buffer()</a></code>
+<li>Saving habitat interpatch distance plots to files with
+<code><a href="../reference/plot_barrier_habitat_interpatch_dist.html">plot_barrier_habitat_interpatch_dist()</a></code>
 </li>
 <li>Rendering a quarto report as a targets artefact</li>
 <li>Using <code>geotargets</code> to store terra rasters natively in the

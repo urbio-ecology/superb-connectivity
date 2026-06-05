@@ -23,6 +23,7 @@ areas of connected patches."></head><body>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/getting-started.html">Getting started</a></li>
+    <li><a class="dropdown-item" href="../articles/interpatch-distance-and-resolution.html">Interpatch distance and raster resolution</a></li>
     <li><a class="dropdown-item" href="../articles/raster-vs-vector.html">Using raster vs vector</a></li>
     <li><a class="dropdown-item" href="../articles/targets-pipeline.html">Using urbioconnect in a targets pipeline</a></li>
   </ul></li>
@@ -51,7 +52,12 @@ areas of connected patches.</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">sf_habitat_connectivity</span><span class="op">(</span><span class="va">habitat</span>, <span class="va">barrier</span>, <span class="va">distance</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">sf_habitat_connectivity</span><span class="op">(</span></span>
+<span>  <span class="va">habitat</span>,</span>
+<span>  <span class="va">barrier</span>,</span>
+<span>  interpatch_distance <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  buffer_radius <span class="op">=</span> <span class="cn">NULL</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -66,9 +72,29 @@ areas of connected patches.</p>
 <dd><p>SF object. Barrier spatial data (e.g., roads, waterways).</p></dd>
 
 
-<dt id="arg-distance">distance<a class="anchor" aria-label="anchor" href="#arg-distance"></a></dt>
-<dd><p>Numeric. Threshold distance in meters for connectivity.
-Habitat patches within this distance are considered connected.</p></dd>
+<dt id="arg-interpatch-distance">interpatch_distance<a class="anchor" aria-label="anchor" href="#arg-interpatch-distance"></a></dt>
+<dd><p>Numeric. The distance (in meters) where habitat
+patches are considered connected. E.g., if set to 500, patches 498m apart
+are connected, those 501m apart are not connected. This is passed
+internally to a spatial operation known as "buffering", where this
+distance is used as a radius from the edge of the habitat zone. This means
+the specified <code>interpatch_distance</code> is halved exactly. So an interpatch
+distance of 500 will be converted to 250. Note that
+<code>interpatch_distance</code> is mutually exclusive to <code>habitat_buffer</code>, so you
+can only specify either <code>interpatch_distance</code> or  <code>habitat_buffer</code>, and
+never both.</p></dd>
+
+
+<dt id="arg-buffer-radius">buffer_radius<a class="anchor" aria-label="anchor" href="#arg-buffer-radius"></a></dt>
+<dd><p>Numeric. The radius in metres around the habitat.
+Since patches of habitat will be connected when their edge-to-edge gap is
+&lt;= 2 * <code>buffer radius</code>, we recommend you specify <code>buffer_radius</code> to be
+half the "interpatch distance". This is the distance past which habitat
+patches are no longer considered connected. For example, if your
+interpatch distance is 500m, set <code>buffer_radius = 250</code>. Note that
+<code>interpatch_distance</code> is mutually exclusive to <code>habitat_buffer</code>, so you
+can only specify either <code>interpatch_distance</code> or  <code>habitat_buffer</code>, and
+never both.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -90,24 +116,24 @@ including <code>patch_id</code>, <code>area</code>, and <code>area_squared</code
 <span class="r-out co"><span class="r-pr">#&gt;</span> Projected CRS: GDA94 / MGA zone 55</span>
 <span class="r-in"><span><span class="va">lizard_habitat_sf</span> <span class="op">&lt;-</span> <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/as.polygons.html" class="external-link">as.polygons</a></span><span class="op">(</span><span class="fu"><a href="example-lizard-data.html">example_habitat</a></span><span class="op">(</span><span class="op">)</span>, dissolve <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_as_sf.html" class="external-link">st_as_sf</a></span><span class="op">(</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">result</span> <span class="op">&lt;-</span> <span class="fu">sf_habitat_connectivity</span><span class="op">(</span><span class="va">lizard_habitat_sf</span>, <span class="va">lizard_barrier_shp</span>, distance <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">result</span> <span class="op">&lt;-</span> <span class="fu">sf_habitat_connectivity</span><span class="op">(</span><span class="va">lizard_habitat_sf</span>, <span class="va">lizard_barrier_shp</span>, interpatch_distance <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span></span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>attribute variables are assumed to be spatially constant throughout all geometries</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>repeating attributes for all sub-geometries for which they may not be constant</span>
 <span class="r-in"><span><span class="va">result</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 136 × 3</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 479 × 3</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    patch_id   area area_squared</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span>        1  <span style="text-decoration: underline;">1</span>102.     1<span style="text-decoration: underline;">213</span>405.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span>        3  <span style="text-decoration: underline;">3</span>325.    11<span style="text-decoration: underline;">054</span>714.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span>        4   173.       <span style="text-decoration: underline;">29</span>758.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span>        6     4           16 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span>        7  <span style="text-decoration: underline;">1</span>582.     2<span style="text-decoration: underline;">501</span>863.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span>        8 <span style="text-decoration: underline;">97</span>842.  <span style="text-decoration: underline;">9</span>573<span style="text-decoration: underline;">070</span>108.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span>        9  <span style="text-decoration: underline;">2</span>412.     5<span style="text-decoration: underline;">819</span>302.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span>       10  <span style="text-decoration: underline;">1</span>299.     1<span style="text-decoration: underline;">688</span>592.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span>       11   810.      <span style="text-decoration: underline;">656</span>219.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span>       12   974.      <span style="text-decoration: underline;">947</span>954.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 126 more rows</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span>        1 <span style="text-decoration: underline;">1</span>536.      2<span style="text-decoration: underline;">360</span>688.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span>        2  287.        <span style="text-decoration: underline;">82</span>321.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span>        3  292.        <span style="text-decoration: underline;">85</span>089.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span>        4  851.       <span style="text-decoration: underline;">723</span>456.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span>        5    8            64 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span>        6 <span style="text-decoration: underline;">3</span>056.      9<span style="text-decoration: underline;">340</span>981.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span>        7   83.2        <span style="text-decoration: underline;">6</span>921.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span>        8   47.9        <span style="text-decoration: underline;">2</span>294.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span>        9  307.        <span style="text-decoration: underline;">94</span>169.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span>       11   24           576 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 469 more rows</span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

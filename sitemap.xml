@@ -3,6 +3,7 @@
 <url><loc>https://urbio-ecology.github.io/urbioconnect/LICENSE.html</loc></url>
 <url><loc>https://urbio-ecology.github.io/urbioconnect/articles/getting-started.html</loc></url>
 <url><loc>https://urbio-ecology.github.io/urbioconnect/articles/index.html</loc></url>
+<url><loc>https://urbio-ecology.github.io/urbioconnect/articles/interpatch-distance-and-resolution.html</loc></url>
 <url><loc>https://urbio-ecology.github.io/urbioconnect/articles/raster-vs-vector.html</loc></url>
 <url><loc>https://urbio-ecology.github.io/urbioconnect/articles/targets-pipeline.html</loc></url>
 <url><loc>https://urbio-ecology.github.io/urbioconnect/authors.html</loc></url>
@@ -22,7 +23,7 @@
 <url><loc>https://urbio-ecology.github.io/urbioconnect/reference/example-lizard-data.html</loc></url>
 <url><loc>https://urbio-ecology.github.io/urbioconnect/reference/fragment_habitat.html</loc></url>
 <url><loc>https://urbio-ecology.github.io/urbioconnect/reference/generate_connectivity_report.html</loc></url>
-<url><loc>https://urbio-ecology.github.io/urbioconnect/reference/gg_barrier_habitat_buffer.html</loc></url>
+<url><loc>https://urbio-ecology.github.io/urbioconnect/reference/gg_barrier_habitat_interpatch_dist.html</loc></url>
 <url><loc>https://urbio-ecology.github.io/urbioconnect/reference/habitat_buffer.html</loc></url>
 <url><loc>https://urbio-ecology.github.io/urbioconnect/reference/habitat_connectivity.html</loc></url>
 <url><loc>https://urbio-ecology.github.io/urbioconnect/reference/habitat_connectivity_full.html</loc></url>
@@ -30,7 +31,7 @@
 <url><loc>https://urbio-ecology.github.io/urbioconnect/reference/lizard_areas_connected.html</loc></url>
 <url><loc>https://urbio-ecology.github.io/urbioconnect/reference/mean_patch_size.html</loc></url>
 <url><loc>https://urbio-ecology.github.io/urbioconnect/reference/n_patches.html</loc></url>
-<url><loc>https://urbio-ecology.github.io/urbioconnect/reference/plot_barrier_habitat_buffer.html</loc></url>
+<url><loc>https://urbio-ecology.github.io/urbioconnect/reference/plot_barrier_habitat_interpatch_dist.html</loc></url>
 <url><loc>https://urbio-ecology.github.io/urbioconnect/reference/plot_connectivity.html</loc></url>
 <url><loc>https://urbio-ecology.github.io/urbioconnect/reference/plot_patches.html</loc></url>
 <url><loc>https://urbio-ecology.github.io/urbioconnect/reference/prepare_rasters.html</loc></url>

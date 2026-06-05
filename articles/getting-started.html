@@ -34,6 +34,7 @@
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
 <li><a class="dropdown-item" href="../articles/getting-started.html">Getting started</a></li>
+    <li><a class="dropdown-item" href="../articles/interpatch-distance-and-resolution.html">Interpatch distance and raster resolution</a></li>
     <li><a class="dropdown-item" href="../articles/raster-vs-vector.html">Using raster vs vector</a></li>
     <li><a class="dropdown-item" href="../articles/targets-pipeline.html">Using urbioconnect in a targets pipeline</a></li>
   </ul>
@@ -84,12 +85,12 @@ cities. <em>MethodsX</em>, 10, 101989. <a href="https://doi.org/10.1016/j.mex.20
 </blockquote>
 <p>The core idea is two habitat patches are considered connected if an
 animal can travel between them without crossing a barrier (e.g., a
-road). We buffer the habitat by a species-specific movement distance,
-then cut those buffers wherever barriers exist. The remaining pieces of
-habitat that are connected become <strong>patches</strong>, and we
-summarise their areas to compute connectivity metrics. This workflow is
-represented visually in the figure below, from the paper by Kirk et
-al.:</p>
+road). We buffer the habitat by a species-specific <strong>interpatch
+distance</strong>, then cut those buffers wherever barriers exist. The
+remaining pieces of habitat that are connected become
+<strong>patches</strong>, and we summarise their areas to compute
+connectivity metrics. This workflow is represented visually in the
+figure below, from the paper by Kirk et al.:</p>
 <p><img src="demo-effective-mesh.jpg" class="r-plt" alt="" width="294" style="display: block; margin: auto;"></p>
 <p>This vignette walks through the raster workflow step by step using
 the built-in Blue-tongued Lizard example data from Darebin Creek,
@@ -142,12 +143,12 @@ elsewhere.</p>
 <span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">habitat</span>, col <span class="op">=</span> <span class="st">"seagreen"</span>, add <span class="op">=</span> <span class="cn">TRUE</span>, legend <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
 <p><img src="getting-started_files/figure-html/plot-habitat-barrier-1.png" class="r-plt" alt="" width="480" style="display: block; margin: auto;"></p>
 <p>The dispersal distance for the blue-tongued lizard in this
-environment is normally 1,000m, which suggess a buffer distance of 500 m
-– half the connectivity threshold. This means two patches are considered
-connected if the outside most edges are within 500 metres of each
-other.</p>
-<p>While 500m is most accurate, the examples below use a smaller buffer
-distance to increase computational speed.</p>
+environment is normally 1,000m, which suggess a interpatch_distance of
+500 m – half the connectivity threshold. This means two patches are
+considered connected if the outside most edges are within 500 metres of
+each other.</p>
+<p>While 500m is most accurate, the examples below use a smaller
+interpatch distance to increase computational speed.</p>
 </div>
 <div class="section level2">
 <h2 id="the-pipeline-step-by-step">The pipeline, step-by-step<a class="anchor" aria-label="anchor" href="#the-pipeline-step-by-step"></a>
@@ -196,37 +197,46 @@ habitat that intersected with barriers.</p>
 <h3 id="step-3-buffer-the-habitat">Step 3: Buffer the habitat<a class="anchor" aria-label="anchor" href="#step-3-buffer-the-habitat"></a>
 </h3>
 <p><code><a href="../reference/habitat_buffer.html">habitat_buffer()</a></code> expands the habitat outward using a
-circular focal window. The <strong>buffer distance</strong> should be
-<em>half</em> the species’ connectivity threshold. For example, if two
-patches are considered connected when within 200 m of each other, use a
-100 m buffer, as the buffers overlap when patches are within 200 m. For
-the blue-tongued lizard in urban Melbourne, the median dispersal
-distance is 1000 m (Kirk et al., 2023), so we would use a buffer of 500
-m. However, we use 10 for a faster demonstration on the small example
-dataset.</p>
+circular focal window. This is the spatial operation of buffering, which
+we use to represent the interpatch distance - here the
+<strong>buffer_radius</strong> should be <em>half</em> the species’
+connectivity threshold. For example, if two patches are considered
+connected when within 200 m of each other, use a 100 m buffer, as the
+buffers overlap when patches are within 200 m. For the blue-tongued
+lizard in urban Melbourne, the median dispersal distance is 1000 m (Kirk
+et al., 2023), so we would use a buffer of 500 m. However, we use 10 for
+a faster demonstration on the small example dataset, and will define
+both <code>interpatch_distance</code> and <code>buffer_radius</code> at
+the same time.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">distance</span> <span class="op">&lt;-</span> <span class="fl">10</span></span>
+<code class="sourceCode R"><span><span class="va">interpatch_distance</span> <span class="op">&lt;-</span> <span class="fl">10</span></span>
+<span><span class="va">buffer_radius</span> <span class="op">&lt;-</span> <span class="va">interpatch_distance</span> <span class="op">/</span> <span class="fl">2</span></span>
 <span></span>
 <span><span class="va">buffered_habitat</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/habitat_buffer.html">habitat_buffer</a></span><span class="op">(</span></span>
 <span>  habitat <span class="op">=</span> <span class="va">remaining_habitat</span>,</span>
-<span>  distance <span class="op">=</span> <span class="va">distance</span></span>
+<span>  buffer_radius <span class="op">=</span> <span class="va">buffer_radius</span></span>
 <span><span class="op">)</span></span>
+<span><span class="co">#&gt; Warning: Buffer radius doesn't align with the raster resolution.</span></span>
+<span><span class="co">#&gt; <span style="color: #BB0000;">✖</span> 5 m isn't a multiple of 2 m.</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> It snaps to 4 m (interpatch distance 8 m).</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Connectivity may shift for patches near the cut-off.</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> See `vignette(urbioconnect::interpatch-distance-and-resolution)`.</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">barrier_mask</span>, col <span class="op">=</span> <span class="fu">scales</span><span class="fu">::</span><span class="fu"><a href="https://scales.r-lib.org/reference/alpha.html" class="external-link">alpha</a></span><span class="op">(</span><span class="st">"grey"</span>, <span class="fl">1</span><span class="op">)</span>, legend <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">buffered_habitat</span>, col <span class="op">=</span> <span class="st">"darkgreen"</span>, legend <span class="op">=</span> <span class="cn">FALSE</span>, add <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">remaining_habitat</span>, col <span class="op">=</span> <span class="st">"#1b9e77"</span>, legend <span class="op">=</span> <span class="cn">FALSE</span>, add <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<p><img src="getting-started_files/figure-html/buffer-1.png" class="r-plt" alt="" width="480" style="display: block; margin: auto;"></p>
+<p><img src="getting-started_files/figure-html/interpatch-1.png" class="r-plt" alt="" width="480" style="display: block; margin: auto;"></p>
 <p>We can now visualise the three layers together using
-<code><a href="../reference/gg_barrier_habitat_buffer.html">gg_barrier_habitat_buffer()</a></code>:</p>
+<code><a href="../reference/gg_barrier_habitat_interpatch_dist.html">gg_barrier_habitat_interpatch_dist()</a></code>:</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/gg_barrier_habitat_buffer.html">gg_barrier_habitat_buffer</a></span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/gg_barrier_habitat_interpatch_dist.html">gg_barrier_habitat_interpatch_dist</a></span><span class="op">(</span></span>
 <span>  barrier <span class="op">=</span> <span class="va">barrier</span>,</span>
 <span>  buffered <span class="op">=</span> <span class="va">buffered_habitat</span>,</span>
 <span>  habitat <span class="op">=</span> <span class="va">remaining_habitat</span>,</span>
-<span>  distance <span class="op">=</span> <span class="va">distance</span>,</span>
+<span>  interpatch_distance <span class="op">=</span> <span class="va">interpatch_distance</span>,</span>
 <span>  species <span class="op">=</span> <span class="st">"Blue-tongued Lizard"</span>,</span>
 <span>  col_barrier <span class="op">=</span> <span class="st">"grey30"</span>,</span>
-<span>  col_buffer <span class="op">=</span> <span class="st">"lightgreen"</span>,</span>
+<span>  col_interpatch_dist <span class="op">=</span> <span class="st">"lightgreen"</span>,</span>
 <span>  col_habitat <span class="op">=</span> <span class="st">"#1b9e77"</span>,</span>
 <span>  col_paper <span class="op">=</span> <span class="st">"white"</span></span>
 <span><span class="op">)</span></span>
@@ -283,7 +293,7 @@ cells that share a fragment blob get the same patch ID.</p>
 <span><span class="co">#&gt;               lizard_habitat_raster</span></span>
 <span><span class="co">#&gt; names       : patch_id,     area</span></span>
 <span><span class="co">#&gt; min values  :        1, 4.000221</span></span>
-<span><span class="co">#&gt; max values  :      406, 4.000273</span></span></code></pre></div>
+<span><span class="co">#&gt; max values  :     1355, 4.000273</span></span></code></pre></div>
 <p><code><a href="../reference/add_patch_area.html">add_patch_area()</a></code> appends a cell-area layer to the
 raster, which is needed for the area calculations in the next step.</p>
 <p>We can plot the patches, with each connected patch shown in a
@@ -291,7 +301,7 @@ distinct colour using <code><a href="../reference/plot_patches.html">plot_patche
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_patches.html">plot_patches</a></span><span class="op">(</span></span>
 <span>  patch_id <span class="op">=</span> <span class="va">patch_id_raster</span>,</span>
-<span>  distance <span class="op">=</span> <span class="va">distance</span>,</span>
+<span>  interpatch_distance <span class="op">=</span> <span class="va">interpatch_distance</span>,</span>
 <span>  species <span class="op">=</span> <span class="st">"Blue-tongued Lizard"</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #0000BB;">&lt;SpatRaster&gt;</span> resampled to <span style="color: #00BB00;">500554</span> cells.</span></span></code></pre></div>
@@ -306,20 +316,20 @@ patch.</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">areas_connected</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/aggregate_connected_patches.html">aggregate_connected_patches</a></span><span class="op">(</span><span class="va">patch_id_raster</span><span class="op">)</span></span>
 <span><span class="va">areas_connected</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 163 × 3</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 703 × 3</span></span></span>
 <span><span class="co">#&gt;    patch_id    area area_squared</span></span>
 <span><span class="co">#&gt;       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span>        1 <span style="text-decoration: underline;">97</span>878.  <span style="text-decoration: underline;">9</span>580<span style="text-decoration: underline;">104</span>085. </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span>       15  <span style="text-decoration: underline;">2</span>416.     5<span style="text-decoration: underline;">837</span>832. </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span>       18  <span style="text-decoration: underline;">1</span>304.     1<span style="text-decoration: underline;">700</span>646. </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span>       32  <span style="text-decoration: underline;">1</span>592.     2<span style="text-decoration: underline;">534</span>763. </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span>       37     4           16.0</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span>       39  <span style="text-decoration: underline;">3</span>332.    11<span style="text-decoration: underline;">103</span>470. </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span>       40   132.       <span style="text-decoration: underline;">17</span>426. </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span>       44   108.       <span style="text-decoration: underline;">11</span>665. </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span>       47    36.0       <span style="text-decoration: underline;">1</span>296. </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span>       57  <span style="text-decoration: underline;">1</span>112.     1<span style="text-decoration: underline;">236</span>681. </span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 153 more rows</span></span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span>        1    60.0        <span style="text-decoration: underline;">3</span>600.</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span>        2  <span style="text-decoration: underline;">1</span>648.      2<span style="text-decoration: underline;">716</span>264.</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span>        7    12.0         144.</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span>        8  <span style="text-decoration: underline;">1</span>200.      1<span style="text-decoration: underline;">440</span>195.</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span>       10 <span style="text-decoration: underline;">92</span>034.   <span style="text-decoration: underline;">8</span>470<span style="text-decoration: underline;">191</span>653.</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span>       11    40.0        <span style="text-decoration: underline;">1</span>600.</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span>       12   288.        <span style="text-decoration: underline;">82</span>955.</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span>       28  <span style="text-decoration: underline;">1</span>156.      1<span style="text-decoration: underline;">336</span>497.</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span>       30    64.0        <span style="text-decoration: underline;">4</span>096.</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span>       31   940.       <span style="text-decoration: underline;">883</span>705.</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 693 more rows</span></span></span></code></pre></div>
 <p>The result has three columns:</p>
 <ul>
 <li>
@@ -342,7 +352,7 @@ computes a set of landscape-level connectivity metrics:</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">results</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/summarise_connectivity.html">summarise_connectivity</a></span><span class="op">(</span></span>
 <span>  area <span class="op">=</span> <span class="va">areas_connected</span><span class="op">$</span><span class="va">area</span>,</span>
-<span>  distance <span class="op">=</span> <span class="va">distance</span>,</span>
+<span>  interpatch_distance <span class="op">=</span> <span class="va">interpatch_distance</span>,</span>
 <span>  target_resolution <span class="op">=</span> <span class="fl">500</span>,</span>
 <span>  data_resolution <span class="op">=</span> <span class="fl">10</span>,</span>
 <span>  aggregation_factor <span class="op">=</span> <span class="fl">50</span>,</span>
@@ -351,9 +361,9 @@ computes a set of landscape-level connectivity metrics:</p>
 <span></span>
 <span><span class="va">results</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 10</span></span></span>
-<span><span class="co">#&gt;   species             distance n_patches effective_mesh_ha prob_connectedness</span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> Blue-tongued Lizard       10       163                 4           0.000<span style="text-decoration: underline;">017</span></span></span>
+<span><span class="co">#&gt;   species     interpatch_distance n_patches effective_mesh_ha prob_connectedness</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> Blue-tongu…                  10       703                 4           0.000<span style="text-decoration: underline;">015</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 5 more variables: patch_area_mean &lt;dbl&gt;, patch_area_total_ha &lt;dbl&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   target_resolution &lt;dbl&gt;, data_resolution &lt;dbl&gt;, aggregation_factor &lt;dbl&gt;</span></span></span></code></pre></div>
 <p>The two key metrics are:</p>
@@ -383,29 +393,34 @@ messages.</p>
 <code class="sourceCode R"><span><span class="va">areas_connected</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/habitat_connectivity.html">habitat_connectivity</a></span><span class="op">(</span></span>
 <span>  habitat <span class="op">=</span> <span class="va">habitat</span>,</span>
 <span>  barrier <span class="op">=</span> <span class="va">barrier</span>,</span>
-<span>  distance <span class="op">=</span> <span class="fl">10</span>,</span>
+<span>  interpatch_distance <span class="op">=</span> <span class="va">interpatch_distance</span>,</span>
 <span>  verbose <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Creating barrier mask</span></span>
 <span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Creating barrier mask <span style="color: #B2B2B2;">[32ms]</span></span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Removing habitat underneath barrier</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Removing habitat underneath barrier <span style="color: #B2B2B2;">[24ms]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Removing habitat underneath barrier <span style="color: #B2B2B2;">[37ms]</span></span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Adding buffer of 10m to habitat layer</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Adding buffer of 10m to habitat layer <span style="color: #B2B2B2;">[582ms]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Adding 5m buffer (interpatch distance 10m)</span></span>
+<span><span class="co">#&gt; Warning: Buffer radius doesn't align with the raster resolution.</span></span>
+<span><span class="co">#&gt; <span style="color: #BB0000;">✖</span> 5 m isn't a multiple of 2 m.</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> It snaps to 4 m (interpatch distance 8 m).</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Connectivity may shift for patches near the cut-off.</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> See `vignette(urbioconnect::interpatch-distance-and-resolution)`.</span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Adding 5m buffer (interpatch distance 10m) <span style="color: #B2B2B2;">[282ms]</span></span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Fragmenting habitat layer along barrier intersection</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Fragmenting habitat layer along barrier intersection <span style="color: #B2B2B2;">[20ms]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Fragmenting habitat layer along barrier intersection <span style="color: #B2B2B2;">[21ms]</span></span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Assigning patches ID to fragments</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Assigning patches ID to fragments <span style="color: #B2B2B2;">[1.1s]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Assigning patches ID to fragments <span style="color: #B2B2B2;">[2.5s]</span></span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Summarising area in each patch</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Summarising area in each patch <span style="color: #B2B2B2;">[43ms]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Summarising area in each patch <span style="color: #B2B2B2;">[48ms]</span></span></span>
 <span><span class="co">#&gt; </span></span></code></pre></div>
 <p>The package also includes a pre-computed version of this result (at
-50 m buffer distance) as <code>lizard_areas_connected</code>:</p>
+50 m interpatch distance) as <code>lizard_areas_connected</code>:</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">lizard_areas_connected</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 59 × 3</span></span></span>
@@ -430,7 +445,7 @@ remaining habitat, and the <code>areas_connected</code> data frame:</p>
 <code class="sourceCode R"><span><span class="va">result</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/habitat_connectivity_full.html">habitat_connectivity_full</a></span><span class="op">(</span></span>
 <span>  habitat <span class="op">=</span> <span class="va">habitat</span>,</span>
 <span>  barrier <span class="op">=</span> <span class="va">barrier</span>,</span>
-<span>  distance <span class="op">=</span> <span class="fl">10</span>,</span>
+<span>  interpatch_distance <span class="op">=</span> <span class="va">interpatch_distance</span>,</span>
 <span>  verbose <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span>
 <span></span>
@@ -439,26 +454,27 @@ remaining habitat, and the <code>areas_connected</code> data frame:</p>
 <span><span class="co">#&gt; [4] "barrier_mask"      "remaining_habitat"</span></span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="comparing-multiple-buffer-distances">Comparing multiple buffer distances<a class="anchor" aria-label="anchor" href="#comparing-multiple-buffer-distances"></a>
+<h2 id="comparing-multiple-interpatch-distances">Comparing multiple interpatch distances<a class="anchor" aria-label="anchor" href="#comparing-multiple-interpatch-distances"></a>
 </h2>
-<p>A common workflow is to run the analysis at several buffer distances
-and compare the results. Use <code><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">purrr::map()</a></code> to iterate, then
-<code><a href="https://purrr.tidyverse.org/reference/list_c.html" class="external-link">purrr::list_rbind()</a></code> to combine:</p>
+<p>A common workflow is to run the analysis at several interpatch
+distances and compare the results. Use <code><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">purrr::map()</a></code> to
+iterate, then <code><a href="https://purrr.tidyverse.org/reference/list_c.html" class="external-link">purrr::list_rbind()</a></code> to combine:</p>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">distances</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">10</span>, <span class="fl">25</span>, <span class="fl">50</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">interpatch_distances</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">10</span>, <span class="fl">30</span>, <span class="fl">50</span><span class="op">)</span></span>
+<span><span class="va">buffered_radiuses</span> <span class="op">&lt;-</span> <span class="va">interpatch_distances</span> <span class="op">/</span> <span class="fl">2</span></span>
 <span></span>
 <span><span class="va">all_results</span> <span class="op">&lt;-</span> <span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map</a></span><span class="op">(</span></span>
-<span>  <span class="va">distances</span>,</span>
+<span>  <span class="va">interpatch_distances</span>,</span>
 <span>  <span class="kw">function</span><span class="op">(</span><span class="va">d</span><span class="op">)</span> <span class="op">{</span></span>
 <span>    <span class="va">areas</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/habitat_connectivity.html">habitat_connectivity</a></span><span class="op">(</span></span>
 <span>      habitat <span class="op">=</span> <span class="va">habitat</span>,</span>
 <span>      barrier <span class="op">=</span> <span class="va">barrier</span>,</span>
-<span>      distance <span class="op">=</span> <span class="va">d</span>,</span>
+<span>      interpatch_distance <span class="op">=</span> <span class="va">d</span>,</span>
 <span>      verbose <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span>    <span class="op">)</span></span>
 <span>    <span class="fu"><a href="../reference/summarise_connectivity.html">summarise_connectivity</a></span><span class="op">(</span></span>
 <span>      area <span class="op">=</span> <span class="va">areas</span><span class="op">$</span><span class="va">area</span>,</span>
-<span>      distance <span class="op">=</span> <span class="va">d</span>,</span>
+<span>      interpatch_distance <span class="op">=</span> <span class="va">d</span>,</span>
 <span>      target_resolution <span class="op">=</span> <span class="fl">500</span>,</span>
 <span>      data_resolution <span class="op">=</span> <span class="fl">10</span>,</span>
 <span>      aggregation_factor <span class="op">=</span> <span class="fl">50</span>,</span>
@@ -470,11 +486,11 @@ and compare the results. Use <code><a href="https://purrr.tidyverse.org/referenc
 <span></span>
 <span><span class="va">all_results</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 × 10</span></span></span>
-<span><span class="co">#&gt;   species             distance n_patches effective_mesh_ha prob_connectedness</span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> Blue-tongued Lizard       10       163                 4           0.000<span style="text-decoration: underline;">017</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> Blue-tongued Lizard       25        73                 4           0.000<span style="text-decoration: underline;">017</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> Blue-tongued Lizard       50        59                 4           0.000<span style="text-decoration: underline;">017</span></span></span>
+<span><span class="co">#&gt;   species     interpatch_distance n_patches effective_mesh_ha prob_connectedness</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> Blue-tongu…                  10       703                 4           0.000<span style="text-decoration: underline;">015</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> Blue-tongu…                  30       105                 4           0.000<span style="text-decoration: underline;">017</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> Blue-tongu…                  50        73                 4           0.000<span style="text-decoration: underline;">017</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 5 more variables: patch_area_mean &lt;dbl&gt;, patch_area_total_ha &lt;dbl&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   target_resolution &lt;dbl&gt;, data_resolution &lt;dbl&gt;, aggregation_factor &lt;dbl&gt;</span></span></span></code></pre></div>
 <p>With multiple buffer distances you can visualise how connectivity
@@ -485,7 +501,7 @@ changes using <code><a href="../reference/plot_connectivity.html">plot_connectiv
 <p><code><a href="../reference/plot_connectivity.html">plot_connectivity()</a></code> produces a faceted ggplot2 figure
 showing each connectivity metric (number of patches, probability of
 connectedness, mean patch area, total habitat area) as a function of
-buffer distance.</p>
+interpatch distance.</p>
 </div>
 <div class="section level2">
 <h2 id="summary">Summary<a class="anchor" aria-label="anchor" href="#summary"></a>
@@ -499,7 +515,7 @@ a passability mask</li>
 <code><a href="../reference/drop_habitat_under_barrier.html">drop_habitat_under_barrier()</a></code> - remove habitat beneath
 barriers</li>
 <li>
-<code><a href="../reference/habitat_buffer.html">habitat_buffer()</a></code> - expand habitat by the movement
+<code><a href="../reference/habitat_buffer.html">habitat_buffer()</a></code> - expand habitat by the interpatch
 distance (half the connectivity threshold)</li>
 <li>
 <code><a href="../reference/fragment_habitat.html">fragment_habitat()</a></code> - cut the buffer where barriers

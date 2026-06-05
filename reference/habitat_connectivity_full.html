@@ -23,6 +23,7 @@ for mapping and reporting."></head><body>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/getting-started.html">Getting started</a></li>
+    <li><a class="dropdown-item" href="../articles/interpatch-distance-and-resolution.html">Interpatch distance and raster resolution</a></li>
     <li><a class="dropdown-item" href="../articles/raster-vs-vector.html">Using raster vs vector</a></li>
     <li><a class="dropdown-item" href="../articles/targets-pipeline.html">Using urbioconnect in a targets pipeline</a></li>
   </ul></li>
@@ -51,7 +52,13 @@ for mapping and reporting.</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">habitat_connectivity_full</span><span class="op">(</span><span class="va">habitat</span>, <span class="va">barrier</span>, <span class="va">distance</span>, verbose <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">habitat_connectivity_full</span><span class="op">(</span></span>
+<span>  <span class="va">habitat</span>,</span>
+<span>  <span class="va">barrier</span>,</span>
+<span>  interpatch_distance <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  buffer_radius <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -66,8 +73,30 @@ for mapping and reporting.</p>
 <dd><p>Terra SpatRaster. Barrier raster.</p></dd>
 
 
-<dt id="arg-distance">distance<a class="anchor" aria-label="anchor" href="#arg-distance"></a></dt>
-<dd><p>Numeric. Buffer distance in meters.</p></dd>
+<dt id="arg-interpatch-distance">interpatch_distance<a class="anchor" aria-label="anchor" href="#arg-interpatch-distance"></a></dt>
+<dd><p>Numeric. The distance (in meters) where habitat
+patches are considered connected. E.g., if set to 500, patches 498m apart
+are connected, those 501m apart are not connected. This is passed
+internally to a spatial operation known as "buffering", where this
+distance is used as a radius from the edge of the habitat zone. This means
+the specified <code>interpatch_distance</code> is halved exactly. So an interpatch
+distance of 500 will be converted to 250. For the buffer to be
+representable on the raster, keep <code>resolution &lt;= interpatch_distance / 2</code>;
+below that the buffer is a no-op and a warning is raised. See
+<code><a href="../articles/interpatch-distance-and-resolution.html">vignette("interpatch-distance-and-resolution")</a></code>.</p></dd>
+
+
+<dt id="arg-buffer-radius">buffer_radius<a class="anchor" aria-label="anchor" href="#arg-buffer-radius"></a></dt>
+<dd><p>Numeric. The radius in metres around the habitat.
+Since patches of habitat will be connected when their edge-to-edge gap is
+&lt;= 2 * <code>buffer radius</code>, we recommend you specify <code>buffer_radius</code> to be
+half the "interpatch distance". This is the distance past which habitat
+patches are no longer considered connected. For example, if your
+interpatch distance is 500m, set <code>buffer_radius = 250</code>. The buffer can only
+be represented if it is at least one raster cell, i.e. keep
+<code>resolution &lt;= interpatch_distance / 2</code>. Below that the buffer is a no-op:
+<code><a href="habitat_buffer.html">habitat_buffer()</a></code> warns and returns the habitat unchanged. See
+<code><a href="../articles/interpatch-distance-and-resolution.html">vignette("interpatch-distance-and-resolution")</a></code>.</p></dd>
 
 
 <dt id="arg-verbose">verbose<a class="anchor" aria-label="anchor" href="#arg-verbose"></a></dt>
@@ -87,7 +116,7 @@ for mapping and reporting.</p>
 <span class="r-in"><span><span class="va">result</span> <span class="op">&lt;-</span> <span class="fu">habitat_connectivity_full</span><span class="op">(</span></span></span>
 <span class="r-in"><span>  <span class="va">lizard_habitat</span>,</span></span>
 <span class="r-in"><span>  <span class="va">lizard_barrier</span>,</span></span>
-<span class="r-in"><span>  distance <span class="op">=</span> <span class="fl">10</span>,</span></span>
+<span class="r-in"><span>  interpatch_distance <span class="op">=</span> <span class="fl">10</span>,</span></span>
 <span class="r-in"><span>  verbose <span class="op">=</span> <span class="cn">FALSE</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rspatial.github.io/terra/reference/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">result</span><span class="op">)</span></span></span>

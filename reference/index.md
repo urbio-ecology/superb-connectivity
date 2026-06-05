@@ -61,12 +61,12 @@
 
 ## Visualisation
 
-- [`gg_barrier_habitat_buffer()`](https://urbio-ecology.github.io/urbioconnect/reference/gg_barrier_habitat_buffer.md)
-  : Plot barrier, habitat, and buffer layers
-- [`plot_barrier_habitat_buffer()`](https://urbio-ecology.github.io/urbioconnect/reference/plot_barrier_habitat_buffer.md)
-  : Save barrier habitat buffer plot
+- [`gg_barrier_habitat_interpatch_dist()`](https://urbio-ecology.github.io/urbioconnect/reference/gg_barrier_habitat_interpatch_dist.md)
+  : Plot barrier, habitat, and interpatch distance layers
+- [`plot_barrier_habitat_interpatch_dist()`](https://urbio-ecology.github.io/urbioconnect/reference/plot_barrier_habitat_interpatch_dist.md)
+  : Save barrier habitat interpatch distance plot
 - [`plot_connectivity()`](https://urbio-ecology.github.io/urbioconnect/reference/plot_connectivity.md)
-  : Plot connectivity metrics across buffer distances
+  : Plot connectivity metrics across interpatch distances
 - [`plot_patches()`](https://urbio-ecology.github.io/urbioconnect/reference/plot_patches.md)
   : Plot connected habitat patches
 

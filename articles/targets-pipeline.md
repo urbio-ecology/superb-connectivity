@@ -22,21 +22,21 @@ The [targets](https://docs.ropensci.org/targets/) package addresses this
 issue by only running code that has been changed. You can think of this
 as a kind of **intelligent caching**: it tracks every input and output
 in your pipeline and only re-runs the steps whose inputs have changed.
-If you add a new buffer distance, targets re-runs only the connectivity
-step for that distance — not the data preparation or the other buffer
-distances.
+If you add a new interpatch distance, targets re-runs only the
+connectivity step for that distance — not the data preparation or the
+other interpatch distances.
 
 `urbioconnect` is works well in a targets pipeline, and this vignette
 unpacks an example pipeline, describing how it works.
 
 We first discuss a minimal pipeline, before going on to add multiple
-buffer distances, and then finally demonstrate how to take advantage of
-parallel processing.
+interpatch distances, and then finally demonstrate how to take advantage
+of parallel processing.
 
 ## A minimal `_targets.R`
 
 The following `_targets.R` file uses the built-in lizard example data
-and runs connectivity analysis at one buffer distance.
+and runs connectivity analysis at one interpatch distance.
 
 Place this code in a file in the root of your project directory, and
 name it `_targets.R`:
@@ -59,7 +59,7 @@ tar_assign({
   target_resolution <- tar_target(500)
   data_resolution <- tar_target(10)
   aggregation_factor <- tar_target(target_resolution / data_resolution)
-  distance <- tar_target(10)
+  interpatch_distance <- tar_target(10)
   
   barrier <- example_barrier() |> tar_terra_rast()
   habitat <- example_habitat() |> tar_terra_rast()
@@ -67,7 +67,7 @@ tar_assign({
   barrier_mask <- create_barrier_mask(barrier) |> tar_terra_rast()
   remaining <- drop_habitat_under_barrier(habitat, barrier_mask) |>
     tar_terra_rast()
-  buffered_habitat <- habitat_buffer(remaining, distance = distance) |>
+  buffered_habitat <- habitat_buffer(remaining, interpatch_distance = interpatch_distance) |>
     tar_terra_rast()
   fragmentation_raster <- fragment_habitat(buffered_habitat, barrier_mask) |>
     tar_terra_rast()
@@ -84,13 +84,13 @@ tar_assign({
   areas_connected <- habitat_connectivity(
     habitat = habitat,
     barrier = barrier,
-    distance = distance
+    interpatch_distance = interpatch_distance
   ) |>
     tar_target()
 
   results_connect_habitat <- summarise_connectivity(
     area = areas_connected$area,
-    distance = distance,
+    interpatch_distance = interpatch_distance,
     target_resolution = target_resolution,
     data_resolution = data_resolution,
     aggregation_factor = aggregation_factor,
@@ -123,11 +123,12 @@ targets with
   target_resolution <- tar_target(500)
   data_resolution <- tar_target(10)
   aggregation_factor <- tar_target(target_resolution / data_resolution)
-  distance <- tar_target(10)
+  interpatch_distance <- tar_target(10)
 ```
 
-This means if any of these variables are changed, say `distance` changes
-from 10 and 20, then anything using `distance` would need to get rerun.
+This means if any of these variables are changed, say
+`interpatch_distance` changes from 10 and 20, then anything using
+`distance` would need to get rerun.
 
 These parts here:
 
@@ -216,7 +217,7 @@ You can load the individual targets back into your R session using
 targets::tar_load(results_connect_habitat)
 results_connect_habitat
 
-# The connectivity data frame for a specific buffer distance
+# The connectivity data frame for a specific interpatch distance
 targets::tar_load(connectivity_50)
 connectivity_50
 ```
@@ -243,8 +244,8 @@ That repository demonstrates:
 
 - Loading real habitat and barrier shapefiles and converting them with
   [`prepare_rasters()`](https://urbio-ecology.github.io/urbioconnect/reference/prepare_rasters.md)
-- Saving habitat buffer plots to files with
-  [`plot_barrier_habitat_buffer()`](https://urbio-ecology.github.io/urbioconnect/reference/plot_barrier_habitat_buffer.md)
+- Saving habitat interpatch distance plots to files with
+  [`plot_barrier_habitat_interpatch_dist()`](https://urbio-ecology.github.io/urbioconnect/reference/plot_barrier_habitat_interpatch_dist.md)
 - Rendering a quarto report as a targets artefact
 - Using `geotargets` to store terra rasters natively in the targets
   cache

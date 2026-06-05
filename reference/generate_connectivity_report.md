@@ -8,7 +8,7 @@ results.
 ``` r
 generate_connectivity_report(
   species_name,
-  buffer_distances,
+  interpatch_distances,
   results_connect_habitat,
   areas_connected,
   habitat = NULL,
@@ -28,9 +28,15 @@ generate_connectivity_report(
 
   Character. Name of the species being analysed.
 
-- buffer_distances:
+- interpatch_distances:
 
-  Numeric vector. Buffer distances used in analysis (in meters).
+  Numeric. The distances (in meters) where habitat patches are
+  considered connected. E.g., if set to 500, patches 498m apart are
+  connected, those 501m apart are not connected. This is passed
+  internally to a spatial operation known as "buffering", where this
+  distance is used as a radius from the edge of the habitat zone. This
+  means the specified `interpatch_distance` is halved exactly. So an
+  interpatch distance of 500 will be converted to 250.
 
 - results_connect_habitat:
 
@@ -38,7 +44,8 @@ generate_connectivity_report(
 
 - areas_connected:
 
-  List of data frames. Connected patch areas for e ach buffer distance.
+  List of data frames. Connected patch areas for each interpatch
+  distance.
 
 - habitat:
 
@@ -82,7 +89,7 @@ Character vector of generated report file path(s).
 if (FALSE) { # \dontrun{
 report_path <- generate_connectivity_report(
   species_name = "Superb Fairy Wren",
-  buffer_distances = c(100, 250, 400),
+  interpatch_distances = c(100, 250, 400),
   results_connect_habitat = results_df,
   areas_connected = patches_list,
   output_format = "html"

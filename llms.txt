@@ -100,29 +100,29 @@ plot(habitat, col = "seagreen", legend = FALSE, add = TRUE)
 
 ``` r
 
-# run the full raster pipeline at a 10m buffer distance
+# run the full raster pipeline at a 10m interpatch distance
 areas <- habitat_connectivity(
   habitat  = habitat,
   barrier  = barrier,
-  distance = 10
+  interpatch_distance = 10
 )
 #> ℹ Creating barrier mask
-#> ✔ Creating barrier mask [42ms]
+#> ✔ Creating barrier mask [39ms]
 #> 
 #> ℹ Removing habitat underneath barrier
 #> ✔ Removing habitat underneath barrier [17ms]
 #> 
-#> ℹ Adding buffer of 10m to habitat layer
-#> ✔ Adding buffer of 10m to habitat layer [249ms]
+#> ℹ Interpatch dist: Adding buffer of 10m to habitat layer
+#> ✔ Interpatch dist: Adding buffer of 10m to habitat layer [248ms]
 #> 
 #> ℹ Fragmenting habitat layer along barrier intersection
 #> ✔ Fragmenting habitat layer along barrier intersection [14ms]
 #> 
 #> ℹ Assigning patches ID to fragments
-#> ✔ Assigning patches ID to fragments [713ms]
+#> ✔ Assigning patches ID to fragments [689ms]
 #> 
 #> ℹ Summarising area in each patch
-#> ✔ Summarising area in each patch [122ms]
+#> ✔ Summarising area in each patch [116ms]
 #> 
 
 areas
@@ -148,16 +148,16 @@ Summarise the connectivity metrics:
 
 summarise_connectivity(
   area = areas$area,
-  distance  = 100,
+  interpatch_distance  = 100,
   target_resolution = 500,
   data_resolution = 10,
   aggregation_factor = 50,
   species = "Blue-tongued Lizard"
 )
 #> # A tibble: 1 × 10
-#>   species    distance n_patches effective_mesh_ha prob_connectedness
+#>   species     interpatch_distance n_patches effective_mesh_ha prob_connectedness
 #>   <chr>                     <dbl>     <int>             <dbl>              <dbl>
-#> 1 Blue-tongued L…             100       163                 4           0.000017
+#> 1 Blue-tongu…                 100       163                 4           0.000017
 #> # ℹ 5 more variables: patch_area_mean <dbl>, patch_area_total_ha <dbl>,
 #> #   target_resolution <dbl>, data_resolution <dbl>, aggregation_factor <dbl>
 ```
@@ -253,12 +253,12 @@ development of the methods and software.
 
 ## Visualisation
 
-- [`gg_barrier_habitat_buffer()`](https://urbio-ecology.github.io/urbioconnect/reference/gg_barrier_habitat_buffer.md)
-  : Plot barrier, habitat, and buffer layers
-- [`plot_barrier_habitat_buffer()`](https://urbio-ecology.github.io/urbioconnect/reference/plot_barrier_habitat_buffer.md)
-  : Save barrier habitat buffer plot
+- [`gg_barrier_habitat_interpatch_dist()`](https://urbio-ecology.github.io/urbioconnect/reference/gg_barrier_habitat_interpatch_dist.md)
+  : Plot barrier, habitat, and interpatch distance layers
+- [`plot_barrier_habitat_interpatch_dist()`](https://urbio-ecology.github.io/urbioconnect/reference/plot_barrier_habitat_interpatch_dist.md)
+  : Save barrier habitat interpatch distance plot
 - [`plot_connectivity()`](https://urbio-ecology.github.io/urbioconnect/reference/plot_connectivity.md)
-  : Plot connectivity metrics across buffer distances
+  : Plot connectivity metrics across interpatch distances
 - [`plot_patches()`](https://urbio-ecology.github.io/urbioconnect/reference/plot_patches.md)
   : Plot connected habitat patches
 
@@ -293,6 +293,8 @@ development of the methods and software.
 
 - [Getting
   started](https://urbio-ecology.github.io/urbioconnect/articles/getting-started.md):
+- [Interpatch distance and raster
+  resolution](https://urbio-ecology.github.io/urbioconnect/articles/interpatch-distance-and-resolution.md):
 - [Using raster vs
   vector](https://urbio-ecology.github.io/urbioconnect/articles/raster-vs-vector.md):
 - [Using urbioconnect in a targets

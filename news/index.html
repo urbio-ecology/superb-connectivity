@@ -19,6 +19,7 @@
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/getting-started.html">Getting started</a></li>
+    <li><a class="dropdown-item" href="../articles/interpatch-distance-and-resolution.html">Interpatch distance and raster resolution</a></li>
     <li><a class="dropdown-item" href="../articles/raster-vs-vector.html">Using raster vs vector</a></li>
     <li><a class="dropdown-item" href="../articles/targets-pipeline.html">Using urbioconnect in a targets pipeline</a></li>
   </ul></li>
@@ -40,14 +41,22 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="development version" id="urbioconnect-development-version">urbioconnect (development version)<a class="anchor" aria-label="anchor" href="#urbioconnect-development-version"></a></h2>
-<ul><li>Use GPL (&gt;= 3) License.</li>
-<li>drop <code>terra_</code> prefix and move <code>rast_</code> functions into <code>scratch</code> where we test the LOO method. * Add <code>sf_</code> prefix to vector based approaches.</li>
-<li>Add datasets and dataset loading function</li>
-<li>Add legend to habitat buffer barrier plot - <a href="https://github.com/urbio-ecology/urbioconnect/issues/66" class="external-link">#66</a>
-</li>
-<li>Resolve internal issue where raster might not be exactly aligned, add internal function <code>align_to()</code> in <code><a href="../reference/drop_habitat_under_barrier.html">drop_habitat_under_barrier()</a></code>, <code><a href="../reference/fragment_habitat.html">fragment_habitat()</a></code>, and <code><a href="../reference/assign_patches_to_fragments.html">assign_patches_to_fragments()</a></code>.</li>
-<li>update <code><a href="../reference/effective_mesh_size.html">effective_mesh_size()</a></code> and <code><a href="../reference/connectivity_probability.html">connectivity_probability()</a></code> to go from area_squared –&gt; area_baseline. <a href="https://github.com/urbio-ecology/urbioconnect/issues/128" class="external-link">#128</a>. This will help facilitate <a href="https://github.com/urbio-ecology/urbioconnect/issues/124" class="external-link">#124</a>.</li>
+<ul><li><p>Use GPL (&gt;= 3) License.</p></li>
+<li><p>drop <code>terra_</code> prefix and move <code>rast_</code> functions into <code>scratch</code> where we test the LOO method. * Add <code>sf_</code> prefix to vector based approaches.</p></li>
+<li><p>Add datasets and dataset loading function</p></li>
+<li><p>Add legend to habitat buffer barrier plot - <a href="https://github.com/urbio-ecology/urbioconnect/issues/66" class="external-link">#66</a></p></li>
+<li><p>Resolve internal issue where raster might not be exactly aligned, add internal function <code>align_to()</code> in <code><a href="../reference/drop_habitat_under_barrier.html">drop_habitat_under_barrier()</a></code>, <code><a href="../reference/fragment_habitat.html">fragment_habitat()</a></code>, and <code><a href="../reference/assign_patches_to_fragments.html">assign_patches_to_fragments()</a></code>.</p></li>
+<li><p>update <code><a href="../reference/effective_mesh_size.html">effective_mesh_size()</a></code> and <code><a href="../reference/connectivity_probability.html">connectivity_probability()</a></code> to go from area_squared –&gt; area_baseline. <a href="https://github.com/urbio-ecology/urbioconnect/issues/128" class="external-link">#128</a>. This will help facilitate <a href="https://github.com/urbio-ecology/urbioconnect/issues/124" class="external-link">#124</a>.</p></li>
+<li><p><code><a href="../reference/habitat_connectivity.html">habitat_connectivity()</a></code>, <code><a href="../reference/habitat_connectivity_full.html">habitat_connectivity_full()</a></code>, and <code><a href="../reference/sf_habitat_connectivity.html">sf_habitat_connectivity()</a></code> now take either <code>interpatch_distance</code> or <code>buffer_radius</code> (supply exactly one). The lower-level <code><a href="../reference/habitat_buffer.html">habitat_buffer()</a></code> and <code><a href="../reference/sf_habitat_buffer.html">sf_habitat_buffer()</a></code> take <code>buffer_radius</code> directly. (<a href="https://github.com/urbio-ecology/urbioconnect/issues/131" class="external-link">#131</a>)</p></li>
+<li><p><code><a href="../reference/habitat_buffer.html">habitat_buffer()</a></code> now warns when the buffer radius is too fine for the raster resolution (smaller than one cell, or not a clean multiple of it) and returns the habitat unchanged instead of erroring. (<a href="https://github.com/urbio-ecology/urbioconnect/issues/131" class="external-link">#131</a>)</p></li>
+<li><p>New vignette <code><a href="../articles/interpatch-distance-and-resolution.html">vignette("interpatch-distance-and-resolution")</a></code> on how interpatch distance, buffer radius, and raster resolution interact.</p></li>
+<li><p>Fix the shiny app’s interpatch-distance input, which was read under the wrong id. (<a href="https://github.com/urbio-ecology/urbioconnect/issues/131" class="external-link">#131</a>)</p></li>
+</ul><div class="section level3">
+<h3 id="breaking-changes-development-version">Breaking changes<a class="anchor" aria-label="anchor" href="#breaking-changes-development-version"></a></h3>
+<ul><li>
+<code>interpatch_distance</code> is now the full edge-to-edge distance below which two patches count as connected. It is halved internally to the buffer radius, so connectivity results differ from previous versions; reproduce old output by passing <code>buffer_radius =</code> the old value. (<a href="https://github.com/urbio-ecology/urbioconnect/issues/131" class="external-link">#131</a>)</li>
 </ul></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.1.0" id="urbioconnect-010">urbioconnect 0.1.0<a class="anchor" aria-label="anchor" href="#urbioconnect-010"></a></h2>
 <ul><li>Make a NEWS file to monitor changes.</li>

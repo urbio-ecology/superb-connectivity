@@ -38,7 +38,7 @@ lizard_barrier_shp <- example_barrier_shp()
 #> Bounding box:  xmin: 326089.6 ymin: 5820342 xmax: 327662.5 ymax: 5821909
 #> Projected CRS: GDA94 / MGA zone 55
 if (FALSE) { # \dontrun{
-buffered <- sf_habitat_buffer(lizard_habitat_sf, distance = 10)
+buffered <- sf_habitat_buffer(lizard_habitat_sf, interpatch_distance = 10)
 sf_fragment_habitat(buffered, lizard_barrier_shp)
 } # }
 ```

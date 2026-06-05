@@ -90,7 +90,8 @@ then unions the polygons, then simplifies with
 
 barrier_sf_clean <- clean(barrier_sf)
 habitat_sf_clean <- clean(habitat_sf)
-buffer_dist <- 10
+interpatch_dist <- 10
+buffered_radius <- interpatch_dist / 2
 ```
 
 ### Raster approach
@@ -110,27 +111,27 @@ tic()
 raster_result <- habitat_connectivity(
   habitat = habitat_rast,
   barrier = barrier_rast,
-  distance = buffer_dist,
+  interpatch_distance = interpatch_dist,
   verbose = FALSE
 )
 rast_time <- toc()
-#> 2.063 sec elapsed
+#> 3.21 sec elapsed
 
 raster_result
-#> # A tibble: 163 × 3
+#> # A tibble: 703 × 3
 #>    patch_id    area area_squared
 #>       <dbl>   <dbl>        <dbl>
-#>  1        1 97878.  9580104085. 
-#>  2       15  2416.     5837832. 
-#>  3       18  1304.     1700646. 
-#>  4       32  1592.     2534763. 
-#>  5       37     4           16.0
-#>  6       39  3332.    11103470. 
-#>  7       40   132.       17426. 
-#>  8       44   108.       11665. 
-#>  9       47    36.0       1296. 
-#> 10       57  1112.     1236681. 
-#> # ℹ 153 more rows
+#>  1        1    60.0        3600.
+#>  2        2  1648.      2716264.
+#>  3        7    12.0         144.
+#>  4        8  1200.      1440195.
+#>  5       10 92034.   8470191653.
+#>  6       11    40.0        1600.
+#>  7       12   288.        82955.
+#>  8       28  1156.      1336497.
+#>  9       30    64.0        4096.
+#> 10       31   940.       883705.
+#> # ℹ 693 more rows
 ```
 
 The raster result has columns `patch_id`, `area` (square metres), and
@@ -144,26 +145,26 @@ tic()
 vector_result <- sf_habitat_connectivity(
   habitat = habitat_sf_clean,
   barrier = barrier_sf_clean,
-  distance = buffer_dist
+  interpatch_distance = interpatch_dist
 )
 vect_time <- toc()
-#> 13.316 sec elapsed
+#> 11.277 sec elapsed
 
 vector_result
-#> # A tibble: 136 × 3
+#> # A tibble: 483 × 3
 #>    patch_id   area area_squared
 #>       <dbl>  <dbl>        <dbl>
-#>  1        2  3326.    11060879.
-#>  2        3   173.       29758.
-#>  3        5     4           16 
-#>  4        6  1583.     2504654.
-#>  5        7 97839.  9572549696.
-#>  6        8  2410.     5808870.
-#>  7        9  1292.     1670114.
-#>  8       10   806.      648912.
-#>  9       11   970.      941092.
-#> 10       12  3177.    10095644.
-#> # ℹ 126 more rows
+#>  1        1 1536.      2359937.
+#>  2        2  287.        82367.
+#>  3        3  292.        85114.
+#>  4        4  850.       721664.
+#>  5        5    8            64 
+#>  6        6 3047.      9283685.
+#>  7        7   82.7        6840.
+#>  8        8   47.7        2280.
+#>  9        9  306.        93555.
+#> 10       11   24           576 
+#> # ℹ 473 more rows
 ```
 
 The vector result has columns `patch_id`, `area` , and `area_squared`.
@@ -176,9 +177,9 @@ area and squared area.
 ``` r
 
 nrow(raster_result)
-#> [1] 163
+#> [1] 703
 nrow(vector_result)
-#> [1] 136
+#> [1] 483
 ```
 
 Small differences in patch counts and areas are expected. The raster
@@ -188,11 +189,10 @@ exact polygon geometry, so it typically produces slightly different (and
 arguably more precise) patch boundaries, particularly along curved or
 irregular barrier edges.
 
-    #> [1] 2.063
+    #> [1] 3.21
 
 Timings for the methods are also important to consider. The raster
-approach took 2.063 seconds, and the vector approach took 13.316
-seconds.
+approach took 3.21 seconds, and the vector approach took 11.277 seconds.
 
 ## Summarising connectivity metrics
 
@@ -205,16 +205,16 @@ area columns as vectors.
 # Raster approach output uses the `area` column
 summarise_connectivity(
   area = raster_result$area,
-  distance = buffer_dist,
+  interpatch_distance = interpatch_dist,
   target_resolution = 500,
   data_resolution = 10,
   aggregation_factor = 50,
   species = "Blue-tongued Lizard (raster)"
 )
 #> # A tibble: 1 × 10
-#>   species                distance n_patches effective_mesh_ha prob_connectedness
+#>   species     interpatch_distance n_patches effective_mesh_ha prob_connectedness
 #>   <chr>                     <dbl>     <int>             <dbl>              <dbl>
-#> 1 Blue-tongued Lizard (…       10       163                 4           0.000017
+#> 1 Blue-tongu…                  10       703                 4           0.000015
 #> # ℹ 5 more variables: patch_area_mean <dbl>, patch_area_total_ha <dbl>,
 #> #   target_resolution <dbl>, data_resolution <dbl>, aggregation_factor <dbl>
 ```
@@ -225,16 +225,16 @@ summarise_connectivity(
 # Strip units before passing to summarise_connectivity
 summarise_connectivity(
   area = vector_result$area,
-  distance = buffer_dist,
+  interpatch_distance = interpatch_dist,
   target_resolution = NA,
   data_resolution = NA,
   aggregation_factor = NA,
   species = "Blue-tongued Lizard (vector)"
 ) 
 #> # A tibble: 1 × 10
-#>   species                distance n_patches effective_mesh_ha prob_connectedness
+#>   species     interpatch_distance n_patches effective_mesh_ha prob_connectedness
 #>   <chr>                     <dbl>     <int>             <dbl>              <dbl>
-#> 1 Blue-tongued Lizard (…       10       136                 4           0.000017
+#> 1 Blue-tongu…                  10       483                 4           0.000016
 #> # ℹ 5 more variables: patch_area_mean <dbl>, patch_area_total_ha <dbl>,
 #> #   target_resolution <lgl>, data_resolution <lgl>, aggregation_factor <lgl>
 ```
@@ -317,7 +317,7 @@ step.
 # Raster step-by-step
 barrier_mask <- create_barrier_mask(barrier_rast)
 remaining <- drop_habitat_under_barrier(habitat_rast, barrier_mask)
-buffered <- habitat_buffer(remaining, distance = 10)
+buffered <- habitat_buffer(remaining, interpatch_distance = 10)
 fragmented <- fragment_habitat(buffered, barrier_mask)
 patches <- assign_patches_to_fragments(remaining, fragmented) |>
   add_patch_area()
@@ -327,7 +327,7 @@ areas <- aggregate_connected_patches(patches)
 ``` r
 
 # Vector step-by-step
-buffered_sf <- sf_habitat_buffer(habitat_sf_clean, distance = 10)
+buffered_sf <- sf_habitat_buffer(habitat_sf_clean, interpatch_distance = 10)
 fragments_sf <- sf_fragment_habitat(buffered_sf, barrier_sf_clean)
 remaining_sf <- sf_drop_habitat_under_barrier(habitat_sf_clean, barrier_sf_clean)
 patches_sf <- sf_assign_patches_to_fragments(remaining_sf, fragments_sf) |>

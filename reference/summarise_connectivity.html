@@ -25,6 +25,7 @@ See examples below."></head><body>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/getting-started.html">Getting started</a></li>
+    <li><a class="dropdown-item" href="../articles/interpatch-distance-and-resolution.html">Interpatch distance and raster resolution</a></li>
     <li><a class="dropdown-item" href="../articles/raster-vs-vector.html">Using raster vs vector</a></li>
     <li><a class="dropdown-item" href="../articles/targets-pipeline.html">Using urbioconnect in a targets pipeline</a></li>
   </ul></li>
@@ -57,7 +58,7 @@ See examples below.</p>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">summarise_connectivity</span><span class="op">(</span></span>
 <span>  <span class="va">area</span>,</span>
 <span>  area_baseline <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  <span class="va">distance</span>,</span>
+<span>  <span class="va">interpatch_distance</span>,</span>
 <span>  <span class="va">target_resolution</span>,</span>
 <span>  <span class="va">data_resolution</span>,</span>
 <span>  <span class="va">aggregation_factor</span>,</span>
@@ -77,8 +78,14 @@ See examples below.</p>
 <dd><p>Numeric vector. Areas of connected patch baseline.</p></dd>
 
 
-<dt id="arg-distance">distance<a class="anchor" aria-label="anchor" href="#arg-distance"></a></dt>
-<dd><p>Numeric. Buffer distance used in analysis (meters).</p></dd>
+<dt id="arg-interpatch-distance">interpatch_distance<a class="anchor" aria-label="anchor" href="#arg-interpatch-distance"></a></dt>
+<dd><p>Numeric. The distance (in meters) where habitat
+patches are considered connected. E.g., if set to 500, patches 498m apart
+are connected, those 501m apart are not connected. This is passed
+internally to a spatial operation known as "buffering", where this
+distance is used as a radius from the edge of the habitat zone. This means
+the specified <code>interpatch_distance</code> is halved exactly. So an interpatch
+distance of 500 will be converted to 250.</p></dd>
 
 
 <dt id="arg-target-resolution">target_resolution<a class="anchor" aria-label="anchor" href="#arg-target-resolution"></a></dt>
@@ -109,16 +116,16 @@ areas.</p>
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">summarise_connectivity</span><span class="op">(</span></span></span>
 <span class="r-in"><span>  area <span class="op">=</span> <span class="va">lizard_areas_connected</span><span class="op">$</span><span class="va">area</span>,</span></span>
-<span class="r-in"><span>  distance <span class="op">=</span> <span class="fl">10</span>,</span></span>
+<span class="r-in"><span>  interpatch_distance <span class="op">=</span> <span class="fl">10</span>,</span></span>
 <span class="r-in"><span>  target_resolution <span class="op">=</span> <span class="fl">500</span>,</span></span>
 <span class="r-in"><span>  data_resolution <span class="op">=</span> <span class="fl">10</span>,</span></span>
 <span class="r-in"><span>  aggregation_factor <span class="op">=</span> <span class="fl">50</span>,</span></span>
 <span class="r-in"><span>  species <span class="op">=</span> <span class="st">"Blue-tongued Lizard"</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 1 × 10</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   species             distance n_patches effective_mesh_ha prob_connectedness</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> Blue-tongued Lizard       10        59                 4           0.000<span style="text-decoration: underline;">017</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   species     interpatch_distance n_patches effective_mesh_ha prob_connectedness</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> Blue-tongu…                  10        59                 4           0.000<span style="text-decoration: underline;">017</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 5 more variables: patch_area_mean &lt;dbl&gt;, patch_area_total_ha &lt;dbl&gt;,</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   target_resolution &lt;dbl&gt;, data_resolution &lt;dbl&gt;, aggregation_factor &lt;dbl&gt;</span></span>
 </code></pre></div>

@@ -10,26 +10,26 @@ test_that("sf_habitat_buffer expands area", {
   habitat <- sf::st_sfc(square(0, 0), crs = 32754)
 
   area_before <- as.numeric(sf::st_area(habitat))
-  buffered <- sf_habitat_buffer(habitat, interpatch_distance = 50)
+  buffered <- sf_habitat_buffer(habitat, buffer_radius = 50)
   area_after <- as.numeric(sf::st_area(buffered))
 
   expect_gt(area_after, area_before)
 })
 
-test_that("sf_habitat_buffer with large interpatch_distance unions separate patches", {
+test_that("sf_habitat_buffer with large buffer_radius unions separate patches", {
   habitat <- sf::st_sfc(square(0, 0), square(1000, 0), crs = 32754)
 
-  # Interpatch distance of 600m spans the 1000m gap between patches
-  buffered <- sf_habitat_buffer(habitat, interpatch_distance = 600)
+  # Buffer radius of 600m spans the 1000m gap between patches
+  buffered <- sf_habitat_buffer(habitat, buffer_radius = 600)
 
   expect_equal(length(buffered), 1)
 })
 
-test_that("sf_habitat_buffer with small interpatch_distance keeps patches separate", {
+test_that("sf_habitat_buffer with small buffer_radius keeps patches separate", {
   habitat <- sf::st_sfc(square(0, 0), square(1000, 0), crs = 32754)
 
-  # Interpatch distance of 50m does not span the 1000m gap
-  buffered <- sf_habitat_buffer(habitat, interpatch_distance = 50)
+  # Buffer radius of 50m does not span the 1000m gap
+  buffered <- sf_habitat_buffer(habitat, buffer_radius = 50)
 
   # Should be a multipolygon (still two separate blobs)
   expect_true(sf::st_is(buffered, "MULTIPOLYGON"))
@@ -99,7 +99,7 @@ test_that("sf_habitat_connectivity returns a data frame with expected columns", 
   habitat <- sf::st_sfc(square(0, 0), square(300, 0), crs = 32754)
   barrier <- sf::st_sfc(square(90, 0, size = 120), crs = 32754)
 
-  result <- sf_habitat_connectivity(habitat, barrier, interpatch_distance = 200)
+  result <- sf_habitat_connectivity(habitat, barrier, buffer_radius = 200)
 
   expect_s3_class(result, "data.frame")
   expect_snapshot(names(result))

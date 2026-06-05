@@ -7,7 +7,13 @@
 #'
 #' @param area Numeric vector. Areas of connected patches.
 #' @param area_baseline Numeric vector. Areas of connected patch baseline.
-#' @param interpatch_distance Numeric. Interpatch distance used in analysis (meters).
+#' @param interpatch_distance Numeric. The distance (in meters) where habitat
+#'   patches are considered connected. E.g., if set to 500, patches 498m apart
+#'   are connected, those 501m apart are not connected. This is passed
+#'   internally to a spatial operation known as "buffering", where this
+#'   distance is used as a radius from the edge of the habitat zone. This means
+#'   the specified `interpatch_distance` is halved exactly. So an interpatch
+#'   distance of 500 will be converted to 250.
 #' @param target_resolution Numeric. Target resolution in meters.
 #' @param data_resolution Numeric. Data resolution in meters.
 #' @param aggregation_factor Numeric. Factor by which Data resolution was

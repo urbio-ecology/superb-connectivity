@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot_save_barrier_habitat_interpatch_dist.R
 \name{plot_barrier_habitat_interpatch_dist}
 \alias{plot_barrier_habitat_interpatch_dist}
-\title{Save barrier habitat buffer plot}
+\title{Save barrier habitat interpatch distance plot}
 \usage{
 plot_barrier_habitat_interpatch_dist(
   barrier,
@@ -23,13 +23,19 @@ plot_barrier_habitat_interpatch_dist(
 
 \item{habitat}{habitat layer}
 
-\item{interpatch_distance}{interpatch distance, numeric}
+\item{interpatch_distance}{Numeric. The distance (in meters) where habitat
+patches are considered connected. E.g., if set to 500, patches 498m apart
+are connected, those 501m apart are not connected. This is passed
+internally to a spatial operation known as "buffering", where this
+distance is used as a radius from the edge of the habitat zone. This means
+the specified \code{interpatch_distance} is halved exactly. So an interpatch
+distance of 500 will be converted to 250.}
 
 \item{species}{character, species name, e.g., "Superb Fairy Wren"}
 
 \item{col_barrier}{colour to colour the barrier layer}
 
-\item{col_interpatch_dist}{colour to colour the buffer layer}
+\item{col_interpatch_dist}{colour to colour the interpatch distance layer}
 
 \item{col_habitat}{colour to colour the habitat layer}
 
@@ -47,7 +53,7 @@ Saved a plot created by \code{\link[=gg_barrier_habitat_interpatch_dist]{gg_barr
 lizard_habitat <- example_habitat()
 lizard_barrier <- example_barrier()
 buffered <- habitat_buffer(lizard_habitat, interpatch_distance = 10)
-# Creates plot-barrier-buffer-habitat-*.png in the working directory
+# Creates plot-barrier-interpatch-dist-habitat-*.png in the working directory
 plot_barrier_habitat_interpatch_dist(
   barrier = lizard_barrier,
   buffered = buffered,

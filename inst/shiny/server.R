@@ -510,7 +510,7 @@ server <- function(input, output, session) {
     plot_connectivity(results$results_connect_habitat)
   })
 
-  # Output: Buffer comparison plot ----
+  # Output: Interpatch distance comparison plot ----
   output$plot_buffer_comparison <- renderPlot({
     req(results$results_connect_habitat)
     req(length(results$interpatch_distances) > 1)

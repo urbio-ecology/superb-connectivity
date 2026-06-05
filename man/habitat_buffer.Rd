@@ -4,27 +4,45 @@
 \alias{habitat_buffer}
 \title{Buffer habitat raster}
 \usage{
-habitat_buffer(habitat, interpatch_distance)
+habitat_buffer(habitat, buffer_radius)
 }
 \arguments{
 \item{habitat}{Terra SpatRaster. Habitat raster.}
 
-\item{interpatch_distance}{Numeric. Interpatch distance in metres.}
+\item{buffer_radius}{Numeric. The radius in metres around the habitat.
+Since patches of habitat will be connected when their edge-to-edge gap is
+<= 2 * \verb{buffer radius}, we recommend you specify \code{buffer_radius} to be
+half the "interpatch distance". This is the distance past which habitat
+patches are no longer considered connected. For example, if your
+interpatch distance is 500m, set \code{buffer_radius = 250}. The buffer can only
+be represented if it is at least one raster cell, i.e. keep
+\code{resolution <= interpatch_distance / 2}. Below that the buffer is a no-op:
+\code{habitat_buffer()} warns and returns the habitat unchanged. See
+\code{vignette("interpatch-distance-and-resolution")}.}
 }
 \value{
 Terra SpatRaster with buffered habitat.
 }
 \description{
-Buffer around the habitat a given distance in metres using \code{\link[terra:focal]{terra::focal()}}.
-We recommend you buffer the habitat by half the threshold distance (the
-distance past which habitat patches are no longer considered connected).
+Buffer around the habitat a given distance in metres using
+\code{terra::focalMat(d = buffer_radius, type = "circle")}. This operation is
+used to identify connected patches of habitat. Two patches will connect
+when their edge-to-edge gap is <= 2 * \verb{buffer radius}. So, we recommend
+you specify the \code{buffer_radius} value to be half the interpatch distance,
+which is the distance past which habitat patches are no longer considered
+connected. For example, if your interpatch distance is 500m, set
+\code{buffer_radius = 250}.
 }
 \examples{
 lizard_habitat <- example_habitat()
 library(terra)
 plot(lizard_habitat, col = "darkgreen", legend = FALSE)
-# run with a small buffer distance
-lizard_buff <- habitat_buffer(lizard_habitat, 10)
+# run with a small buffer radius
+lizard_buff <- habitat_buffer(lizard_habitat, buffer_radius = 10)
 plot(lizard_buff, col = "lightgreen", legend = FALSE)
 plot(lizard_habitat, col = "darkgreen", legend = FALSE, add = TRUE)
+}
+\seealso{
+\code{vignette("interpatch-distance-and-resolution")} for the
+relationship between interpatch distance, buffer radius, and resolution.
 }

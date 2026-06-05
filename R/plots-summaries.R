@@ -20,7 +20,13 @@ col2hex <- function(color_name) {
 #' @param barrier Terra SpatRaster. Barrier layer (e.g., roads).
 #' @param buffered Terra SpatRaster. Buffered habitat layer.
 #' @param habitat Terra SpatRaster. Original habitat layer.
-#' @param interpatch_distance Numeric. Interpatch distance in meters.
+#' @param interpatch_distance Numeric. The distance (in meters) where habitat
+#'   patches are considered connected. E.g., if set to 500, patches 498m apart
+#'   are connected, those 501m apart are not connected. This is passed
+#'   internally to a spatial operation known as "buffering", where this
+#'   distance is used as a radius from the edge of the habitat zone. This means
+#'   the specified `interpatch_distance` is halved exactly. So an interpatch
+#'   distance of 500 will be converted to 250.
 #' @param species Character. Species name for plot title.
 #' @param col_barrier Character. Color for barrier layer.
 #' @param col_interpatch_dist Character. Color for interpatch distance zone.
@@ -32,7 +38,7 @@ col2hex <- function(color_name) {
 #' @examples
 #' lizard_habitat <- example_habitat()
 #' lizard_barrier <- example_barrier()
-#' lizard_buffered <- habitat_buffer(lizard_habitat, 10)
+#' lizard_buffered <- habitat_buffer(lizard_habitat, buffer_radius =10)
 #' gg_bar_hab_buf <- gg_barrier_habitat_interpatch_dist(
 #'   barrier = lizard_barrier,
 #'   buffered = lizard_buffered,
@@ -178,7 +184,13 @@ to_sentence <- function(x) {
 #' Visualizes habitat patches colored by their connected fragment ID.
 #'
 #' @param patch_id Terra SpatRaster. Raster with patch IDs.
-#' @param interpatch_distance Numeric. interpatch distance used (for subtitle).
+#' @param interpatch_distance Numeric. The distance (in meters) where habitat
+#'   patches are considered connected. E.g., if set to 500, patches 498m apart
+#'   are connected, those 501m apart are not connected. This is passed
+#'   internally to a spatial operation known as "buffering", where this
+#'   distance is used as a radius from the edge of the habitat zone. This means
+#'   the specified `interpatch_distance` is halved exactly. So an interpatch
+#'   distance of 500 will be converted to 250.
 #' @param species Character. Species name (default: "Species").
 #' @param n_cols Integer. Number of colors to cycle through (default: 7).
 #'
@@ -187,8 +199,8 @@ to_sentence <- function(x) {
 #' @examples
 #' lizard_habitat <- example_habitat()
 #' lizard_barrier <- example_barrier()
-#' interpatch_distance <- 5
-#' buffered_habitat <- habitat_buffer(lizard_habitat, interpatch_distance)
+#' buffer_radius <- 5
+#' buffered_habitat <- habitat_buffer(lizard_habitat, buffer_radius)
 #' barrier_mask <- create_barrier_mask(lizard_barrier)
 #' fragmented <- fragment_habitat(buffered_habitat, barrier_mask)
 #' remaining_habitat <- drop_habitat_under_barrier(
@@ -249,7 +261,8 @@ plot_patches <- function(
         "Patches of {species} habitat"
       ),
       subtitle = glue::glue(
-        "# patches: {n_patches}\nBuffer size: {interpatch distances}m\n{n_cols} colours"
+        "# patches: {n_patches}\nInterpatch Distance size:\\
+        {interpatch_distance}m\n{n_cols} colours"
       )
     ) +
     ggplot2::theme_sub_axis(

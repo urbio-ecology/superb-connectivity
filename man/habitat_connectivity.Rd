@@ -4,14 +4,29 @@
 \alias{habitat_connectivity}
 \title{Calculate habitat connectivity using terra}
 \usage{
-habitat_connectivity(habitat, barrier, interpatch_distance, verbose = TRUE)
+habitat_connectivity(
+  habitat,
+  barrier,
+  interpatch_distance = NULL,
+  buffer_radius = NULL,
+  verbose = TRUE
+)
 }
 \arguments{
 \item{habitat}{Terra SpatRaster. Habitat raster.}
 
 \item{barrier}{Terra SpatRaster. Barrier raster.}
 
-\item{interpatch_distance}{Numeric. Interpatch distance in meters.}
+\item{interpatch_distance}{Numeric. The distance (in meters) where habitat
+patches are considered connected. E.g., if set to 500, patches 498m apart
+are connected, those 501m apart are not connected. This is passed
+internally to a spatial operation known as "buffering", where this
+distance is used as a radius from the edge of the habitat zone. This means
+the specified \code{interpatch_distance} is halved exactly. So an interpatch
+distance of 500 will be converted to 250. For the buffer to be
+representable on the raster, keep \code{resolution <= interpatch_distance / 2};
+below that the buffer is a no-op and a warning is raised. See
+\code{vignette("interpatch-distance-and-resolution")}.}
 
 \item{verbose}{Logical. Display progress messages (default: TRUE).}
 }
@@ -39,4 +54,8 @@ connectivity <- habitat_connectivity(
     interpatch_distance = 10
   )
 connectivity
+}
+\seealso{
+\code{vignette("interpatch-distance-and-resolution")} for the
+relationship between interpatch distance, buffer radius, and resolution.
 }

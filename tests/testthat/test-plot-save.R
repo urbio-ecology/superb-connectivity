@@ -13,7 +13,7 @@ small_barrier <- terra::rast(
   vals = NA
 )
 small_barrier[10, 10] <- 1
-buffered <- habitat_buffer(small_habitat, interpatch_distance = 100)
+buffered <- habitat_buffer(small_habitat, buffer_radius = 100)
 
 test_that("plot_barrier_habitat_interpatch_dist saves a file and returns a named path", {
   withr::with_tempdir({

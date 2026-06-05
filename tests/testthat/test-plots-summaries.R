@@ -1,7 +1,7 @@
 lizard_habitat <- example_habitat()
 lizard_barrier <- example_barrier()
-buffer_dist <- 10
-buffered <- habitat_buffer(lizard_habitat, buffer_dist)
+interpatch_dist <- 10
+buffered <- habitat_buffer(lizard_habitat, interpatch_dist)
 barrier_mask <- create_barrier_mask(lizard_barrier)
 fragmented <- fragment_habitat(buffered, barrier_mask)
 remaining <- drop_habitat_under_barrier(lizard_habitat, barrier_mask)

@@ -1,24 +1,35 @@
 #' Buffer habitat by distance
 #'
 #' Creates a buffer around habitat polygons and unions overlapping areas into
-#' a single polygon.
+#' a single polygon, using [sf::st_buffer()]. Unlike the raster
+#' [habitat_buffer()], this works in continuous coordinate space, so there is
+#' **no resolution constraint**: any `buffer_radius` produces an exact buffer
+#' and the sub-cell "no buffer" problem of the raster path does not apply. The
+#' buffer arc is approximated by `nQuadSegs` straight segments per quarter
+#' circle (here 5, i.e. a 20-sided polygon), which affects the *smoothness* of
+#' the outline, not whether the buffer forms. See
+#' `vignette("interpatch-distance-and-resolution")`.
 #'
 #' @param habitat SF object. Habitat spatial data.
-#' @param interpatch_distance Numeric. interpatch distance in meters.
+#' @param buffer_radius Numeric. The radius in metres around the habitat.
+#'   Specify it as half the interpatch distance (see [habitat_buffer()]).
+#'   Because vector buffering is done in continuous space, there is no minimum
+#'   representable radius — unlike the raster path, there is no resolution below
+#'   which the buffer becomes a no-op.
 #'
 #' @returns SF object with buffered and unioned habitat geometry.
 #' @examples
 #' lizard_habitat_sf <- terra::as.polygons(example_habitat(), dissolve = TRUE) |>
 #'   sf::st_as_sf()
 #' \dontrun{
-#' sf_habitat_buffer(lizard_habitat_sf, interpatch_distance = 10)
+#' sf_habitat_buffer(lizard_habitat_sf, buffer_radius = 10)
 #' }
 #' @export
-sf_habitat_buffer <- function(habitat, interpatch_distance) {
-  # buffer by the required interpatch_distance
+sf_habitat_buffer <- function(habitat, buffer_radius) {
+  # buffer by the required buffer_radius
   habitat_buffer <- sf::st_buffer(
     x = habitat,
-    dist = interpatch_distance,
+    dist = buffer_radius,
     nQuadSegs = 5
   )
   # union creates one large polygon rather than multiple small ones
@@ -94,7 +105,7 @@ sf_drop_habitat_under_barrier <- function(habitat, barrier) {
 #'   sf::st_as_sf()
 #' lizard_barrier_shp <- example_barrier_shp()
 #' \dontrun{
-#' buffered <- sf_habitat_buffer(lizard_habitat_sf, interpatch_distance = 10)
+#' buffered <- sf_habitat_buffer(lizard_habitat_sf, buffer_radius = 10)
 #' fragments <- sf_fragment_habitat(buffered, lizard_barrier_shp)
 #' remaining <- sf_drop_habitat_under_barrier(lizard_habitat_sf, lizard_barrier_shp)
 #' sf_assign_patches_to_fragments(remaining, fragments)
@@ -118,7 +129,7 @@ sf_assign_patches_to_fragments <- function(remaining, fragment_id) {
 #'   sf::st_as_sf()
 #' \dontrun{
 #' lizard_barrier_shp <- example_barrier_shp()
-#' buffered <- sf_habitat_buffer(lizard_habitat_sf, interpatch_distance = 10)
+#' buffered <- sf_habitat_buffer(lizard_habitat_sf, buffer_radius = 10)
 #' fragments <- sf_fragment_habitat(buffered, lizard_barrier_shp)
 #' remaining <- sf_drop_habitat_under_barrier(lizard_habitat_sf, lizard_barrier_shp)
 #' patches <- sf_assign_patches_to_fragments(remaining, fragments)
@@ -142,7 +153,7 @@ sf_add_patch_area <- function(patches) {
 #'   sf::st_as_sf()
 #' lizard_barrier_shp <- example_barrier_shp()
 #' \dontrun{
-#' buffered <- sf_habitat_buffer(lizard_habitat_sf, interpatch_distance = 10)
+#' buffered <- sf_habitat_buffer(lizard_habitat_sf, buffer_radius = 10)
 #' fragments <- sf_fragment_habitat(buffered, lizard_barrier_shp)
 #' remaining <- sf_drop_habitat_under_barrier(lizard_habitat_sf, lizard_barrier_shp)
 #' patches <- sf_assign_patches_to_fragments(remaining, fragments) |>
@@ -167,8 +178,26 @@ sf_aggregate_connected_patches <- function(patch_areas) {
 #'
 #' @param habitat SF object. Original habitat spatial data.
 #' @param barrier SF object. Barrier spatial data (e.g., roads, waterways).
-#' @param interpatch_distance Numeric. Threshold interpatch_distance in meters for connectivity.
-#'   Habitat patches within this interpatch_distance are considered connected.
+#' @param interpatch_distance Numeric. The distance (in meters) where habitat
+#'   patches are considered connected. E.g., if set to 500, patches 498m apart
+#'   are connected, those 501m apart are not connected. This is passed
+#'   internally to a spatial operation known as "buffering", where this
+#'   distance is used as a radius from the edge of the habitat zone. This means
+#'   the specified `interpatch_distance` is halved exactly. So an interpatch
+#'   distance of 500 will be converted to 250. Note that
+#'   `interpatch_distance` is mutually exclusive to `habitat_buffer`, so you
+#'    can only specify either `interpatch_distance` or  `habitat_buffer`, and
+#'    never both.
+#' @param buffer_radius Numeric. The radius in metres around the habitat.
+#'   Since patches of habitat will be connected when their edge-to-edge gap is
+#'   <= 2 * `buffer radius`, we recommend you specify `buffer_radius` to be
+#'   half the "interpatch distance". This is the distance past which habitat
+#'   patches are no longer considered connected. For example, if your
+#'   interpatch distance is 500m, set `buffer_radius = 250`. Note that
+#'   `interpatch_distance` is mutually exclusive to `habitat_buffer`, so you
+#'    can only specify either `interpatch_distance` or  `habitat_buffer`, and
+#'    never both.
+
 #'
 #' @returns Data frame with connectivity metrics for each connected patch,
 #'   including `patch_id`, `area`, and `area_squared`.
@@ -180,9 +209,15 @@ sf_aggregate_connected_patches <- function(patch_areas) {
 #' result <- sf_habitat_connectivity(lizard_habitat_sf, lizard_barrier_shp, interpatch_distance = 10)
 #' result
 #' @export
-sf_habitat_connectivity <- function(habitat, barrier, interpatch_distance) {
-  # buffer the habitat layer by the interpatch_distance
-  buffer <- sf_habitat_buffer(habitat, interpatch_distance)
+sf_habitat_connectivity <- function(
+  habitat,
+  barrier,
+  interpatch_distance = NULL,
+  buffer_radius = NULL
+) {
+  buffer_radius <- resolve_buffer_radius(interpatch_distance, buffer_radius)
+  # buffer the habitat layer by the buffer_radius
+  buffer <- sf_habitat_buffer(habitat, buffer_radius)
   # create fragmentation geometry
   fragment <- sf_fragment_habitat(buffer, barrier)
   # remove all habitat under barriers

@@ -155,7 +155,7 @@ small_barrier[10, 10] <- 1
 hc_verbose <- habitat_connectivity(
   small_habitat,
   small_barrier,
-  interpatch_distance = 100,
+  interpatch_distance = 200,
   verbose = TRUE
 )
 
@@ -195,7 +195,7 @@ test_that("align_to resamples rasters with mismatched geometry", {
 hcf_verbose <- habitat_connectivity_full(
   small_habitat,
   small_barrier,
-  interpatch_distance = 100,
+  interpatch_distance = 200,
   verbose = TRUE
 )
 

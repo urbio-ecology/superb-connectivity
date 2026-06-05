@@ -81,6 +81,7 @@ It is good practice to clean vector data before analysis, especially when workin
 barrier_sf_clean <- clean(barrier_sf)
 habitat_sf_clean <- clean(habitat_sf)
 interpatch_dist <- 10
+buffered_radius <- interpatch_dist / 2
 ```
 
 ### Raster approach

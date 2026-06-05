@@ -122,15 +122,16 @@ plot(remaining_habitat, col = "#1b9e77", legend = FALSE, add = TRUE)
 
 ### Step 3: Buffer the habitat
 
-`habitat_buffer()` expands the habitat outward using a circular focal window. This is the spatial operation of buffering, which we use to represent the interpatch distance - here the **interpatch_distance** should be *half* the species' connectivity threshold. For example, if two patches are considered connected when within 200 m of each other, use a 100 m buffer, as the buffers overlap when patches are within 200 m. For the blue-tongued lizard in urban Melbourne, the median dispersal distance is 1000 m (Kirk et al., 2023), so we would use a buffer of 500 m. However, we use 10 for a faster demonstration on the small example dataset.
+`habitat_buffer()` expands the habitat outward using a circular focal window. This is the spatial operation of buffering, which we use to represent the interpatch distance - here the **buffer_radius** should be *half* the species' connectivity threshold. For example, if two patches are considered connected when within 200 m of each other, use a 100 m buffer, as the buffers overlap when patches are within 200 m. For the blue-tongued lizard in urban Melbourne, the median dispersal distance is 1000 m (Kirk et al., 2023), so we would use a buffer of 500 m. However, we use 10 for a faster demonstration on the small example dataset, and will define both `interpatch_distance` and `buffer_radius` at the same time.
 
 ```{r}
 #| label: interpatch
 interpatch_distance <- 10
+buffer_radius <- interpatch_distance / 2
 
 buffered_habitat <- habitat_buffer(
   habitat = remaining_habitat,
-  interpatch_distance = interpatch_distance
+  buffer_radius = buffer_radius
 )
 
 plot(barrier_mask, col = scales::alpha("grey", 1), legend = FALSE)
@@ -258,7 +259,7 @@ We developed each step of the pipeline as a set of functions that can be run ind
 areas_connected <- habitat_connectivity(
   habitat = habitat,
   barrier = barrier,
-  interpatch_distance = 10,
+  interpatch_distance = interpatch_distance,
   verbose = TRUE
 )
 ```
@@ -277,7 +278,7 @@ If you need the intermediate rasters for mapping or reporting, use `habitat_conn
 result <- habitat_connectivity_full(
   habitat = habitat,
   barrier = barrier,
-  interpatch_distance = 10,
+  interpatch_distance = interpatch_distance,
   verbose = FALSE
 )
 
@@ -290,11 +291,12 @@ A common workflow is to run the analysis at several interpatch distances and com
 
 ```{r}
 #| label: multi-interpatch
-#| 
-distances <- c(10, 25, 50)
+
+interpatch_distances <- c(10, 30, 50)
+buffered_radiuses <- interpatch_distances / 2
 
 all_results <- purrr::map(
-  distances,
+  interpatch_distances,
   function(d) {
     areas <- habitat_connectivity(
       habitat = habitat,

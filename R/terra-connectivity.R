@@ -345,6 +345,16 @@ aggregate_connected_patches <- function(raster) {
 #'   representable on the raster, keep `resolution <= interpatch_distance / 2`;
 #'   below that the buffer is a no-op and a warning is raised. See
 #'   `vignette("interpatch-distance-and-resolution")`.
+#' @param buffer_radius Numeric. The radius in metres around the habitat.
+#'   Since patches of habitat will be connected when their edge-to-edge gap is
+#'   <= 2 * `buffer radius`, we recommend you specify `buffer_radius` to be
+#'   half the "interpatch distance". This is the distance past which habitat
+#'   patches are no longer considered connected. For example, if your
+#'   interpatch distance is 500m, set `buffer_radius = 250`. The buffer can only
+#'   be represented if it is at least one raster cell, i.e. keep
+#'   `resolution <= interpatch_distance / 2`. Below that the buffer is a no-op:
+#'   `habitat_buffer()` warns and returns the habitat unchanged. See
+#'   `vignette("interpatch-distance-and-resolution")`.
 #' @param verbose Logical. Display progress messages (default: TRUE).
 #' @returns Data frame with connectivity metrics per patch.
 #' @seealso `vignette("interpatch-distance-and-resolution")` for the

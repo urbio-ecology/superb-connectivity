@@ -30,7 +30,8 @@ Visualizes habitat patches colored by their connected fragment ID.
 \examples{
 lizard_habitat <- example_habitat()
 lizard_barrier <- example_barrier()
-buffer_radius <- 5
+interpatch_distance <- 20
+buffer_radius <- interpatch_distance / 2
 buffered_habitat <- habitat_buffer(lizard_habitat, buffer_radius)
 barrier_mask <- create_barrier_mask(lizard_barrier)
 fragmented <- fragment_habitat(buffered_habitat, barrier_mask)

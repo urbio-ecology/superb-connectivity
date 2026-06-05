@@ -15,6 +15,7 @@ globalVariables(
     "patch_area_total_ha",
     "patch_id",
     "prob_connectedness",
+    "scenario",
     "species",
     "value"
   )

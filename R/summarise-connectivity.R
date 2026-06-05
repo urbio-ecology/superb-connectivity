@@ -74,7 +74,7 @@ summarise_connectivity <- function(
     dplyr::relocate(
       species,
       interpatch_distance,
-      .before = everything()
+      .before = dplyr::everything()
     )
   full_results
 }

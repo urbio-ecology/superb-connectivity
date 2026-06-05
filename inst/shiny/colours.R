@@ -8,7 +8,7 @@ urbio_pal_cut <- urbio_pal[c(6:11)]
 # Define color variables for plotting
 urbio_cols <- list(
   habitat = urbio_pal_cut[2], # Dark green: #1B5E20
-  buffer = urbio_pal_cut[5], # Light green: #43A047
+  interpatch_distance = urbio_pal_cut[5], # Light green: #43A047
   barrier = "#FFFFFF" # White
 )
 
@@ -21,7 +21,7 @@ urbio_ui_cols <- list(
 
 # Export individual colors for easy access
 col_habitat <- urbio_cols$habitat
-col_buffer <- urbio_cols$buffer
+col_interpatch_distance <- urbio_cols$interpatch_distance
 col_barrier <- urbio_cols$barrier
 col_primary <- urbio_ui_cols$primary
 col_success <- urbio_ui_cols$success

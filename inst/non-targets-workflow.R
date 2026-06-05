@@ -108,7 +108,7 @@ areas_connected <- map(
     habitat_connectivity(
       habitat = habitat_raster,
       barrier = barrier_raster,
-      distance = distances
+      interpatch_distance = distances
     )
   }
 )
@@ -119,7 +119,7 @@ results_connect_habitat <- map(
   .f = function(areas_connected) {
     summarise_connectivity(
       area = areas_connected$area,
-      distance = distance,
+      interpatch_distance = interpatch_distance,
       target_resolution = target_resolution,
       data_resolution = data_resolution,
       aggregation_factor = aggregation_factor,

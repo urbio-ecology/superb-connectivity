@@ -4,14 +4,40 @@
 \alias{habitat_connectivity_full}
 \title{Calculate habitat connectivity with visualization data}
 \usage{
-habitat_connectivity_full(habitat, barrier, distance, verbose = TRUE)
+habitat_connectivity_full(
+  habitat,
+  barrier,
+  interpatch_distance = NULL,
+  buffer_radius = NULL,
+  verbose = TRUE
+)
 }
 \arguments{
 \item{habitat}{Terra SpatRaster. Habitat raster.}
 
 \item{barrier}{Terra SpatRaster. Barrier raster.}
 
-\item{distance}{Numeric. Buffer distance in meters.}
+\item{interpatch_distance}{Numeric. The distance (in meters) where habitat
+patches are considered connected. E.g., if set to 500, patches 498m apart
+are connected, those 501m apart are not connected. This is passed
+internally to a spatial operation known as "buffering", where this
+distance is used as a radius from the edge of the habitat zone. This means
+the specified \code{interpatch_distance} is halved exactly. So an interpatch
+distance of 500 will be converted to 250. For the buffer to be
+representable on the raster, keep \code{resolution <= interpatch_distance / 2};
+below that the buffer is a no-op and a warning is raised. See
+\code{vignette("interpatch-distance-and-resolution")}.}
+
+\item{buffer_radius}{Numeric. The radius in metres around the habitat.
+Since patches of habitat will be connected when their edge-to-edge gap is
+<= 2 * \verb{buffer radius}, we recommend you specify \code{buffer_radius} to be
+half the "interpatch distance". This is the distance past which habitat
+patches are no longer considered connected. For example, if your
+interpatch distance is 500m, set \code{buffer_radius = 250}. The buffer can only
+be represented if it is at least one raster cell, i.e. keep
+\code{resolution <= interpatch_distance / 2}. Below that the buffer is a no-op:
+\code{habitat_buffer()} warns and returns the habitat unchanged. See
+\code{vignette("interpatch-distance-and-resolution")}.}
 
 \item{verbose}{Logical. Display progress messages (default: TRUE).}
 }
@@ -30,7 +56,7 @@ lizard_barrier <- example_barrier()
 result <- habitat_connectivity_full(
   lizard_habitat,
   lizard_barrier,
-  distance = 10,
+  interpatch_distance = 10,
   verbose = FALSE
 )
 names(result)

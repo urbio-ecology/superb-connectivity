@@ -4,12 +4,18 @@
 \alias{plot_patches}
 \title{Plot connected habitat patches}
 \usage{
-plot_patches(patch_id, distance, species = "Species", n_cols = 7)
+plot_patches(patch_id, interpatch_distance, species = "Species", n_cols = 7)
 }
 \arguments{
 \item{patch_id}{Terra SpatRaster. Raster with patch IDs.}
 
-\item{distance}{Numeric. Buffer distance used (for subtitle).}
+\item{interpatch_distance}{Numeric. The distance (in meters) where habitat
+patches are considered connected. E.g., if set to 500, patches 498m apart
+are connected, those 501m apart are not connected. This is passed
+internally to a spatial operation known as "buffering", where this
+distance is used as a radius from the edge of the habitat zone. This means
+the specified \code{interpatch_distance} is halved exactly. So an interpatch
+distance of 500 will be converted to 250.}
 
 \item{species}{Character. Species name (default: "Species").}
 
@@ -24,8 +30,9 @@ Visualizes habitat patches colored by their connected fragment ID.
 \examples{
 lizard_habitat <- example_habitat()
 lizard_barrier <- example_barrier()
-buffer_dist <- 5
-buffered_habitat <- habitat_buffer(lizard_habitat, buffer_dist)
+interpatch_distance <- 20
+buffer_radius <- interpatch_distance / 2
+buffered_habitat <- habitat_buffer(lizard_habitat, buffer_radius)
 barrier_mask <- create_barrier_mask(lizard_barrier)
 fragmented <- fragment_habitat(buffered_habitat, barrier_mask)
 remaining_habitat <- drop_habitat_under_barrier(
@@ -37,12 +44,12 @@ fragment_patches <- assign_patches_to_fragments(
   fragment = fragmented
   ) |> add_patch_area()
 
-plot_patches(fragment_patches, distance = buffer_dist)
+plot_patches(fragment_patches, interpatch_distance = interpatch_distance)
 
 #' add north arrow and scale bar with ggspatial
 library(ggspatial)
 library(tidyterra)
-plot_patches(fragment_patches, distance = buffer_dist) +
+plot_patches(fragment_patches, interpatch_distance = interpatch_distance) +
  annotation_north_arrow(
    style = north_arrow_fancy_orienteering()
   ) +

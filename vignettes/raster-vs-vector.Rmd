@@ -80,7 +80,8 @@ It is good practice to clean vector data before analysis, especially when workin
 #| label: clean-vector
 barrier_sf_clean <- clean(barrier_sf)
 habitat_sf_clean <- clean(habitat_sf)
-buffer_dist <- 10
+interpatch_dist <- 10
+buffered_radius <- interpatch_dist / 2
 ```
 
 ### Raster approach
@@ -94,7 +95,7 @@ tic()
 raster_result <- habitat_connectivity(
   habitat = habitat_rast,
   barrier = barrier_rast,
-  distance = buffer_dist,
+  interpatch_distance = interpatch_dist,
   verbose = FALSE
 )
 rast_time <- toc()
@@ -112,7 +113,7 @@ tic()
 vector_result <- sf_habitat_connectivity(
   habitat = habitat_sf_clean,
   barrier = barrier_sf_clean,
-  distance = buffer_dist
+  interpatch_distance = interpatch_dist
 )
 vect_time <- toc()
 
@@ -151,7 +152,7 @@ Timings for the methods are also important to consider. The raster approach took
 # Raster approach output uses the `area` column
 summarise_connectivity(
   area = raster_result$area,
-  distance = buffer_dist,
+  interpatch_distance = interpatch_dist,
   target_resolution = 500,
   data_resolution = 10,
   aggregation_factor = 50,
@@ -165,7 +166,7 @@ summarise_connectivity(
 # Strip units before passing to summarise_connectivity
 summarise_connectivity(
   area = vector_result$area,
-  distance = buffer_dist,
+  interpatch_distance = interpatch_dist,
   target_resolution = NA,
   data_resolution = NA,
   aggregation_factor = NA,
@@ -236,7 +237,7 @@ Both approaches expose individual functions if you need finer control — for ex
 # Raster step-by-step
 barrier_mask <- create_barrier_mask(barrier_rast)
 remaining <- drop_habitat_under_barrier(habitat_rast, barrier_mask)
-buffered <- habitat_buffer(remaining, distance = 10)
+buffered <- habitat_buffer(remaining, interpatch_distance = 10)
 fragmented <- fragment_habitat(buffered, barrier_mask)
 patches <- assign_patches_to_fragments(remaining, fragmented) |>
   add_patch_area()
@@ -247,7 +248,7 @@ areas <- aggregate_connected_patches(patches)
 #| label: step-by-step-vector
 #| eval: false
 # Vector step-by-step
-buffered_sf <- sf_habitat_buffer(habitat_sf_clean, distance = 10)
+buffered_sf <- sf_habitat_buffer(habitat_sf_clean, interpatch_distance = 10)
 fragments_sf <- sf_fragment_habitat(buffered_sf, barrier_sf_clean)
 remaining_sf <- sf_drop_habitat_under_barrier(habitat_sf_clean, barrier_sf_clean)
 patches_sf <- sf_assign_patches_to_fragments(remaining_sf, fragments_sf) |>

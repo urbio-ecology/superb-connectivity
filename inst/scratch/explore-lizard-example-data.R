@@ -12,5 +12,5 @@ debugonce(habitat_connectivity)
 habitat_connectivity(
   habitat = ex_hab,
   barrier = ex_bar,
-  distance = 50
+  interpatch_distance = 50
 )

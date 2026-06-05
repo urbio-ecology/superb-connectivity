@@ -1,7 +1,7 @@
 lizard_habitat <- example_habitat()
 lizard_barrier <- example_barrier()
-buffer_dist <- 10
-buffered <- habitat_buffer(lizard_habitat, buffer_dist)
+interpatch_dist <- 10
+buffered <- habitat_buffer(lizard_habitat, interpatch_dist)
 barrier_mask <- create_barrier_mask(lizard_barrier)
 fragmented <- fragment_habitat(buffered, barrier_mask)
 remaining <- drop_habitat_under_barrier(lizard_habitat, barrier_mask)
@@ -32,12 +32,12 @@ results_connect <- purrr::map(
     full <- habitat_connectivity_full(
       small_habitat,
       small_barrier,
-      distance = d,
+      interpatch_distance = d,
       verbose = FALSE
     )
     summarise_connectivity(
       area = full$areas_connected$area,
-      distance = d,
+      interpatch_distance = d,
       target_resolution = 500,
       data_resolution = 10,
       aggregation_factor = 50,
@@ -69,8 +69,8 @@ test_that("show_tabs outputs markdown headers and calls print", {
     "200m" = ggplot2::ggplot()
   )
   expect_output(
-    show_tabs(plots, message = "Buffer"),
-    "## Buffer 100m"
+    show_tabs(plots, message = "Interpatch distance"),
+    "## Interpatch distance 100m"
   )
 })
 
@@ -84,39 +84,42 @@ test_that("show_image_tabs outputs markdown headers", {
   images <- c("100m" = tmp)
   suppressWarnings(
     expect_output(
-      show_image_tabs(images, message = "Buffer"),
-      "## Buffer 100m"
+      show_image_tabs(images, message = "Interpatch Distance"),
+      "## Interpatch Distance 100m"
     )
   )
 })
 
-# gg_barrier_habitat_buffer ---------------------------------------------
+# gg_barrier_habitat_interpatch_dist ---------------------------------------------
 
-gg_buffer_plot <- gg_barrier_habitat_buffer(
+gg_buffer_plot <- gg_barrier_habitat_interpatch_dist(
   barrier = lizard_barrier,
   buffered = buffered,
   habitat = lizard_habitat,
-  distance = buffer_dist,
+  interpatch_distance = interpatch_dist,
   species = "Blue Tongue Lizard",
   col_barrier = "white",
-  col_buffer = "lightgreen",
+  col_interpatch_dist = "lightgreen",
   col_habitat = "seagreen",
   col_paper = "grey50"
 )
 
-test_that("gg_barrier_habitat_buffer returns a ggplot", {
+test_that("gg_barrier_habitat_interpatch_dist returns a ggplot", {
   expect_s3_class(gg_buffer_plot, "ggplot")
 })
 
-test_that("gg_barrier_habitat_buffer renders correctly", {
+test_that("gg_barrier_habitat_interpatch_dist renders correctly", {
   skip_on_ci()
-  vdiffr::expect_doppelganger("gg-barrier-habitat-buffer", gg_buffer_plot)
+  vdiffr::expect_doppelganger("gg-barrier-habitat-interpatch", gg_buffer_plot)
 })
 
 # plot_patches ----------------------------------------------------------
 
 test_that("plot_patches returns a ggplot", {
-  result <- plot_patches(patch_id_raster, distance = buffer_dist)
+  result <- plot_patches(
+    patch_id_raster,
+    interpatch_distance = interpatch_dist
+  )
   expect_s3_class(result, "ggplot")
 })
 
@@ -126,7 +129,7 @@ test_that("plot_patches renders correctly", {
     "plot-patches",
     plot_patches(
       patch_id_raster,
-      distance = buffer_dist,
+      interpatch_distance = interpatch_dist,
       species = "Blue Tongue Lizard"
     )
   )

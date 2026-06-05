@@ -87,26 +87,54 @@ prepare_rasters <- function(
 
 #' Buffer habitat raster
 #'
-#' Buffer around the habitat a given distance in metres using [terra::focal()].
-#'  We recommend you buffer the habitat by half the threshold distance (the
-#'  distance past which habitat patches are no longer considered connected).
+#' Buffer around the habitat a given distance in metres using
+#'   `terra::focalMat(d = buffer_radius, type = "circle")`. This operation is
+#'   used to identify connected patches of habitat. Two patches will connect
+#'   when their edge-to-edge gap is <= 2 * `buffer radius`. So, we recommend
+#'   you specify the `buffer_radius` value to be half the interpatch distance,
+#'   which is the distance past which habitat patches are no longer considered
+#'   connected. For example, if your interpatch distance is 500m, set
+#'   `buffer_radius = 250`.
 #'
 #' @param habitat Terra SpatRaster. Habitat raster.
-#' @param distance Numeric. Buffer distance in meters.
+#' @param buffer_radius Numeric. The radius in metres around the habitat.
+#'   Since patches of habitat will be connected when their edge-to-edge gap is
+#'   <= 2 * `buffer radius`, we recommend you specify `buffer_radius` to be
+#'   half the "interpatch distance". This is the distance past which habitat
+#'   patches are no longer considered connected. For example, if your
+#'   interpatch distance is 500m, set `buffer_radius = 250`. The buffer can only
+#'   be represented if it is at least one raster cell, i.e. keep
+#'   `resolution <= interpatch_distance / 2`. Below that the buffer is a no-op:
+#'   `habitat_buffer()` warns and returns the habitat unchanged. See
+#'   `vignette("interpatch-distance-and-resolution")`.
 #' @returns Terra SpatRaster with buffered habitat.
+#' @seealso `vignette("interpatch-distance-and-resolution")` for the
+#'   relationship between interpatch distance, buffer radius, and resolution.
 #' @export
 #' @examples
 #' lizard_habitat <- example_habitat()
 #' library(terra)
 #' plot(lizard_habitat, col = "darkgreen", legend = FALSE)
-#' # run with a small buffer distance
-#' lizard_buff <- habitat_buffer(lizard_habitat, 10)
+#' # run with a small buffer radius
+#' lizard_buff <- habitat_buffer(lizard_habitat, buffer_radius = 10)
 #' plot(lizard_buff, col = "lightgreen", legend = FALSE)
 #' plot(lizard_habitat, col = "darkgreen", legend = FALSE, add = TRUE)
-habitat_buffer <- function(habitat, distance) {
+habitat_buffer <- function(habitat, buffer_radius) {
+  resolution <- terra::res(habitat)[1]
+  warn_buffer_resolution(
+    buffer_radius = buffer_radius,
+    resolution = resolution
+  )
+  # A sub-cell radius rounds to zero rings: terra::focalMat() returns a 1x1
+  # window and terra::focal() errors ("not a meaningful window"). The buffer is a
+  # no-op at this resolution, so return the habitat unchanged — the warning above
+  # has already explained the consequence (only touching patches are linked).
+  if (buffer_radius < resolution) {
+    return(habitat)
+  }
   buffer_window <- terra::focalMat(
     x = habitat,
-    d = distance,
+    d = buffer_radius,
     type = "circle"
   )
   buffer_window <- buffer_window / max(buffer_window)
@@ -300,16 +328,37 @@ aggregate_connected_patches <- function(raster) {
 #'   The steps are:
 #'   * [create_barrier_mask()]: Creating barrier mask.
 #'   * [drop_habitat_under_barrier()]: Removes Habitat underneath barrier.
-#'   * [habitat_buffer()]: Adds buffer of distance (m) to habitat layer.
+#'   * [habitat_buffer()]: Buffers the habitat layer by the interpatch distance (m).
 #'   * [fragment_habitat()]: Fragments habitat layer along barrier intersection.
 #'   * [assign_patches_to_fragments()]: Assign patch ID to fragments.
 #'   * [aggregate_connected_patches()]: Summarise area in each patch.
 #'
 #' @param habitat Terra SpatRaster. Habitat raster.
 #' @param barrier Terra SpatRaster. Barrier raster.
-#' @param distance Numeric. Buffer distance in meters.
+#' @param interpatch_distance Numeric. The distance (in meters) where habitat
+#'   patches are considered connected. E.g., if set to 500, patches 498m apart
+#'   are connected, those 501m apart are not connected. This is passed
+#'   internally to a spatial operation known as "buffering", where this
+#'   distance is used as a radius from the edge of the habitat zone. This means
+#'   the specified `interpatch_distance` is halved exactly. So an interpatch
+#'   distance of 500 will be converted to 250. For the buffer to be
+#'   representable on the raster, keep `resolution <= interpatch_distance / 2`;
+#'   below that the buffer is a no-op and a warning is raised. See
+#'   `vignette("interpatch-distance-and-resolution")`.
+#' @param buffer_radius Numeric. The radius in metres around the habitat.
+#'   Since patches of habitat will be connected when their edge-to-edge gap is
+#'   <= 2 * `buffer radius`, we recommend you specify `buffer_radius` to be
+#'   half the "interpatch distance". This is the distance past which habitat
+#'   patches are no longer considered connected. For example, if your
+#'   interpatch distance is 500m, set `buffer_radius = 250`. The buffer can only
+#'   be represented if it is at least one raster cell, i.e. keep
+#'   `resolution <= interpatch_distance / 2`. Below that the buffer is a no-op:
+#'   `habitat_buffer()` warns and returns the habitat unchanged. See
+#'   `vignette("interpatch-distance-and-resolution")`.
 #' @param verbose Logical. Display progress messages (default: TRUE).
 #' @returns Data frame with connectivity metrics per patch.
+#' @seealso `vignette("interpatch-distance-and-resolution")` for the
+#'   relationship between interpatch distance, buffer radius, and resolution.
 #' @export
 #' @examples
 #' lizard_habitat <- example_habitat()
@@ -317,20 +366,22 @@ aggregate_connected_patches <- function(raster) {
 #' connectivity <- habitat_connectivity(
 #'     habitat = lizard_habitat,
 #'     barrier = lizard_barrier,
-#'     distance = 10
+#'     interpatch_distance = 10
 #'   )
 #' connectivity
 habitat_connectivity <- function(
   habitat,
   barrier,
-  distance,
+  interpatch_distance = NULL,
+  buffer_radius = NULL,
   verbose = TRUE
 ) {
+  buffer_radius <- resolve_buffer_radius(interpatch_distance, buffer_radius)
   if (verbose) {
     habitat_connectivity <- .habitat_connectivity(
       habitat,
       barrier,
-      distance
+      buffer_radius = buffer_radius
     )
   } else {
     quiet_habitat_connectivity <- purrr::quietly(
@@ -339,7 +390,7 @@ habitat_connectivity <- function(
     habitat_connectivity <- quiet_habitat_connectivity(
       habitat,
       barrier,
-      distance
+      buffer_radius
     )$result
   }
   habitat_connectivity
@@ -347,7 +398,7 @@ habitat_connectivity <- function(
 
 #' @noRd
 #' @note internal
-.habitat_connectivity <- function(habitat, barrier, distance) {
+.habitat_connectivity <- function(habitat, barrier, buffer_radius) {
   cli::cli_progress_step("Creating barrier mask")
   barrier_mask <- create_barrier_mask(barrier = barrier)
 
@@ -357,10 +408,12 @@ habitat_connectivity <- function(
     barrier_mask = barrier_mask
   )
 
-  cli::cli_progress_step("Adding buffer of {distance}m to habitat layer")
+  cli::cli_progress_step(
+    "Adding {buffer_radius}m buffer (interpatch distance {2 * buffer_radius}m)"
+  )
   buffered_habitat <- habitat_buffer(
     habitat = remaining_habitat,
-    distance = distance
+    buffer_radius = buffer_radius
   )
 
   cli::cli_progress_step("Fragmenting habitat layer along barrier intersection")
@@ -397,7 +450,7 @@ habitat_connectivity <- function(
 #' result <- habitat_connectivity_full(
 #'   lizard_habitat,
 #'   lizard_barrier,
-#'   distance = 10,
+#'   interpatch_distance = 10,
 #'   verbose = FALSE
 #' )
 #' names(result)
@@ -405,21 +458,23 @@ habitat_connectivity <- function(
 habitat_connectivity_full <- function(
   habitat,
   barrier,
-  distance,
+  interpatch_distance = NULL,
+  buffer_radius = NULL,
   verbose = TRUE
 ) {
+  buffer_radius <- resolve_buffer_radius(interpatch_distance, buffer_radius)
   if (!verbose) {
     quiet_fun <- purrr::quietly(.habitat_connectivity_full)
-    res <- quiet_fun(habitat, barrier, distance)
+    res <- quiet_fun(habitat, barrier, buffer_radius)
     return(res$result)
   }
 
-  .habitat_connectivity_full(habitat, barrier, distance)
+  .habitat_connectivity_full(habitat, barrier, buffer_radius)
 }
 
 #' @noRd
 #' @note internal
-.habitat_connectivity_full <- function(habitat, barrier, distance) {
+.habitat_connectivity_full <- function(habitat, barrier, buffer_radius) {
   cli::cli_progress_step("Creating barrier mask")
   barrier_mask <- create_barrier_mask(barrier = barrier)
 
@@ -429,10 +484,12 @@ habitat_connectivity_full <- function(
     barrier_mask = barrier_mask
   )
 
-  cli::cli_progress_step("Adding buffer of {distance}m to habitat layer")
+  cli::cli_progress_step(
+    "Adding buffer of {buffer_radius}m to habitat layer"
+  )
   buffered_habitat <- habitat_buffer(
     habitat = remaining_habitat,
-    distance = distance
+    buffer_radius = buffer_radius
   )
 
   cli::cli_progress_step("Fragmenting habitat layer along barrier intersection")

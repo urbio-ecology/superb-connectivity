@@ -8,10 +8,16 @@
 #'
 #' @param area_new Numeric vector. Area of a connected patch.
 #' @param area_baseline Numeric vector. Baseline area of a connected patch.
-#' @param distance buffered distance
+#' @param interpatch_distance Numeric. The distance (in meters) where habitat
+#'   patches are considered connected. E.g., if set to 500, patches 498m apart
+#'   are connected, those 501m apart are not connected. This is passed
+#'   internally to a spatial operation known as "buffering", where this
+#'   distance is used as a radius from the edge of the habitat zone. This means
+#'   the specified `interpatch_distance` is halved exactly. So an interpatch
+#'   distance of 500 will be converted to 250.
 #' @param species name of species
 #'
-#' @returns tibble with "scenario", "distance", "species",
+#' @returns tibble with "scenario", "interpatch_distance", "species",
 #'   "n_patches", "effective_mesh_ha", and "prob_connectedness".
 #' @export
 #'
@@ -22,13 +28,13 @@
 #' compare_connectivity(
 #'   area_new = new_areas,
 #'   area_baseline = baseline_areas,
-#'   distance = 10,
+#'   interpatch_distance = 10,
 #'   species = "blue-tongued lizard"
 #' )
 compare_connectivity <- function(
   area_new,
   area_baseline,
-  distance,
+  interpatch_distance,
   species
 ) {
   baseline <- connectivity_metrics(area = area_baseline)
@@ -44,7 +50,7 @@ compare_connectivity <- function(
     .id = "scenario"
   ) |>
     dplyr::mutate(
-      distance = distance,
+      interpatch_distance = interpatch_distance,
       species = species,
       .after = scenario
     )

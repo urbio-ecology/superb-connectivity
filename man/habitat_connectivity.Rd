@@ -4,14 +4,40 @@
 \alias{habitat_connectivity}
 \title{Calculate habitat connectivity using terra}
 \usage{
-habitat_connectivity(habitat, barrier, distance, verbose = TRUE)
+habitat_connectivity(
+  habitat,
+  barrier,
+  interpatch_distance = NULL,
+  buffer_radius = NULL,
+  verbose = TRUE
+)
 }
 \arguments{
 \item{habitat}{Terra SpatRaster. Habitat raster.}
 
 \item{barrier}{Terra SpatRaster. Barrier raster.}
 
-\item{distance}{Numeric. Buffer distance in meters.}
+\item{interpatch_distance}{Numeric. The distance (in meters) where habitat
+patches are considered connected. E.g., if set to 500, patches 498m apart
+are connected, those 501m apart are not connected. This is passed
+internally to a spatial operation known as "buffering", where this
+distance is used as a radius from the edge of the habitat zone. This means
+the specified \code{interpatch_distance} is halved exactly. So an interpatch
+distance of 500 will be converted to 250. For the buffer to be
+representable on the raster, keep \code{resolution <= interpatch_distance / 2};
+below that the buffer is a no-op and a warning is raised. See
+\code{vignette("interpatch-distance-and-resolution")}.}
+
+\item{buffer_radius}{Numeric. The radius in metres around the habitat.
+Since patches of habitat will be connected when their edge-to-edge gap is
+<= 2 * \verb{buffer radius}, we recommend you specify \code{buffer_radius} to be
+half the "interpatch distance". This is the distance past which habitat
+patches are no longer considered connected. For example, if your
+interpatch distance is 500m, set \code{buffer_radius = 250}. The buffer can only
+be represented if it is at least one raster cell, i.e. keep
+\code{resolution <= interpatch_distance / 2}. Below that the buffer is a no-op:
+\code{habitat_buffer()} warns and returns the habitat unchanged. See
+\code{vignette("interpatch-distance-and-resolution")}.}
 
 \item{verbose}{Logical. Display progress messages (default: TRUE).}
 }
@@ -24,7 +50,7 @@ The steps are:
 \itemize{
 \item \code{\link[=create_barrier_mask]{create_barrier_mask()}}: Creating barrier mask.
 \item \code{\link[=drop_habitat_under_barrier]{drop_habitat_under_barrier()}}: Removes Habitat underneath barrier.
-\item \code{\link[=habitat_buffer]{habitat_buffer()}}: Adds buffer of distance (m) to habitat layer.
+\item \code{\link[=habitat_buffer]{habitat_buffer()}}: Buffers the habitat layer by the interpatch distance (m).
 \item \code{\link[=fragment_habitat]{fragment_habitat()}}: Fragments habitat layer along barrier intersection.
 \item \code{\link[=assign_patches_to_fragments]{assign_patches_to_fragments()}}: Assign patch ID to fragments.
 \item \code{\link[=aggregate_connected_patches]{aggregate_connected_patches()}}: Summarise area in each patch.
@@ -36,7 +62,11 @@ lizard_barrier <- example_barrier()
 connectivity <- habitat_connectivity(
     habitat = lizard_habitat,
     barrier = lizard_barrier,
-    distance = 10
+    interpatch_distance = 10
   )
 connectivity
+}
+\seealso{
+\code{vignette("interpatch-distance-and-resolution")} for the
+relationship between interpatch distance, buffer radius, and resolution.
 }

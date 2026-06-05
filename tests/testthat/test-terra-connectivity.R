@@ -67,7 +67,7 @@ test_that("drop_habitat_under_barrier removes habitat cells covered by barriers"
   expect_true(all(vals[-centre_cell_idx] == 1, na.rm = TRUE))
 })
 
-test_that("fragment_habitat cuts buffer at barrier cells", {
+test_that("fragment_habitat cuts interpatch distance at barrier cells", {
   buffered <- small_rast(val = 1)
 
   # Vertical barrier through centre column (col 3 of 5)
@@ -95,7 +95,7 @@ lizard_barrier <- example_barrier()
 hcf_quiet <- habitat_connectivity_full(
   lizard_habitat,
   lizard_barrier,
-  distance = 50,
+  interpatch_distance = 50,
   verbose = FALSE
 )
 hc_quiet <- hcf_quiet$areas_connected
@@ -155,7 +155,7 @@ small_barrier[10, 10] <- 1
 hc_verbose <- habitat_connectivity(
   small_habitat,
   small_barrier,
-  distance = 100,
+  interpatch_distance = 200,
   verbose = TRUE
 )
 
@@ -195,7 +195,7 @@ test_that("align_to resamples rasters with mismatched geometry", {
 hcf_verbose <- habitat_connectivity_full(
   small_habitat,
   small_barrier,
-  distance = 100,
+  interpatch_distance = 200,
   verbose = TRUE
 )
 

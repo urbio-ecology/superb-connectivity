@@ -6,7 +6,7 @@
 \usage{
 generate_connectivity_report(
   species_name,
-  buffer_distances,
+  interpatch_distances,
   results_connect_habitat,
   areas_connected,
   habitat = NULL,
@@ -22,13 +22,18 @@ generate_connectivity_report(
 \arguments{
 \item{species_name}{Character. Name of the species being analysed.}
 
-\item{buffer_distances}{Numeric vector. Buffer distances used in analysis
-(in meters).}
+\item{interpatch_distances}{Numeric. The distances (in meters) where habitat
+patches are considered connected. E.g., if set to 500, patches 498m apart
+are connected, those 501m apart are not connected. This is passed
+internally to a spatial operation known as "buffering", where this
+distance is used as a radius from the edge of the habitat zone. This means
+the specified \code{interpatch_distance} is halved exactly. So an interpatch
+distance of 500 will be converted to 250.}
 
 \item{results_connect_habitat}{Data frame. Connectivity summary results.}
 
-\item{areas_connected}{List of data frames. Connected patch areas for e
-ach buffer distance.}
+\item{areas_connected}{List of data frames. Connected patch areas for each
+interpatch distance.}
 
 \item{habitat}{SF object. Habitat spatial data (optional, for mapping).}
 
@@ -59,7 +64,7 @@ Creates a parameterised Quarto report from connectivity analysis results.
 \dontrun{
 report_path <- generate_connectivity_report(
   species_name = "Superb Fairy Wren",
-  buffer_distances = c(100, 250, 400),
+  interpatch_distances = c(100, 250, 400),
   results_connect_habitat = results_df,
   areas_connected = patches_list,
   output_format = "html"

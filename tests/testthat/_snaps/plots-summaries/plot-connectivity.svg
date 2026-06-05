@@ -182,7 +182,7 @@
 <text x='61.25' y='487.10' text-anchor='end' style='font-size: 11.20px; fill: #4D4D4D; font-family: sans;' textLength='40.49px' lengthAdjust='spacingAndGlyphs'>396.975</text>
 <text x='61.25' y='430.07' text-anchor='end' style='font-size: 11.20px; fill: #4D4D4D; font-family: sans;' textLength='40.49px' lengthAdjust='spacingAndGlyphs'>397.000</text>
 <text x='61.25' y='373.05' text-anchor='end' style='font-size: 11.20px; fill: #4D4D4D; font-family: sans;' textLength='40.49px' lengthAdjust='spacingAndGlyphs'>397.025</text>
-<text x='390.35' y='567.61' text-anchor='middle' style='font-size: 14.00px; font-family: sans;' textLength='118.28px' lengthAdjust='spacingAndGlyphs'>Buffer distance (m)</text>
+<text x='390.35' y='567.61' text-anchor='middle' style='font-size: 14.00px; font-family: sans;' textLength='143.19px' lengthAdjust='spacingAndGlyphs'>Interpatch distance (m)</text>
 <text transform='translate(15.11,292.54) rotate(-90)' text-anchor='middle' style='font-size: 14.00px; font-family: sans;' textLength='33.47px' lengthAdjust='spacingAndGlyphs'>value</text>
 <text x='66.18' y='17.04' style='font-size: 16.80px; font-family: sans;' textLength='120.48px' lengthAdjust='spacingAndGlyphs'>plot-connectivity</text>
 </g>

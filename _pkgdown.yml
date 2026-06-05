@@ -36,8 +36,8 @@ reference:
   - sf_habitat_connectivity
 - title: Visualisation
   contents:
-  - gg_barrier_habitat_buffer
-  - plot_barrier_habitat_buffer
+  - gg_barrier_habitat_interpatch_dist
+  - plot_barrier_habitat_interpatch_dist
   - plot_connectivity
   - plot_patches
 - title: Data sources

@@ -1,0 +1,242 @@
+---
+title: "Interpatch distance and raster resolution"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Interpatch distance and raster resolution}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r}
+#| include: false
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.align = "center",
+  fig.width = 8,
+  fig.height = 2.8
+)
+```
+
+```{r}
+#| label: setup
+#| message: false
+library(urbioconnect)
+library(terra)
+library(ggplot2)
+```
+
+```{r}
+#| include: false
+# helper to tidy SpatRaster into data frame of tiles (keeps the grid, incl. NA)
+
+to_tiles <- function(r, label) {
+  d <- as.data.frame(r, xy = TRUE, na.rm = FALSE)
+  names(d)[3] <- "value"
+  d$facet <- label
+  d$w <- xres(r)
+  d$h <- yres(r)
+  d
+}
+
+plot_tiles <- function(df, title = NULL, subtitle = NULL) {
+  ggplot(df, aes(x, y, fill = factor(value))) +
+    geom_tile(aes(width = w, height = h)) +
+    facet_wrap(~ factor(facet, levels = unique(df$facet)), nrow = 1) +
+    scale_fill_manual(
+      values = c("1" = "#1B5E20"),
+      na.value = "grey95",
+      guide = "none"
+    ) +
+    coord_equal(expand = FALSE) +
+    labs(title = title, subtitle = subtitle) +
+    theme_minimal(base_size = 12) +
+    theme(
+      axis.title = element_blank(),
+      axis.text = element_blank(),
+      panel.grid = element_blank()
+    )
+}
+
+```
+
+This vignette explores a small but important detail when using raster data to analyse connectivity: the relationship between the interpatch distance and the raster resolution. 
+
+This boils down to a key idea: if your buffer distance is not a multiple of your raster resolution, you might not be buffering as you might expect. Essentially:
+
+**Your buffer radius must be at least one cell**, i.e.
+
+$$
+\text{resolution} \le \frac{\text{interpatch distance}}{2}.
+$$
+
+
+This vignette goes into a bit more detail on the topic.
+
+## Interpatch distance
+
+When you analyse connectivity you specify an **interpatch distance**: 
+
+> the distance between two habitat patches below which they count as connected. 
+
+If a species can disperse across a 200 m gap, its interpatch distance is 200 m.
+
+Internally, connectivity is computed by *buffering* the habitat - growing each patch outward - and seeing which patches then overlap. Because **both** patches grow toward each other, they meet when the gap between them is twice the buffer radius. So the buffer radius is **half** the interpatch distance:
+
+$$
+\text{buffer radius} = \frac{\text{interpatch distance}}{2}
+$$
+
+`habitat_connectivity()` takes the interpatch distance and halves it for you. The
+lower-level `habitat_buffer()` is an operation and takes the `buffer_radius` directly.
+
+## Buffering happens on a grid
+
+When habitat is stored as a raster, a grid of square cells. `habitat_buffer()` uses a circular focal window of the requested radius, but that circle has to be **discretised** onto the grid. 
+
+The number of whole-cell "rings" it can add is `floor(buffer_radius / resolution)`:
+
+```{r}
+#| label: windows
+
+# 100 m cells
+r <- rast(
+  nrows = 10,
+  ncols = 10,
+  extent = ext(0, 1000, 0, 1000)
+)
+sapply(
+  c(50, 100, 150, 200),
+  function(d) {
+    circle_buffer <- focalMat(r, d = d, type = "circle")
+    circle_buffer_dim <- dim(circle_buffer)
+    paste(circle_buffer_dim, collapse = "x")
+  }
+)
+
+```
+
+A radius of 100 m (one cell) gives a 3×3 window - one ring. A radius of **50 m is smaller than a single 100 m cell**, so the window collapses to 1×1: there is nowhere to grow, and no buffer is possible. A radius of 150m still only gives one ring - it snaps down to 100m.
+
+```{r}
+#| label: fig-windows
+#| fig.height: 2.6
+#| echo: false
+windows <- do.call(
+  rbind,
+  lapply(c(50, 100, 200), function(d) {
+    circle_buffer <- focalMat(r, d = d, type = "circle")
+    circle_buffer_rast <- rast(circle_buffer)
+    dat_buffer <- as.data.frame(circle_buffer_rast, xy = TRUE)
+    names(dat_buffer)[3] <- "weight"
+    dat_buffer$value <- ifelse(dat_buffer$weight > 0, "1", NA)
+    dat_buffer$facet <- sprintf(
+      "radius %d m (%s)",
+      d,
+      paste(dim(circle_buffer), collapse = "x")
+    )
+    dat_buffer$w <- 1
+    dat_buffer$h <- 1
+    dat_buffer
+  })
+)
+plot_tiles(
+  windows,
+  "The buffer window, discretised onto the grid",
+  "radius 50 m (< one 100 m cell) collapses to a single cell"
+)
+```
+
+## A sub-cell radius does nothing - and `habitat_buffer()` warns
+
+Because the window collapses, buffering by less than one cell leaves the habitat exactly as it was. `habitat_buffer()` detects this and warns you, then returns the habitat unchanged (rather than letting `terra::focal()` error):
+
+```{r}
+#| label: rings
+hab <- r
+values(hab) <- NA
+# one habitat cell
+hab[5, 5] <- 1 
+
+# sub-cell: warns, no-op
+b50 <- habitat_buffer(hab, buffer_radius = 50) 
+# one ring
+b100 <- habitat_buffer(hab, buffer_radius = 100) 
+# two rings
+b200 <- habitat_buffer(hab, buffer_radius = 200) 
+```
+
+```{r}
+#| label: fig-rings
+#| echo: false
+rings <- rbind(
+  to_tiles(hab, "habitat (1 cell)"),
+  to_tiles(b50, "radius 50 m (sub-cell)"),
+  to_tiles(b100, "radius 100 m (1 ring)"),
+  to_tiles(b200, "radius 200 m (2 rings)")
+)
+
+plot_tiles(
+  rings, 
+  "Buffering grows habitat in whole-cell rings",
+  "a sub-cell radius (50 m) leaves the habitat untouched"
+  )
+```
+
+## Why it matters: the same distance, two resolutions
+
+This is the crux. Connectivity is **resolution-dependent**. Two patches with a 200m gap need a 100 m buffer each to link. At a fine resolution that buffer is representable and the patches connect; at a coarse resolution the same 100 m buffer is sub-cell - a no-op - and the patches stay apart, even though the interpatch distance hasn't changed.
+
+```{r}
+#| label: two-patch
+#| fig.height: 3
+#| echo: false
+patches <- rbind(
+  as.polygons(ext(0, 200, 0, 400)),
+  # 200m gap
+  as.polygons(ext(400, 600, 0, 400)) 
+)
+
+scene <- function(resolution) {
+  g <- rast(ext(0, 800, 0, 400), resolution = resolution)
+  suppressWarnings(habitat_buffer(rasterize(patches, g), buffer_radius = 100))
+}
+
+two <- rbind(
+  to_tiles(scene(50), "fine: 50 m cells -> CONNECTED"),
+  to_tiles(scene(200), "coarse: 200 m cells -> NOT connected")
+)
+
+plot_tiles(
+  two, 
+  "Same patches, same 200 m interpatch distance",
+  "the buffer bridges the gap only when the grid can represent it"
+  )
+```
+
+## Choosing a resolution
+
+The practical rule of thumb: **your buffer radius must be at least one cell**, i.e.
+
+$$
+\text{resolution} \le \frac{\text{interpatch distance}}{2}.
+$$
+
+
+For an interpatch distance of 200 m, work at 100 m cells or finer. If the resolution is too coarse for the interpatch distance you've asked for, `habitat_buffer()` (and therefore `habitat_connectivity()`) will warn that the buffer can't be represented - increase the resolution, or use a larger interpatch distance.
+
+## What about vector (sf) data?
+
+Everything above is specific to **raster** data. The vector path
+(`sf_habitat_buffer()`, via `sf::st_buffer()`) buffers in *continuous*
+coordinate space - there is no grid and no resolution, so **any** buffer radius
+produces an exact buffer. The sub-cell "no buffer" problem simply does not arise,
+which makes the vector approach a good fit when your interpatch distance is small
+relative to a practical raster resolution.
+
+The vector equivalent of discretisation is `nQuadSegs`: the number of straight
+segments used to approximate each quarter-circle of the buffer. It controls the
+*smoothness* of the buffer outline, not whether the buffer exists. The package
+uses `nQuadSegs = 5` (a 20-sided polygon), which sits slightly *inside* the true
+circle - enough to matter only for patches whose gap is right at the threshold.
+Unlike resolution, it is never a cliff: the buffer always forms, at any radius.

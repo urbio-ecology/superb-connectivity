@@ -7,6 +7,7 @@
 sf_habitat_connectivity(
   habitat,
   barrier,
+  species,
   interpatch_distance = NULL,
   buffer_radius = NULL
 )
@@ -15,6 +16,8 @@ sf_habitat_connectivity(
 \item{habitat}{SF object. Original habitat spatial data.}
 
 \item{barrier}{SF object. Barrier spatial data (e.g., roads, waterways).}
+
+\item{species}{character. Species name.}
 
 \item{interpatch_distance}{Numeric. The distance (in meters) where habitat
 patches are considered connected. E.g., if set to 500, patches 498m apart
@@ -48,8 +51,16 @@ areas of connected patches.
 }
 \examples{
 lizard_barrier_shp <- example_barrier_shp()
-lizard_habitat_sf <- terra::as.polygons(example_habitat(), dissolve = TRUE) |>
+lizard_habitat_sf <- terra::as.polygons(
+  example_habitat(),
+  dissolve = TRUE
+  ) |>
   sf::st_as_sf()
-result <- sf_habitat_connectivity(lizard_habitat_sf, lizard_barrier_shp, interpatch_distance = 10)
+result <- sf_habitat_connectivity(
+  habitat = lizard_habitat_sf,
+  barrier = lizard_barrier_shp,
+  species = "Blue-tongued lizard",
+  interpatch_distance = 10
+  )
 result
 }

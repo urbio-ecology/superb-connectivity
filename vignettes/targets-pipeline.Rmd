@@ -83,6 +83,7 @@ tar_assign({
   areas_connected <- habitat_connectivity(
     habitat = habitat,
     barrier = barrier,
+    species = "Blue-tongued Lizard",
     interpatch_distance = interpatch_distance
   ) |>
     tar_target()

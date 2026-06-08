@@ -31,12 +31,26 @@
 #'   interpatch_distance = 10,
 #'   species = "blue-tongued lizard"
 #' )
-compare_connectivity <- function(
+
+#' @export
+compare_connectivity <- function(area_new, ...) {
+  UseMethod("compare_connectivity")
+}
+
+#' @export
+compare_connectivity.patch_connectivity <- function(
   area_new,
   area_baseline,
-  interpatch_distance,
-  species
+  ...
 ) {
+  if (!identical(pc_species(area_new), pc_species(area_baseline))) {
+    cli::cli_abort("Scenarios must be the same species.")
+  }
+
+  ## possibly check that the interpatch distance is the same, too?
+  # summarise each, diff
+  # interpatch_distance,
+  # species
   baseline <- connectivity_metrics(area = area_baseline)
   new <- connectivity_metrics(area = area_new, area_baseline = area_baseline)
   # (column-wise subtraction; direction is: baseline - new

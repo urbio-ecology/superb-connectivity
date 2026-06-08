@@ -99,10 +99,16 @@ test_that("sf_habitat_connectivity returns a data frame with expected columns", 
   habitat <- sf::st_sfc(square(0, 0), square(300, 0), crs = 32754)
   barrier <- sf::st_sfc(square(90, 0, size = 120), crs = 32754)
 
-  result <- sf_habitat_connectivity(habitat, barrier, buffer_radius = 200)
+  result <- sf_habitat_connectivity(
+    habitat = habitat,
+    barrier = barrier,
+    species = "lizard",
+    buffer_radius = 200
+  )
 
-  expect_s3_class(result, "data.frame")
+  expect_s3_class(result, "patch_connectivity")
   expect_snapshot(names(result))
   expect_gt(nrow(result), 0)
   expect_all_true(as.numeric(result$area) > 0)
+  expect_all_true(as.numeric(result$area) < as.numeric(result$area_squared))
 })

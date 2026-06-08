@@ -259,6 +259,7 @@ We developed each step of the pipeline as a set of functions that can be run ind
 areas_connected <- habitat_connectivity(
   habitat = habitat,
   barrier = barrier,
+  species = "Blue-tongued Lizard",
   interpatch_distance = interpatch_distance,
   verbose = TRUE
 )
@@ -301,6 +302,7 @@ all_results <- purrr::map(
     areas <- habitat_connectivity(
       habitat = habitat,
       barrier = barrier,
+      species = "Blue-tongued Lizard",
       interpatch_distance = d,
       verbose = FALSE
     )

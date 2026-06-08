@@ -155,6 +155,7 @@ small_barrier[10, 10] <- 1
 hc_verbose <- habitat_connectivity(
   small_habitat,
   small_barrier,
+  species = "lizard",
   interpatch_distance = 200,
   verbose = TRUE
 )

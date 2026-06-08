@@ -4,7 +4,7 @@
 \alias{compare_connectivity}
 \title{Compare measurements the connectivity of different scenarios}
 \usage{
-compare_connectivity(area_new, area_baseline, interpatch_distance, species)
+compare_connectivity(area_new, ...)
 }
 \arguments{
 \item{area_new}{Numeric vector. Area of a connected patch.}

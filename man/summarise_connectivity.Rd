@@ -4,15 +4,7 @@
 \alias{summarise_connectivity}
 \title{Summarise connectivity metrics}
 \usage{
-summarise_connectivity(
-  area,
-  area_baseline = NULL,
-  interpatch_distance,
-  target_resolution,
-  data_resolution,
-  aggregation_factor,
-  species
-)
+summarise_connectivity(area, ...)
 }
 \arguments{
 \item{area}{Numeric vector. Areas of connected patches.}

@@ -95,6 +95,7 @@ tic()
 raster_result <- habitat_connectivity(
   habitat = habitat_rast,
   barrier = barrier_rast,
+  species = "Blue-tongued Lizard",
   interpatch_distance = interpatch_dist,
   verbose = FALSE
 )
@@ -113,6 +114,7 @@ tic()
 vector_result <- sf_habitat_connectivity(
   habitat = habitat_sf_clean,
   barrier = barrier_sf_clean,
+  species = "lizard",
   interpatch_distance = interpatch_dist
 )
 vect_time <- toc()

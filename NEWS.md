@@ -14,6 +14,7 @@
 
 * Fix the shiny app's interpatch-distance input, which was read under the wrong id. (#131)
 
+* Add "patch_connectivity" class to `habitat_connectivity()` function, to pave the way for attaching useful metadata to these data. (#133).
 
 ## Breaking changes
 

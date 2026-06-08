@@ -7,6 +7,7 @@
 habitat_connectivity(
   habitat,
   barrier,
+  species,
   interpatch_distance = NULL,
   buffer_radius = NULL,
   verbose = TRUE
@@ -16,6 +17,8 @@ habitat_connectivity(
 \item{habitat}{Terra SpatRaster. Habitat raster.}
 
 \item{barrier}{Terra SpatRaster. Barrier raster.}
+
+\item{species}{Species name. E.g., "Blue-tongued Lizard".}
 
 \item{interpatch_distance}{Numeric. The distance (in meters) where habitat
 patches are considered connected. E.g., if set to 500, patches 498m apart
@@ -62,7 +65,8 @@ lizard_barrier <- example_barrier()
 connectivity <- habitat_connectivity(
     habitat = lizard_habitat,
     barrier = lizard_barrier,
-    interpatch_distance = 10
+    species = "Blue-tongued Lizard",
+    interpatch_distance = 12
   )
 connectivity
 }

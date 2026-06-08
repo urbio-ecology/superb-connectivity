@@ -178,6 +178,7 @@ sf_aggregate_connected_patches <- function(patch_areas) {
 #'
 #' @param habitat SF object. Original habitat spatial data.
 #' @param barrier SF object. Barrier spatial data (e.g., roads, waterways).
+#' @param species character. Species name.
 #' @param interpatch_distance Numeric. The distance (in meters) where habitat
 #'   patches are considered connected. E.g., if set to 500, patches 498m apart
 #'   are connected, those 501m apart are not connected. This is passed
@@ -204,14 +205,23 @@ sf_aggregate_connected_patches <- function(patch_areas) {
 #'
 #' @examples
 #' lizard_barrier_shp <- example_barrier_shp()
-#' lizard_habitat_sf <- terra::as.polygons(example_habitat(), dissolve = TRUE) |>
+#' lizard_habitat_sf <- terra::as.polygons(
+#'   example_habitat(),
+#'   dissolve = TRUE
+#'   ) |>
 #'   sf::st_as_sf()
-#' result <- sf_habitat_connectivity(lizard_habitat_sf, lizard_barrier_shp, interpatch_distance = 10)
+#' result <- sf_habitat_connectivity(
+#'   habitat = lizard_habitat_sf,
+#'   barrier = lizard_barrier_shp,
+#'   species = "Blue-tongued lizard",
+#'   interpatch_distance = 10
+#'   )
 #' result
 #' @export
 sf_habitat_connectivity <- function(
   habitat,
   barrier,
+  species,
   interpatch_distance = NULL,
   buffer_radius = NULL
 ) {
@@ -231,5 +241,11 @@ sf_habitat_connectivity <- function(
     sf_add_patch_area()
   # group the patches by connected area ID
   areas_connected <- sf_aggregate_connected_patches(habitat_remaining_id)
+  areas_connected <- patch_connectivity(
+    data = areas_connected,
+    species = species,
+    # store the FULL distance
+    interpatch_distance = buffer_radius * 2
+  )
   areas_connected
 }

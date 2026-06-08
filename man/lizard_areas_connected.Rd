@@ -12,7 +12,7 @@ A data frame with columns:
 \item{area_squared}{Numeric. Squared area, used in connectivity metrics.}
 }
 
-An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 59 rows and 3 columns.
+An object of class \code{patch_connectivity} (inherits from \code{tbl_df}, \code{tbl}, \code{data.frame}) with 73 rows and 3 columns.
 }
 \source{
 Generated from \code{\link[=example_habitat]{example_habitat()}} and \code{\link[=example_barrier]{example_barrier()}} at
@@ -35,6 +35,7 @@ habitat patch.
 lizard_areas_connected <- habitat_connectivity(
     habitat = example_habitat(),
     barrier = example_barrier(),
+    species = "Blue-tongued Lizard",
     interpatch_distance = 50,
     verbose = FALSE
   )

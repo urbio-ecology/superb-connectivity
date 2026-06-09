@@ -30,11 +30,9 @@ test_that("summarise_connectivity with multiple Interpatch distance distances st
   # Called once per interpatch distance — should always return exactly 1 row
   purrr::walk(c(50, 100, 200), function(dist) {
     result <- summarise_connectivity(
-      area = c(5000, 5000),
+      connectivity = c(5000, 5000),
       interpatch_distance = dist,
-      target_resolution = 500,
       data_resolution = 10,
-      aggregation_factor = 50,
       species = "Wren"
     )
     expect_equal(nrow(result), 1)

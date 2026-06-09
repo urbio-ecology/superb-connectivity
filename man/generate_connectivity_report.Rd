@@ -13,7 +13,6 @@ generate_connectivity_report(
   barrier = NULL,
   habitat_raster = NULL,
   data_resolution = 10,
-  target_resolution = 500,
   output_file = NULL,
   output_format = c("html", "pdf", "both"),
   output_dir = getwd()
@@ -43,8 +42,6 @@ interpatch distance.}
 mapping).}
 
 \item{data_resolution}{Numeric. Data resolution in meters.}
-
-\item{target_resolution}{Numeric. Target resolution in meters.}
 
 \item{output_file}{Character. Output filename (without extension).}
 

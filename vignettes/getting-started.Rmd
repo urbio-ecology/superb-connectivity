@@ -227,11 +227,9 @@ The result has three columns:
 ```{r}
 #| label: summarise
 results <- summarise_connectivity(
-  area = areas_connected$area,
+  connectivity = areas_connected$area,
   interpatch_distance = interpatch_distance,
-  target_resolution = 500,
   data_resolution = 10,
-  aggregation_factor = 50,
   species = "Blue-tongued Lizard"
 )
 
@@ -306,14 +304,7 @@ all_results <- purrr::map(
       interpatch_distance = d,
       verbose = FALSE
     )
-    summarise_connectivity(
-      area = areas$area,
-      interpatch_distance = d,
-      target_resolution = 500,
-      data_resolution = 10,
-      aggregation_factor = 50,
-      species = "Blue-tongued Lizard"
-    )
+    summarise_connectivity(connectivity = areas)
   }
 ) |>
   purrr::list_rbind()

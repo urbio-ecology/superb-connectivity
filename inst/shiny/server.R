@@ -258,9 +258,7 @@ server <- function(input, output, session) {
               summarise_connectivity(
                 area = areas$area,
                 interpatch_distance = dist,
-                target_resolution = overlay_res,
                 data_resolution = base_res,
-                aggregation_factor = overlay_res / base_res,
                 species = input$species
               )
             }

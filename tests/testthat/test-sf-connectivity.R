@@ -110,5 +110,4 @@ test_that("sf_habitat_connectivity returns a data frame with expected columns", 
   expect_snapshot(names(result))
   expect_gt(nrow(result), 0)
   expect_all_true(as.numeric(result$area) > 0)
-  expect_all_true(as.numeric(result$area) < as.numeric(result$area_squared))
 })

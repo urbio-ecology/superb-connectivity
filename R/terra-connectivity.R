@@ -379,6 +379,7 @@ habitat_connectivity <- function(
   buffer_radius = NULL,
   verbose = TRUE
 ) {
+  # check all arguments are there first?
   buffer_radius <- resolve_buffer_radius(interpatch_distance, buffer_radius)
   if (verbose) {
     habitat_connectivity <- .habitat_connectivity(
@@ -396,11 +397,13 @@ habitat_connectivity <- function(
       buffer_radius
     )$result
   }
+
   habitat_connectivity <- patch_connectivity(
     data = habitat_connectivity,
     species = species,
     # store the FULL distance
-    interpatch_distance = buffer_radius * 2
+    interpatch_distance = buffer_radius * 2,
+    res = terra::res(habitat)
   )
 
   habitat_connectivity

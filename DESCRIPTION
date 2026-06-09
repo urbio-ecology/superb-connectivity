@@ -48,7 +48,8 @@ Imports:
     grDevices,
     cli,
     rlang,
-    scales
+    scales,
+    vctrs
 Suggests:
     bslib,
     conflicted,
@@ -67,7 +68,6 @@ Suggests:
     tarchetypes,
     targets,
     testthat (>= 3.0.0),
-    vctrs,
     vdiffr,
     withr,
     tictoc,

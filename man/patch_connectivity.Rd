@@ -4,7 +4,7 @@
 \alias{patch_connectivity}
 \title{A set of connected habitat patches}
 \usage{
-patch_connectivity(data, species, interpatch_distance)
+patch_connectivity(data, species, interpatch_distance, res = NA)
 }
 \arguments{
 \item{data}{Data frame of connected patches. Must contain an \code{area} column.}
@@ -13,6 +13,9 @@ patch_connectivity(data, species, interpatch_distance)
 
 \item{interpatch_distance}{Numeric of length 1. The interpatch distance (m)
 the analysis used.}
+
+\item{res}{resolution in pixels - defaults to NA, not required for vector
+based approaches.}
 }
 \value{
 A \code{patch_connectivity} object: a tibble with \code{species} and

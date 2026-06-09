@@ -84,7 +84,7 @@ barrier_rasterised <- terra::rasterize(
 ## barrier data directly - we could instead do raster of this grid spec
 coarse_raster <- terra::aggregate(
   barrier_rasterised * 0,
-  aggregation_factor
+  fact = aggregation_factor
 )
 
 ## making the grid finer
@@ -117,14 +117,7 @@ areas_connected <- map(
 results_connect_habitat <- map(
   .x = areas_connected,
   .f = function(areas_connected) {
-    summarise_connectivity(
-      area = areas_connected$area,
-      interpatch_distance = interpatch_distance,
-      target_resolution = target_resolution,
-      data_resolution = data_resolution,
-      aggregation_factor = aggregation_factor,
-      species = species
-    )
+    summarise_connectivity(areas_connected)
   }
 ) |>
   list_rbind()

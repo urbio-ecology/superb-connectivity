@@ -103,6 +103,7 @@ plot(habitat, col = "seagreen", legend = FALSE, add = TRUE)
 areas <- habitat_connectivity(
   habitat  = habitat,
   barrier  = barrier,
+  species = "Blue-tongued Lizard",
   interpatch_distance = 10
 )
 
@@ -113,12 +114,7 @@ Summarise the connectivity metrics:
 
 ```{r summarise}
 summarise_connectivity(
-  area = areas$area,
-  interpatch_distance  = 100,
-  target_resolution = 500,
-  data_resolution = 10,
-  aggregation_factor = 50,
-  species = "Blue-tongued Lizard"
+  connectivity = areas
 )
 ```
 

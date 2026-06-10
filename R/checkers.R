@@ -121,3 +121,18 @@ check_pc_match <- function(
     call = call
   )
 }
+
+check_names <- function(
+  x,
+  name,
+  arg = rlang::caller_arg(x),
+  call = rlang::caller_env()
+) {
+  name_exists <- rlang::has_name(x, name)
+  if (!name_exists) {
+    cli::cli_abort(
+      message = "{.arg x} must contain an {.field name} column.",
+      call = call
+    )
+  }
+}

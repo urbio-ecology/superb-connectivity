@@ -21,11 +21,12 @@ pc_interpatch_distance(x)
 }
 \value{
 \itemize{
-\item \code{pc_species()} Returns the species (character, length 1);
+\item \code{pc_species()} Returns the species (character, length 1).
 \item \code{pc_interpatch_distance()} returns the interpatch distance (numeric,
 length 1).
-\item \code{pc_res()} returns the resolution (character, length 1 - e.g., "2x2"),
-\item \code{pc_patches()} returns the number of patches (numeric, length 1)
+\item \code{pc_res()} returns the resolution (character, length 1 - e.g., "2x2").
+\item \code{pc_patches()} returns the number of patches - computed live from the
+number of rows (numeric, length 1).
 }
 }
 \description{

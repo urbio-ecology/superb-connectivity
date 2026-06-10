@@ -2,7 +2,6 @@
 "_PACKAGE"
 
 ## usethis namespace: start
-#' @importFrom tibble tbl_sum
 ## usethis namespace: end
 NULL
 

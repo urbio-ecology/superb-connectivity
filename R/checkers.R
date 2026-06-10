@@ -1,19 +1,42 @@
-#' @noRd
-check_scalar_numeric <- function(
+check_class <- function(
+  x,
+  class_predicate,
+  class_name,
+  arg = rlang::caller_arg(x),
+  call = rlang::caller_env()
+) {
+  if (!class_predicate(x)) {
+    cli::cli_abort(
+      message = c(
+        "{.arg {arg}} must be {.cls {class_name}}, not {.cls {class(x)}}.",
+        "i" = "You supplied: {.obj_type_friendly {x}}"
+      )
+    )
+  }
+  invisible(x)
+}
+
+check_numeric <- function(
   x,
   arg = rlang::caller_arg(x),
   call = rlang::caller_env()
 ) {
-  if (!is.numeric(x)) {
-    cli::cli_abort(
-      message = c(
-        "{.arg {arg}} must be {.cls numeric}, not {.cls {class(x)}}.",
-        "i" = "You supplied: {.obj_type_friendly {x}}"
-      ),
-      call = call
-    )
-  }
+  check_class(x, is.numeric, "numeric")
+}
 
+check_character <- function(
+  x,
+  arg = rlang::caller_arg(x),
+  call = rlang::caller_env()
+) {
+  check_class(x, is.character, "character")
+}
+
+check_scalar <- function(
+  x,
+  arg = rlang::caller_arg(x),
+  call = rlang::caller_env()
+) {
   if (length(x) != 1) {
     cli::cli_abort(
       message = c(
@@ -23,10 +46,38 @@ check_scalar_numeric <- function(
       call = call
     )
   }
+  invisible(x)
+}
+
+#' @noRd
+check_scalar_numeric <- function(
+  x,
+  arg = rlang::caller_arg(x),
+  call = rlang::caller_env()
+) {
+  check_numeric(x, arg, call)
+  check_scalar(x, arg, call)
 
   invisible(x)
 }
 
+check_scalar_character <- function(
+  x,
+  arg = rlang::caller_arg(x),
+  call = rlang::caller_env()
+) {
+  check_character(x, arg, call)
+  check_scalar(x, arg, call)
+  invisible(x)
+}
+
+make_bullets <- function(category, new, baseline) {
+  c(
+    paste0("{.strong ", category, "}"),
+    "*" = paste0("connectivity          = {.val ", new, "}"),
+    "*" = paste0("connectivity_baseline = {.val ", baseline, "}")
+  )
+}
 
 # check distance, species, and res match
 check_pc_match <- function(
@@ -50,14 +101,6 @@ check_pc_match <- function(
 
   if (dist_match && res_match && species_match) {
     return(invisible())
-  }
-
-  make_bullets <- function(category, new, baseline) {
-    c(
-      paste0("{.strong ", category, "}"),
-      "*" = paste0("connectivity          = {.val ", new, "}"),
-      "*" = paste0("connectivity_baseline = {.val ", baseline, "}")
-    )
   }
 
   cli::cli_abort(

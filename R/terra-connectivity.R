@@ -319,7 +319,6 @@ aggregate_connected_patches <- function(raster) {
     ) |>
     dplyr::mutate(area_squared = area^2) |>
     dplyr::mutate(dplyr::across(dplyr::starts_with("area"), \(x) round(x, 3)))
-  summed
 }
 
 #' Calculate habitat connectivity using terra

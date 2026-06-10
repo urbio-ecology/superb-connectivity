@@ -80,3 +80,15 @@ test_that("summarise_connectivity rounds prob_connectedness to 6 decimal places"
   )
   expect_equal(result$prob_connectedness, round(result$prob_connectedness, 6))
 })
+
+test_that("summarise_connectivity works with patch_connectivity data", {
+  expect_snapshot(
+    summarise_connectivity(lizard_areas_connected)
+  )
+  expect_snapshot(
+    summarise_connectivity(
+      connectivity = lizard_areas_connected,
+      connectivity_baseline = lizard_areas_connected
+    )
+  )
+})

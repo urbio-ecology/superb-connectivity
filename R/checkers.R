@@ -10,7 +10,8 @@ check_class <- function(
       message = c(
         "{.arg {arg}} must be {.cls {class_name}}, not {.cls {class(x)}}.",
         "i" = "You supplied: {.obj_type_friendly {x}}"
-      )
+      ),
+      call = call
     )
   }
   invisible(x)
@@ -131,7 +132,7 @@ check_names <- function(
   name_exists <- rlang::has_name(x, name)
   if (!name_exists) {
     cli::cli_abort(
-      message = "{.arg x} must contain an {.field name} column.",
+      message = "{.arg x} must contain a {.field {name}} column.",
       call = call
     )
   }

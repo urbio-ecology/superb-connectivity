@@ -75,6 +75,7 @@ patch_connectivity <- function(
     res = res
   )
   validate_patch_connectivity(pc)
+  pc
 }
 
 # using approaches from https://epiverse-trace.github.io/posts/extend-dataframes/

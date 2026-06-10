@@ -49,12 +49,12 @@ compare_connectivity.patch_connectivity <- function(
   )
   # (column-wise subtraction; direction is: baseline - new
   # positive = more in new vs baseline, connectivity increased in new scenario)
-  difference <- new - baseline
+  change <- new - baseline
 
   results <- dplyr::bind_rows(
     baseline = baseline,
     new = new,
-    difference = difference,
+    change = change,
     .id = "scenario"
   ) |>
     dplyr::mutate(

@@ -1,4 +1,18 @@
-# multiplication works
+# compare_connectivity works for patch_connectivity
+
+    Code
+      compare_connectivity(connectivity = lizard_areas_connected,
+        connectivity_baseline = lizard_areas_connected)
+    Output
+      # A tibble: 3 x 6
+        scenario interpatch_distance species             n_patches effective_mesh_ha
+        <chr>                  <dbl> <chr>                   <int>             <dbl>
+      1 baseline                  50 Blue-tongued Lizard        73              4.47
+      2 new                       50 Blue-tongued Lizard        73              4.47
+      3 change                    50 Blue-tongued Lizard         0              0   
+      # i 1 more variable: prob_connectedness <dbl>
+
+# compare-connectivity works
 
     Code
       compare_connectivity(connectivity = new_areas, connectivity_baseline = baseline_areas,

@@ -55,7 +55,6 @@ patch_id_raster <- assign_patches_to_fragments(
 rast_areas_connected <- aggregate_connected_patches(patch_id_raster)
 ## This code is to do with finding the actual connectivity calculation
 
-
 areas_connected2 <- habitat_connectivity(
   habitat = habitat_raster,
   barrier = barrier_raster,

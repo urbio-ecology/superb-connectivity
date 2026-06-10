@@ -1,0 +1,176 @@
+#' A set of connected habitat patches
+#'
+#' The object returned by [habitat_connectivity()]: a [tibble][tibble::tibble]
+#' of connected patch areas that also carries the `species` and
+#' `interpatch_distance` the analysis was run with as attributes.
+#'
+#' Because it is a tibble subclass it behaves like a data frame directly --
+#' `$`, `[`, [DT::datatable()], [utils::write.csv()] and ggplot2 all work
+#' without ceremony. Read the metadata back with [pc_species()] and
+#' [pc_interpatch_distance()].
+#'
+#' @param data Data frame of connected patches. Must contain an `area` column.
+#' @param species Character of length 1. Species the analysis was run for.
+#' @param res resolution in pixels - defaults to NA (numeric), not required for
+#'   vector based approaches.
+#' @param interpatch_distance Numeric of length 1. The interpatch distance (m)
+#'   the analysis used.
+#' @returns A `patch_connectivity` object: a tibble with `species` and
+#'   `interpatch_distance` attributes.
+#' @export
+new_patch_connectivity <- function(
+  data,
+  species,
+  interpatch_distance,
+  res = NA_real_
+) {
+  check_scalar_character(species)
+  check_scalar_numeric(interpatch_distance)
+  check_numeric(res)
+  check_names(data, "area")
+  check_names(data, "patch_id")
+
+  vctrs::new_data_frame(
+    # tibble::as_tibble(data),
+    x = list(
+      patch_id = data$patch_id,
+      area = data$area
+    ),
+    species = species,
+    interpatch_distance = interpatch_distance,
+    res = res,
+    n = nrow(data),
+    class = c("patch_connectivity", "tbl_df", "tbl")
+  )
+}
+
+validate_patch_connectivity <- function(x) {
+  species <- pc_species(x)
+  check_scalar_character(species)
+
+  interpatch_distance <- pc_interpatch_distance(x)
+  check_scalar_numeric(interpatch_distance)
+
+  res <- pc_res(x)
+  check_character(res)
+
+  check_names(x, "area")
+  check_names(x, "patch_id")
+
+  invisible(x)
+}
+
+#' @rdname new_patch_connectivity
+#' @export
+patch_connectivity <- function(
+  data,
+  species,
+  interpatch_distance,
+  res = NA_real_
+) {
+  pc <- new_patch_connectivity(
+    data = data,
+    species = species,
+    interpatch_distance = interpatch_distance,
+    res = res
+  )
+  validate_patch_connectivity(pc)
+  pc
+}
+
+# using approaches from https://epiverse-trace.github.io/posts/extend-dataframes/
+# Gate on *structural* prerequisites that exist on the bare data dplyr hands us
+# (the required columns), not on metadata attributes -- those live on the
+# template and are restored by df_reconstruct(), not validated here.
+patch_connectivity_can_reconstruct <- function(data) {
+  all(c("patch_id", "area") %in% names(data))
+}
+
+df_reconstruct <- function(x, to) {
+  attrs <- attributes(to)
+  attrs$names <- names(x)
+  attrs$row.names <- .row_names_info(x, type = 0L)
+  attributes(x) <- attrs
+  x
+}
+
+patch_connectivity_reconstruct <- function(x, to) {
+  if (patch_connectivity_can_reconstruct(x)) {
+    df_reconstruct(x, to)
+  } else {
+    x <- as.data.frame(x)
+    cli::cli_inform(
+      "Removing attributes in {.cls patch_connectivity}",
+      "Returning {.cls data.frame}"
+    )
+    x
+  }
+}
+
+#' @exportS3Method dplyr::dplyr_reconstruct
+dplyr_reconstruct.patch_connectivity <- function(data, template) {
+  patch_connectivity_reconstruct(data, template)
+}
+
+#' @export
+`[.patch_connectivity` <- function(x, ...) {
+  out <- NextMethod()
+  patch_connectivity_reconstruct(out, x)
+}
+
+#' @export
+`names<-.patch_connectivity` <- function(x, value) {
+  out <- NextMethod()
+  patch_connectivity_reconstruct(out, x)
+}
+
+#' @export
+print.patch_connectivity <- function(x, ..., n = NULL) {
+  NextMethod(n = n %||% 5)
+}
+
+#' @exportS3Method tibble::tbl_sum
+tbl_sum.patch_connectivity <- function(x) {
+  c(
+    "patch_connectivity" = "data.frame",
+    "Species" = pc_species(x),
+    "Patches" = pc_patches(x),
+    "Resolution" = paste(pc_res(x), collapse = "x"),
+    "Interpatch Distance" = paste(pc_interpatch_distance(x), "m")
+  )
+}
+
+#' Metadata from a `patch_connectivity` object
+#'
+#' @param x A [patch_connectivity()] object.
+#' @returns
+#'  * `pc_species()` Returns the species (character, length 1).
+#'  * `pc_interpatch_distance()` returns the interpatch distance (numeric,
+#'   length 1).
+#'  * `pc_res()` returns the resolution (character, length 1 - e.g., "2x2").
+#'  * `pc_patches()` returns the number of patches - computed live from the
+#'  number of rows (numeric, length 1).
+#' @name pc-getters
+#' @export
+pc_species <- function(x) {
+  attr(x, "species")
+}
+
+#' @rdname pc-getters
+#' @export
+pc_patches <- function(x) {
+  nrow(x)
+}
+
+#' @rdname pc-getters
+#' @export
+pc_res <- function(x) {
+  x_res <- attr(x, "res")
+  paste(x_res, collapse = "x")
+}
+
+#' @rdname pc-getters
+#' @export
+pc_interpatch_distance <- function(x) {
+  attr(x, "interpatch_distance")
+}

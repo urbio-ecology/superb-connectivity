@@ -26,7 +26,7 @@ URL: https://urbio-ecology.r-universe.dev/urbioconnect, https://github.com/urbio
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 Depends:
-  R (>= 4.2.0)
+  R (>= 4.3.0)
 Imports:
     colorspace,
     dplyr,
@@ -48,7 +48,8 @@ Imports:
     grDevices,
     cli,
     rlang,
-    scales
+    scales,
+    vctrs
 Suggests:
     bslib,
     conflicted,
@@ -67,7 +68,6 @@ Suggests:
     tarchetypes,
     targets,
     testthat (>= 3.0.0),
-    vctrs,
     vdiffr,
     withr,
     tictoc,

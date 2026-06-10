@@ -23,5 +23,5 @@
     Code
       names(result)
     Output
-      [1] "patch_id"     "area"         "area_squared"
+      [1] "patch_id" "area"    
 

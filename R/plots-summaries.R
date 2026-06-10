@@ -292,11 +292,9 @@ plot_patches <- function(
 #'     full <- habitat_connectivity_full(lizard_habitat, lizard_barrier,
 #'       interpatch_distance = d, verbose = FALSE)
 #'     summarise_connectivity(
-#'       area = full$areas_connected$area,
+#'       connectivity = full$areas_connected$area,
 #'       interpatch_distance = d,
-#'       target_resolution = 500,
 #'       data_resolution = 10,
-#'       aggregation_factor = 50,
 #'       species = "Blue-tongued Lizard"
 #'     )
 #'   }

@@ -14,6 +14,10 @@ reference:
   - n_patches
   - total_habitat_area
   - habitat_connectivity_full
+- title: Patch connectivity class
+  contents:
+  - patch_connectivity
+  - pc-getters
 - title: Raster functions
   contents:
   - create_barrier_mask

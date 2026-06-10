@@ -18,7 +18,6 @@
 #' @param habitat_raster Terra SpatRaster. Habitat raster (optional, for
 #' mapping).
 #' @param data_resolution Numeric. Data resolution in meters.
-#' @param target_resolution Numeric. Target resolution in meters.
 #' @param output_file Character. Output filename (without extension).
 #' @param output_format Character. Output format: "html" (default), "pdf", or
 #' "both".
@@ -47,7 +46,6 @@ generate_connectivity_report <- function(
   barrier = NULL,
   habitat_raster = NULL,
   data_resolution = 10,
-  target_resolution = 500,
   output_file = NULL,
   output_format = c("html", "pdf", "both"),
   output_dir = getwd()
@@ -87,8 +85,7 @@ generate_connectivity_report <- function(
     habitat = habitat,
     barrier = barrier,
     habitat_raster = habitat_raster,
-    data_resolution = data_resolution,
-    target_resolution = target_resolution
+    data_resolution = data_resolution
   )
 
   # Render report(s)

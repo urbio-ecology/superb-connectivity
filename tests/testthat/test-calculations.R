@@ -59,11 +59,9 @@ test_that("connectivity_probability is higher for unfragmented habitat", {
 
 test_that("summarise_connectivity returns a tibble with expected columns", {
   result <- summarise_connectivity(
-    area = 10000,
+    connectivity = 10000,
     interpatch_distance = 100,
-    target_resolution = 500,
     data_resolution = 10,
-    aggregation_factor = 50,
     species = "Test Species"
   )
 
@@ -75,12 +73,22 @@ test_that("summarise_connectivity returns a tibble with expected columns", {
 
 test_that("summarise_connectivity rounds prob_connectedness to 6 decimal places", {
   result <- summarise_connectivity(
-    area = c(10000, 20000),
+    connectivity = c(10000, 20000),
     interpatch_distance = 200,
-    target_resolution = 500,
     data_resolution = 10,
-    aggregation_factor = 50,
     species = "Test"
   )
   expect_equal(result$prob_connectedness, round(result$prob_connectedness, 6))
+})
+
+test_that("summarise_connectivity works with patch_connectivity data", {
+  expect_snapshot(
+    summarise_connectivity(lizard_areas_connected)
+  )
+  expect_snapshot(
+    summarise_connectivity(
+      connectivity = lizard_areas_connected,
+      connectivity_baseline = lizard_areas_connected
+    )
+  )
 })

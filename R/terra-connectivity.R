@@ -319,7 +319,6 @@ aggregate_connected_patches <- function(raster) {
     ) |>
     dplyr::mutate(area_squared = area^2) |>
     dplyr::mutate(dplyr::across(dplyr::starts_with("area"), \(x) round(x, 3)))
-  summed
 }
 
 #' Calculate habitat connectivity using terra
@@ -335,6 +334,7 @@ aggregate_connected_patches <- function(raster) {
 #'
 #' @param habitat Terra SpatRaster. Habitat raster.
 #' @param barrier Terra SpatRaster. Barrier raster.
+#' @param species Species name. E.g., "Blue-tongued Lizard".
 #' @param interpatch_distance Numeric. The distance (in meters) where habitat
 #'   patches are considered connected. E.g., if set to 500, patches 498m apart
 #'   are connected, those 501m apart are not connected. This is passed
@@ -366,16 +366,19 @@ aggregate_connected_patches <- function(raster) {
 #' connectivity <- habitat_connectivity(
 #'     habitat = lizard_habitat,
 #'     barrier = lizard_barrier,
-#'     interpatch_distance = 10
+#'     species = "Blue-tongued Lizard",
+#'     interpatch_distance = 12
 #'   )
 #' connectivity
 habitat_connectivity <- function(
   habitat,
   barrier,
+  species,
   interpatch_distance = NULL,
   buffer_radius = NULL,
   verbose = TRUE
 ) {
+  # check all arguments are there first?
   buffer_radius <- resolve_buffer_radius(interpatch_distance, buffer_radius)
   if (verbose) {
     habitat_connectivity <- .habitat_connectivity(
@@ -393,6 +396,15 @@ habitat_connectivity <- function(
       buffer_radius
     )$result
   }
+
+  habitat_connectivity <- new_patch_connectivity(
+    data = habitat_connectivity,
+    species = species,
+    # store the FULL distance
+    interpatch_distance = buffer_radius * 2,
+    res = terra::res(habitat)
+  )
+
   habitat_connectivity
 }
 

@@ -19,19 +19,9 @@
 #'   `interpatch_distance` attributes.
 #' @export
 patch_connectivity <- function(data, species, interpatch_distance, res = NA) {
-  if (!rlang::is_scalar_character(species)) {
-    cli::cli_abort(
-      "{.arg species} must be a character vector of length 1, not \\
-      {.obj_type_friendly {species}} of length {length(species)}."
-    )
-  }
-  if (!is.numeric(interpatch_distance) || length(interpatch_distance) != 1) {
-    cli::cli_abort(
-      "{.arg interpatch_distance} must be a numeric vector of length 1, not \\
-      {.obj_type_friendly {interpatch_distance}} of length \\
-      {length(interpatch_distance)}."
-    )
-  }
+  check_scalar_character(species)
+  check_scalar_numeric(interpatch_distance)
+
   if (!"area" %in% names(data)) {
     cli::cli_abort("{.arg data} must contain an {.field area} column.")
   }

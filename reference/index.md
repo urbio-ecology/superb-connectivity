@@ -4,7 +4,7 @@
 
 - [`habitat_connectivity()`](https://urbio-ecology.github.io/urbioconnect/reference/habitat_connectivity.md)
   : Calculate habitat connectivity using terra
-- [`summarise_connectivity()`](https://urbio-ecology.github.io/urbioconnect/reference/summarise_connectivity.md)
+- [`summarise_connectivity()`](https://urbio-ecology.github.io/urbioconnect/reference/summarise-connectivity.md)
   : Summarise connectivity metrics
 - [`compare_connectivity()`](https://urbio-ecology.github.io/urbioconnect/reference/compare_connectivity.md)
   : Compare measurements the connectivity of different scenarios
@@ -20,6 +20,20 @@
   : Calculate total habitat area
 - [`habitat_connectivity_full()`](https://urbio-ecology.github.io/urbioconnect/reference/habitat_connectivity_full.md)
   : Calculate habitat connectivity with visualization data
+
+## Patch connectivity class
+
+- [`new_patch_connectivity()`](https://urbio-ecology.github.io/urbioconnect/reference/new_patch_connectivity.md)
+  [`patch_connectivity()`](https://urbio-ecology.github.io/urbioconnect/reference/new_patch_connectivity.md)
+  : A set of connected habitat patches
+
+- [`pc_species()`](https://urbio-ecology.github.io/urbioconnect/reference/pc-getters.md)
+  [`pc_patches()`](https://urbio-ecology.github.io/urbioconnect/reference/pc-getters.md)
+  [`pc_res()`](https://urbio-ecology.github.io/urbioconnect/reference/pc-getters.md)
+  [`pc_interpatch_distance()`](https://urbio-ecology.github.io/urbioconnect/reference/pc-getters.md)
+  :
+
+  Metadata from a `patch_connectivity` object
 
 ## Raster functions
 

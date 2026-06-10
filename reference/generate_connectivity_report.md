@@ -15,7 +15,6 @@ generate_connectivity_report(
   barrier = NULL,
   habitat_raster = NULL,
   data_resolution = 10,
-  target_resolution = 500,
   output_file = NULL,
   output_format = c("html", "pdf", "both"),
   output_dir = getwd()
@@ -62,10 +61,6 @@ generate_connectivity_report(
 - data_resolution:
 
   Numeric. Data resolution in meters.
-
-- target_resolution:
-
-  Numeric. Target resolution in meters.
 
 - output_file:
 

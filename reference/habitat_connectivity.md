@@ -27,6 +27,7 @@ output. The steps are:
 habitat_connectivity(
   habitat,
   barrier,
+  species,
   interpatch_distance = NULL,
   buffer_radius = NULL,
   verbose = TRUE
@@ -42,6 +43,10 @@ habitat_connectivity(
 - barrier:
 
   Terra SpatRaster. Barrier raster.
+
+- species:
+
+  Species name. E.g., "Blue-tongued Lizard".
 
 - interpatch_distance:
 
@@ -93,44 +98,39 @@ lizard_barrier <- example_barrier()
 connectivity <- habitat_connectivity(
     habitat = lizard_habitat,
     barrier = lizard_barrier,
-    interpatch_distance = 10
+    species = "Blue-tongued Lizard",
+    interpatch_distance = 12
   )
 #> ℹ Creating barrier mask
-#> ✔ Creating barrier mask [31ms]
+#> ✔ Creating barrier mask [32ms]
 #> 
 #> ℹ Removing habitat underneath barrier
 #> ✔ Removing habitat underneath barrier [23ms]
 #> 
-#> ℹ Adding 5m buffer (interpatch distance 10m)
-#> Warning: Buffer radius doesn't align with the raster resolution.
-#> ✖ 5 m isn't a multiple of 2 m.
-#> ℹ It snaps to 4 m (interpatch distance 8 m).
-#> ℹ Connectivity may shift for patches near the cut-off.
-#> ℹ See `vignette(urbioconnect::interpatch-distance-and-resolution)`.
-#> ✔ Adding 5m buffer (interpatch distance 10m) [162ms]
+#> ℹ Adding 6m buffer (interpatch distance 12m)
+#> ✔ Adding 6m buffer (interpatch distance 12m) [218ms]
 #> 
 #> ℹ Fragmenting habitat layer along barrier intersection
-#> ✔ Fragmenting habitat layer along barrier intersection [20ms]
+#> ✔ Fragmenting habitat layer along barrier intersection [21ms]
 #> 
 #> ℹ Assigning patches ID to fragments
-#> ✔ Assigning patches ID to fragments [2.5s]
+#> ✔ Assigning patches ID to fragments [2.8s]
 #> 
 #> ℹ Summarising area in each patch
-#> ✔ Summarising area in each patch [37ms]
+#> ✔ Summarising area in each patch [47ms]
 #> 
 connectivity
-#> # A tibble: 703 × 3
-#>    patch_id    area area_squared
-#>       <dbl>   <dbl>        <dbl>
-#>  1        1    60.0        3600.
-#>  2        2  1648.      2716264.
-#>  3        7    12.0         144.
-#>  4        8  1200.      1440195.
-#>  5       10 92034.   8470191653.
-#>  6       11    40.0        1600.
-#>  7       12   288.        82955.
-#>  8       28  1156.      1336497.
-#>  9       30    64.0        4096.
-#> 10       31   940.       883705.
-#> # ℹ 693 more rows
+#> # patch_connectivity:  data.frame
+#> # Species:             Blue-tongued Lizard
+#> # Patches:             399
+#> # Resolution:          2x2
+#> # Interpatch Distance: 12 m
+#>   patch_id   area
+#>      <dbl>  <dbl>
+#> 1        1 95326.
+#> 2        3   364.
+#> 3        6  2344.
+#> 4       13  1220.
+#> 5       48  1112.
+#> # ℹ 394 more rows
 ```

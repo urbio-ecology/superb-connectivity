@@ -33,5 +33,5 @@ Numeric. Effective mesh size, in hectares.
 
 ``` r
 effective_mesh_size(lizard_areas_connected$area)
-#> [1] 4.491013
+#> [1] 4.473824
 ```

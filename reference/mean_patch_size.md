@@ -32,5 +32,5 @@ Numeric. Mean patch size.
 
 ``` r
 mean_patch_size(lizard_areas_connected$area)
-#> [1] 4454.651
+#> [1] 3600.334
 ```

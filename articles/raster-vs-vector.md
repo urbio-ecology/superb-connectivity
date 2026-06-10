@@ -111,27 +111,27 @@ tic()
 raster_result <- habitat_connectivity(
   habitat = habitat_rast,
   barrier = barrier_rast,
+  species = "Blue-tongued Lizard",
   interpatch_distance = interpatch_dist,
   verbose = FALSE
 )
 rast_time <- toc()
-#> 3.21 sec elapsed
+#> 3.227 sec elapsed
 
 raster_result
-#> # A tibble: 703 × 3
-#>    patch_id    area area_squared
-#>       <dbl>   <dbl>        <dbl>
-#>  1        1    60.0        3600.
-#>  2        2  1648.      2716264.
-#>  3        7    12.0         144.
-#>  4        8  1200.      1440195.
-#>  5       10 92034.   8470191653.
-#>  6       11    40.0        1600.
-#>  7       12   288.        82955.
-#>  8       28  1156.      1336497.
-#>  9       30    64.0        4096.
-#> 10       31   940.       883705.
-#> # ℹ 693 more rows
+#> # patch_connectivity:  data.frame
+#> # Species:             Blue-tongued Lizard
+#> # Patches:             703
+#> # Resolution:          2x2
+#> # Interpatch Distance: 10 m
+#>   patch_id    area
+#>      <dbl>   <dbl>
+#> 1        1    60.0
+#> 2        2  1648. 
+#> 3        7    12.0
+#> 4        8  1200. 
+#> 5       10 92034. 
+#> # ℹ 698 more rows
 ```
 
 The raster result has columns `patch_id`, `area` (square metres), and
@@ -145,26 +145,26 @@ tic()
 vector_result <- sf_habitat_connectivity(
   habitat = habitat_sf_clean,
   barrier = barrier_sf_clean,
+  species = "lizard",
   interpatch_distance = interpatch_dist
 )
 vect_time <- toc()
-#> 11.277 sec elapsed
+#> 11.297 sec elapsed
 
 vector_result
-#> # A tibble: 483 × 3
-#>    patch_id   area area_squared
-#>       <dbl>  <dbl>        <dbl>
-#>  1        1 1536.      2359937.
-#>  2        2  287.        82367.
-#>  3        3  292.        85114.
-#>  4        4  850.       721664.
-#>  5        5    8            64 
-#>  6        6 3047.      9283685.
-#>  7        7   82.7        6840.
-#>  8        8   47.7        2280.
-#>  9        9  306.        93555.
-#> 10       11   24           576 
-#> # ℹ 473 more rows
+#> # patch_connectivity:  data.frame
+#> # Species:             lizard
+#> # Patches:             483
+#> # Resolution:          NA
+#> # Interpatch Distance: 10 m
+#>   patch_id  area
+#>      <dbl> <dbl>
+#> 1        1 1536.
+#> 2        2  287.
+#> 3        3  292.
+#> 4        4  850.
+#> 5        5    8 
+#> # ℹ 478 more rows
 ```
 
 The vector result has columns `patch_id`, `area` , and `area_squared`.
@@ -189,14 +189,15 @@ exact polygon geometry, so it typically produces slightly different (and
 arguably more precise) patch boundaries, particularly along curved or
 irregular barrier edges.
 
-    #> [1] 3.21
+    #> [1] 3.227
 
 Timings for the methods are also important to consider. The raster
-approach took 3.21 seconds, and the vector approach took 11.277 seconds.
+approach took 3.227 seconds, and the vector approach took 11.297
+seconds.
 
 ## Summarising connectivity metrics
 
-[`summarise_connectivity()`](https://urbio-ecology.github.io/urbioconnect/reference/summarise_connectivity.md)
+[`summarise_connectivity()`](https://urbio-ecology.github.io/urbioconnect/reference/summarise-connectivity.md)
 works with output from either approach. You simply pass the appropriate
 area columns as vectors.
 
@@ -204,19 +205,17 @@ area columns as vectors.
 
 # Raster approach output uses the `area` column
 summarise_connectivity(
-  area = raster_result$area,
+  connectivity = raster_result$area,
   interpatch_distance = interpatch_dist,
-  target_resolution = 500,
   data_resolution = 10,
-  aggregation_factor = 50,
   species = "Blue-tongued Lizard (raster)"
 )
-#> # A tibble: 1 × 10
+#> # A tibble: 1 × 8
 #>   species     interpatch_distance n_patches effective_mesh_ha prob_connectedness
 #>   <chr>                     <dbl>     <int>             <dbl>              <dbl>
 #> 1 Blue-tongu…                  10       703                 4           0.000015
-#> # ℹ 5 more variables: patch_area_mean <dbl>, patch_area_total_ha <dbl>,
-#> #   target_resolution <dbl>, data_resolution <dbl>, aggregation_factor <dbl>
+#> # ℹ 3 more variables: patch_area_mean <dbl>, patch_area_total_ha <dbl>,
+#> #   data_resolution <dbl>
 ```
 
 ``` r
@@ -224,19 +223,17 @@ summarise_connectivity(
 # Vector approach output uses the `area` column
 # Strip units before passing to summarise_connectivity
 summarise_connectivity(
-  area = vector_result$area,
+  connectivity = vector_result$area,
   interpatch_distance = interpatch_dist,
-  target_resolution = NA,
   data_resolution = NA,
-  aggregation_factor = NA,
   species = "Blue-tongued Lizard (vector)"
 ) 
-#> # A tibble: 1 × 10
+#> # A tibble: 1 × 8
 #>   species     interpatch_distance n_patches effective_mesh_ha prob_connectedness
 #>   <chr>                     <dbl>     <int>             <dbl>              <dbl>
 #> 1 Blue-tongu…                  10       483                 4           0.000016
-#> # ℹ 5 more variables: patch_area_mean <dbl>, patch_area_total_ha <dbl>,
-#> #   target_resolution <lgl>, data_resolution <lgl>, aggregation_factor <lgl>
+#> # ℹ 3 more variables: patch_area_mean <dbl>, patch_area_total_ha <dbl>,
+#> #   data_resolution <lgl>
 ```
 
 The metrics — effective mesh size, probability of connectedness, mean

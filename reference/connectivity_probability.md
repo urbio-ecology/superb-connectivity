@@ -42,7 +42,7 @@ connectivity_probability(
   effective_mesh_size = effective_mesh,
   area_baseline = lizard_areas_connected$area
   )
-#> [1] 1.708751e-05
+#> [1] 1.702211e-05
 # if you wanted to compare to a scenario, you would consider the effective
 # mesh size to be the new scenario level, and the baseline as so:
 connectivity_probability(
@@ -50,5 +50,5 @@ connectivity_probability(
   effective_mesh_size = effective_mesh,
   area_baseline = lizard_areas_connected$area
   )
-#> [1] 1.708751e-05
+#> [1] 1.702211e-05
 ```

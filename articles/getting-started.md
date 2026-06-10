@@ -323,28 +323,26 @@ The result has three columns:
 
 ## Computing connectivity metrics
 
-[`summarise_connectivity()`](https://urbio-ecology.github.io/urbioconnect/reference/summarise_connectivity.md)
+[`summarise_connectivity()`](https://urbio-ecology.github.io/urbioconnect/reference/summarise-connectivity.md)
 takes the patch area data and computes a set of landscape-level
 connectivity metrics:
 
 ``` r
 
 results <- summarise_connectivity(
-  area = areas_connected$area,
+  connectivity = areas_connected$area,
   interpatch_distance = interpatch_distance,
-  target_resolution = 500,
   data_resolution = 10,
-  aggregation_factor = 50,
   species = "Blue-tongued Lizard"
 )
 
 results
-#> # A tibble: 1 × 10
+#> # A tibble: 1 × 8
 #>   species     interpatch_distance n_patches effective_mesh_ha prob_connectedness
 #>   <chr>                     <dbl>     <int>             <dbl>              <dbl>
 #> 1 Blue-tongu…                  10       703                 4           0.000015
-#> # ℹ 5 more variables: patch_area_mean <dbl>, patch_area_total_ha <dbl>,
-#> #   target_resolution <dbl>, data_resolution <dbl>, aggregation_factor <dbl>
+#> # ℹ 3 more variables: patch_area_mean <dbl>, patch_area_total_ha <dbl>,
+#> #   data_resolution <dbl>
 ```
 
 The two key metrics are:
@@ -381,6 +379,7 @@ messages.
 areas_connected <- habitat_connectivity(
   habitat = habitat,
   barrier = barrier,
+  species = "Blue-tongued Lizard",
   interpatch_distance = interpatch_distance,
   verbose = TRUE
 )
@@ -388,7 +387,7 @@ areas_connected <- habitat_connectivity(
 #> ✔ Creating barrier mask [32ms]
 #> 
 #> ℹ Removing habitat underneath barrier
-#> ✔ Removing habitat underneath barrier [37ms]
+#> ✔ Removing habitat underneath barrier [24ms]
 #> 
 #> ℹ Adding 5m buffer (interpatch distance 10m)
 #> Warning: Buffer radius doesn't align with the raster resolution.
@@ -396,16 +395,16 @@ areas_connected <- habitat_connectivity(
 #> ℹ It snaps to 4 m (interpatch distance 8 m).
 #> ℹ Connectivity may shift for patches near the cut-off.
 #> ℹ See `vignette(urbioconnect::interpatch-distance-and-resolution)`.
-#> ✔ Adding 5m buffer (interpatch distance 10m) [282ms]
+#> ✔ Adding 5m buffer (interpatch distance 10m) [288ms]
 #> 
 #> ℹ Fragmenting habitat layer along barrier intersection
-#> ✔ Fragmenting habitat layer along barrier intersection [21ms]
+#> ✔ Fragmenting habitat layer along barrier intersection [31ms]
 #> 
 #> ℹ Assigning patches ID to fragments
 #> ✔ Assigning patches ID to fragments [2.5s]
 #> 
 #> ℹ Summarising area in each patch
-#> ✔ Summarising area in each patch [48ms]
+#> ✔ Summarising area in each patch [40ms]
 #> 
 ```
 
@@ -415,20 +414,19 @@ interpatch distance) as `lizard_areas_connected`:
 ``` r
 
 lizard_areas_connected
-#> # A tibble: 59 × 3
-#>    patch_id   area area_squared
-#>       <dbl>  <dbl>        <dbl>
-#>  1        1  5096.    25972178.
-#>  2        3 98006.  9605178767.
-#>  3        5  2416.     5837832.
-#>  4        6  1304.     1700646.
-#>  5        7  5008.    25083449.
-#>  6        8  1112.     1236681.
-#>  7        9  3276.    10733423.
-#>  8       10  3232.    10447202.
-#>  9       11   500.      250028.
-#> 10       12  2004.     4016481.
-#> # ℹ 49 more rows
+#> # patch_connectivity:  data.frame
+#> # Species:             Blue-tongued Lizard
+#> # Patches:             73
+#> # Resolution:         
+#> # Interpatch Distance: 50 m
+#>   patch_id   area area_squared
+#>      <dbl>  <dbl>        <dbl>
+#> 1        1   172.       29587.
+#> 2        2  1592.     2534763.
+#> 3        7 98006.  9605178767.
+#> 4        9  2416.     5837832.
+#> 5       10  1304.     1700646.
+#> # ℹ 68 more rows
 ```
 
 If you need the intermediate rasters for mapping or reporting, use
@@ -471,30 +469,24 @@ all_results <- purrr::map(
     areas <- habitat_connectivity(
       habitat = habitat,
       barrier = barrier,
+      species = "Blue-tongued Lizard",
       interpatch_distance = d,
       verbose = FALSE
     )
-    summarise_connectivity(
-      area = areas$area,
-      interpatch_distance = d,
-      target_resolution = 500,
-      data_resolution = 10,
-      aggregation_factor = 50,
-      species = "Blue-tongued Lizard"
-    )
+    summarise_connectivity(connectivity = areas)
   }
 ) |>
   purrr::list_rbind()
 
 all_results
-#> # A tibble: 3 × 10
+#> # A tibble: 3 × 8
 #>   species     interpatch_distance n_patches effective_mesh_ha prob_connectedness
 #>   <chr>                     <dbl>     <int>             <dbl>              <dbl>
 #> 1 Blue-tongu…                  10       703                 4           0.000015
 #> 2 Blue-tongu…                  30       105                 4           0.000017
 #> 3 Blue-tongu…                  50        73                 4           0.000017
-#> # ℹ 5 more variables: patch_area_mean <dbl>, patch_area_total_ha <dbl>,
-#> #   target_resolution <dbl>, data_resolution <dbl>, aggregation_factor <dbl>
+#> # ℹ 3 more variables: patch_area_mean <dbl>, patch_area_total_ha <dbl>,
+#> #   data_resolution <chr>
 ```
 
 With multiple buffer distances you can visualise how connectivity
@@ -531,7 +523,7 @@ The core raster workflow in `urbioconnect` is:
     label and measure connected patches
 6.  [`aggregate_connected_patches()`](https://urbio-ecology.github.io/urbioconnect/reference/aggregate_connected_patches.md) -
     summarise patch areas
-7.  [`summarise_connectivity()`](https://urbio-ecology.github.io/urbioconnect/reference/summarise_connectivity.md) -
+7.  [`summarise_connectivity()`](https://urbio-ecology.github.io/urbioconnect/reference/summarise-connectivity.md) -
     compute effective mesh size and probability of connectedness
 
 Or, equivalently, use

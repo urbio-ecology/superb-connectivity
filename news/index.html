@@ -51,6 +51,16 @@
 <li><p><code><a href="../reference/habitat_buffer.html">habitat_buffer()</a></code> now warns when the buffer radius is too fine for the raster resolution (smaller than one cell, or not a clean multiple of it) and returns the habitat unchanged instead of erroring. (<a href="https://github.com/urbio-ecology/urbioconnect/issues/131" class="external-link">#131</a>)</p></li>
 <li><p>New vignette <code><a href="../articles/interpatch-distance-and-resolution.html">vignette("interpatch-distance-and-resolution")</a></code> on how interpatch distance, buffer radius, and raster resolution interact.</p></li>
 <li><p>Fix the shiny app’s interpatch-distance input, which was read under the wrong id. (<a href="https://github.com/urbio-ecology/urbioconnect/issues/131" class="external-link">#131</a>)</p></li>
+<li><p>Add “patch_connectivity” class to <code><a href="../reference/habitat_connectivity.html">habitat_connectivity()</a></code> function, to pave the way for attaching useful metadata to these data. (<a href="https://github.com/urbio-ecology/urbioconnect/issues/133" class="external-link">#133</a>).</p></li>
+<li>
+<p>Add <code>patch_connectivity</code> S3 class:</p>
+<ul><li>add pc_* accessor functions to get: interpatch_distance, patches, res, species.</li>
+<li>Extend <code>patch_connectivity</code> onto tibble</li>
+<li>Add various checking functions to ensure you can compare the same species, and metrics together.</li>
+<li>change <code>area</code> parameter for summarise/compare_connectivity to be <code>connectivity</code>
+</li>
+<li>remove use of arguments, <code>target_resolution</code> and <code>aggregation_factor</code> from many functions as it is only really relevant to the spatial processing, and we really only care about the resolution at the end of the day</li>
+</ul></li>
 </ul><div class="section level3">
 <h3 id="breaking-changes-development-version">Breaking changes<a class="anchor" aria-label="anchor" href="#breaking-changes-development-version"></a></h3>
 <ul><li>

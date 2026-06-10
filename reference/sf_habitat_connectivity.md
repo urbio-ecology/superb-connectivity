@@ -10,6 +10,7 @@ calculates areas of connected patches.
 sf_habitat_connectivity(
   habitat,
   barrier,
+  species,
   interpatch_distance = NULL,
   buffer_radius = NULL
 )
@@ -24,6 +25,10 @@ sf_habitat_connectivity(
 - barrier:
 
   SF object. Barrier spatial data (e.g., roads, waterways).
+
+- species:
+
+  character. Species name.
 
 - interpatch_distance:
 
@@ -66,24 +71,31 @@ lizard_barrier_shp <- example_barrier_shp()
 #> Dimension:     XY
 #> Bounding box:  xmin: 326089.6 ymin: 5820342 xmax: 327662.5 ymax: 5821909
 #> Projected CRS: GDA94 / MGA zone 55
-lizard_habitat_sf <- terra::as.polygons(example_habitat(), dissolve = TRUE) |>
+lizard_habitat_sf <- terra::as.polygons(
+  example_habitat(),
+  dissolve = TRUE
+  ) |>
   sf::st_as_sf()
-result <- sf_habitat_connectivity(lizard_habitat_sf, lizard_barrier_shp, interpatch_distance = 10)
+result <- sf_habitat_connectivity(
+  habitat = lizard_habitat_sf,
+  barrier = lizard_barrier_shp,
+  species = "Blue-tongued lizard",
+  interpatch_distance = 10
+  )
 #> Warning: attribute variables are assumed to be spatially constant throughout all geometries
 #> Warning: repeating attributes for all sub-geometries for which they may not be constant
 result
-#> # A tibble: 479 × 3
-#>    patch_id   area area_squared
-#>       <dbl>  <dbl>        <dbl>
-#>  1        1 1536.      2360688.
-#>  2        2  287.        82321.
-#>  3        3  292.        85089.
-#>  4        4  851.       723456.
-#>  5        5    8            64 
-#>  6        6 3056.      9340981.
-#>  7        7   83.2        6921.
-#>  8        8   47.9        2294.
-#>  9        9  307.        94169.
-#> 10       11   24           576 
-#> # ℹ 469 more rows
+#> # patch_connectivity:  data.frame
+#> # Species:             Blue-tongued lizard
+#> # Patches:             479
+#> # Resolution:          NA
+#> # Interpatch Distance: 10 m
+#>   patch_id  area
+#>      <dbl> <dbl>
+#> 1        1 1536.
+#> 2        2  287.
+#> 3        3  292.
+#> 4        4  851.
+#> 5        5    8 
+#> # ℹ 474 more rows
 ```

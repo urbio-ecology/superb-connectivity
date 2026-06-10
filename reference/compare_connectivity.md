@@ -10,18 +10,32 @@ barrier(s), or both. This function help you do that.
 ## Usage
 
 ``` r
-compare_connectivity(area_new, area_baseline, interpatch_distance, species)
+compare_connectivity(connectivity, connectivity_baseline, ...)
+
+# Default S3 method
+compare_connectivity(
+  connectivity,
+  connectivity_baseline,
+  interpatch_distance = 10,
+  res = NA,
+  species = "blue-tongued lizard",
+  ...
+)
 ```
 
 ## Arguments
 
-- area_new:
+- connectivity:
 
   Numeric vector. Area of a connected patch.
 
-- area_baseline:
+- connectivity_baseline:
 
   Numeric vector. Baseline area of a connected patch.
+
+- ...:
+
+  extra arguments to pass through for default method
 
 - interpatch_distance:
 
@@ -32,6 +46,10 @@ compare_connectivity(area_new, area_baseline, interpatch_distance, species)
   a radius from the edge of the habitat zone. This means the specified
   `interpatch_distance` is halved exactly. So an interpatch distance of
   500 will be converted to 250.
+
+- res:
+
+  pixel resolution - relevant to rasters only
 
 - species:
 
@@ -49,16 +67,16 @@ tibble with "scenario", "interpatch_distance", "species", "n_patches",
 baseline_areas <- round(lizard_areas_connected$area)
 new_areas <- baseline_areas[-1] * 0.8
 compare_connectivity(
-  area_new = new_areas,
-  area_baseline = baseline_areas,
+  connectivity = new_areas,
+  connectivity_baseline = baseline_areas,
   interpatch_distance = 10,
   species = "blue-tongued lizard"
 )
-#> # A tibble: 3 × 6
-#>   scenario   interpatch_distance species             n_patches effective_mesh_ha
-#>   <chr>                    <dbl> <chr>                   <int>             <dbl>
-#> 1 baseline                    10 blue-tongued lizard        59              4.49
-#> 2 new                         10 blue-tongued lizard        58              2.87
-#> 3 difference                  10 blue-tongued lizard        -1             -1.62
+#> # A tibble: 3 × 7
+#>   scenario   interpatch_distance res   species       n_patches effective_mesh_ha
+#>   <chr>                    <dbl> <lgl> <chr>             <int>             <dbl>
+#> 1 baseline                    10 NA    blue-tongued…        73              4.47
+#> 2 new                         10 NA    blue-tongued…        72              2.86
+#> 3 difference                  10 NA    blue-tongued…        -1             -1.61
 #> # ℹ 1 more variable: prob_connectedness <dbl>
 ```

@@ -56,9 +56,7 @@ tar_source()
 ## Assign like regular R, just make sure to pipe into a tar_ operation
 tar_assign({
   species <- tar_target("Blue-Tongued-Lizard")
-  target_resolution <- tar_target(500)
   data_resolution <- tar_target(10)
-  aggregation_factor <- tar_target(target_resolution / data_resolution)
   interpatch_distance <- tar_target(10)
   
   barrier <- example_barrier() |> tar_terra_rast()
@@ -84,17 +82,13 @@ tar_assign({
   areas_connected <- habitat_connectivity(
     habitat = habitat,
     barrier = barrier,
+    species = "Blue-tongued Lizard",
     interpatch_distance = interpatch_distance
   ) |>
     tar_target()
 
   results_connect_habitat <- summarise_connectivity(
-    area = areas_connected$area,
-    interpatch_distance = interpatch_distance,
-    target_resolution = target_resolution,
-    data_resolution = data_resolution,
-    aggregation_factor = aggregation_factor,
-    species = species
+    connectivity = areas_connected
   ) |>
     tar_target()
 })
@@ -121,8 +115,6 @@ targets with
 
   species <- tar_target("Blue-Tongued-Lizard")
   target_resolution <- tar_target(500)
-  data_resolution <- tar_target(10)
-  aggregation_factor <- tar_target(target_resolution / data_resolution)
   interpatch_distance <- tar_target(10)
 ```
 

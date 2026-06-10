@@ -117,9 +117,7 @@ name it <code>_targets.R</code>:</p>
 <span><span class="co">## Assign like regular R, just make sure to pipe into a tar_ operation</span></span>
 <span><span class="fu"><a href="https://docs.ropensci.org/tarchetypes/reference/tar_assign.html" class="external-link">tar_assign</a></span><span class="op">(</span><span class="op">{</span></span>
 <span>  <span class="va">species</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://docs.ropensci.org/targets/reference/tar_target.html" class="external-link">tar_target</a></span><span class="op">(</span><span class="st">"Blue-Tongued-Lizard"</span><span class="op">)</span></span>
-<span>  <span class="va">target_resolution</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://docs.ropensci.org/targets/reference/tar_target.html" class="external-link">tar_target</a></span><span class="op">(</span><span class="fl">500</span><span class="op">)</span></span>
 <span>  <span class="va">data_resolution</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://docs.ropensci.org/targets/reference/tar_target.html" class="external-link">tar_target</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span></span>
-<span>  <span class="va">aggregation_factor</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://docs.ropensci.org/targets/reference/tar_target.html" class="external-link">tar_target</a></span><span class="op">(</span><span class="va">target_resolution</span> <span class="op">/</span> <span class="va">data_resolution</span><span class="op">)</span></span>
 <span>  <span class="va">interpatch_distance</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://docs.ropensci.org/targets/reference/tar_target.html" class="external-link">tar_target</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span></span>
 <span>  </span>
 <span>  <span class="va">barrier</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/example-lizard-data.html">example_barrier</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu">tar_terra_rast</span><span class="op">(</span><span class="op">)</span></span>
@@ -145,17 +143,13 @@ name it <code>_targets.R</code>:</p>
 <span>  <span class="va">areas_connected</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/habitat_connectivity.html">habitat_connectivity</a></span><span class="op">(</span></span>
 <span>    habitat <span class="op">=</span> <span class="va">habitat</span>,</span>
 <span>    barrier <span class="op">=</span> <span class="va">barrier</span>,</span>
+<span>    species <span class="op">=</span> <span class="st">"Blue-tongued Lizard"</span>,</span>
 <span>    interpatch_distance <span class="op">=</span> <span class="va">interpatch_distance</span></span>
 <span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>    <span class="fu"><a href="https://docs.ropensci.org/targets/reference/tar_target.html" class="external-link">tar_target</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
-<span>  <span class="va">results_connect_habitat</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/summarise_connectivity.html">summarise_connectivity</a></span><span class="op">(</span></span>
-<span>    area <span class="op">=</span> <span class="va">areas_connected</span><span class="op">$</span><span class="va">area</span>,</span>
-<span>    interpatch_distance <span class="op">=</span> <span class="va">interpatch_distance</span>,</span>
-<span>    target_resolution <span class="op">=</span> <span class="va">target_resolution</span>,</span>
-<span>    data_resolution <span class="op">=</span> <span class="va">data_resolution</span>,</span>
-<span>    aggregation_factor <span class="op">=</span> <span class="va">aggregation_factor</span>,</span>
-<span>    species <span class="op">=</span> <span class="va">species</span></span>
+<span>  <span class="va">results_connect_habitat</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/summarise-connectivity.html">summarise_connectivity</a></span><span class="op">(</span></span>
+<span>    connectivity <span class="op">=</span> <span class="va">areas_connected</span></span>
 <span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>    <span class="fu"><a href="https://docs.ropensci.org/targets/reference/tar_target.html" class="external-link">tar_target</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span></code></pre></div>
@@ -173,8 +167,6 @@ targets with <code><a href="https://docs.ropensci.org/targets/reference/tar_targ
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span>  <span class="va">species</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://docs.ropensci.org/targets/reference/tar_target.html" class="external-link">tar_target</a></span><span class="op">(</span><span class="st">"Blue-Tongued-Lizard"</span><span class="op">)</span></span>
 <span>  <span class="va">target_resolution</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://docs.ropensci.org/targets/reference/tar_target.html" class="external-link">tar_target</a></span><span class="op">(</span><span class="fl">500</span><span class="op">)</span></span>
-<span>  <span class="va">data_resolution</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://docs.ropensci.org/targets/reference/tar_target.html" class="external-link">tar_target</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span></span>
-<span>  <span class="va">aggregation_factor</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://docs.ropensci.org/targets/reference/tar_target.html" class="external-link">tar_target</a></span><span class="op">(</span><span class="va">target_resolution</span> <span class="op">/</span> <span class="va">data_resolution</span><span class="op">)</span></span>
 <span>  <span class="va">interpatch_distance</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://docs.ropensci.org/targets/reference/tar_target.html" class="external-link">tar_target</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span></span></code></pre></div>
 <p>This means if any of these variables are changed, say
 <code>interpatch_distance</code> changes from 10 and 20, then anything

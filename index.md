@@ -104,42 +104,47 @@ plot(habitat, col = "seagreen", legend = FALSE, add = TRUE)
 areas <- habitat_connectivity(
   habitat  = habitat,
   barrier  = barrier,
+  species = "Blue-tongued Lizard",
   interpatch_distance = 10
 )
 #> ℹ Creating barrier mask
-#> ✔ Creating barrier mask [39ms]
+#> ✔ Creating barrier mask [55ms]
 #> 
 #> ℹ Removing habitat underneath barrier
-#> ✔ Removing habitat underneath barrier [17ms]
+#> ✔ Removing habitat underneath barrier [14ms]
 #> 
-#> ℹ Interpatch dist: Adding buffer of 10m to habitat layer
-#> ✔ Interpatch dist: Adding buffer of 10m to habitat layer [248ms]
+#> ℹ Adding 5m buffer (interpatch distance 10m)
+#> Warning: Buffer radius doesn't align with the raster resolution.
+#> ✖ 5 m isn't a multiple of 2 m.
+#> ℹ It snaps to 4 m (interpatch distance 8 m).
+#> ℹ Connectivity may shift for patches near the cut-off.
+#> ℹ See `vignette(urbioconnect::interpatch-distance-and-resolution)`.
+#> ✔ Adding 5m buffer (interpatch distance 10m) [114ms]
 #> 
 #> ℹ Fragmenting habitat layer along barrier intersection
-#> ✔ Fragmenting habitat layer along barrier intersection [14ms]
+#> ✔ Fragmenting habitat layer along barrier intersection [17ms]
 #> 
 #> ℹ Assigning patches ID to fragments
-#> ✔ Assigning patches ID to fragments [689ms]
+#> ✔ Assigning patches ID to fragments [1.5s]
 #> 
 #> ℹ Summarising area in each patch
-#> ✔ Summarising area in each patch [116ms]
+#> ✔ Summarising area in each patch [63ms]
 #> 
 
 areas
-#> # A tibble: 163 × 3
-#>    patch_id    area area_squared
-#>       <dbl>   <dbl>        <dbl>
-#>  1        1 97878.  9580104085. 
-#>  2       15  2416.     5837832. 
-#>  3       18  1304.     1700646. 
-#>  4       32  1592.     2534763. 
-#>  5       37     4           16.0
-#>  6       39  3332.    11103470. 
-#>  7       40   132.       17426. 
-#>  8       44   108.       11665. 
-#>  9       47    36.0       1296. 
-#> 10       57  1112.     1236681. 
-#> # ℹ 153 more rows
+#> # patch_connectivity:  data.frame
+#> # Species:             Blue-tongued Lizard
+#> # Patches:             703
+#> # Resolution:          2x2
+#> # Interpatch Distance: 10 m
+#>   patch_id    area
+#>      <dbl>   <dbl>
+#> 1        1    60.0
+#> 2        2  1648. 
+#> 3        7    12.0
+#> 4        8  1200. 
+#> 5       10 92034. 
+#> # ℹ 698 more rows
 ```
 
 Summarise the connectivity metrics:
@@ -147,19 +152,14 @@ Summarise the connectivity metrics:
 ``` r
 
 summarise_connectivity(
-  area = areas$area,
-  interpatch_distance  = 100,
-  target_resolution = 500,
-  data_resolution = 10,
-  aggregation_factor = 50,
-  species = "Blue-tongued Lizard"
+  connectivity = areas
 )
-#> # A tibble: 1 × 10
+#> # A tibble: 1 × 8
 #>   species     interpatch_distance n_patches effective_mesh_ha prob_connectedness
 #>   <chr>                     <dbl>     <int>             <dbl>              <dbl>
-#> 1 Blue-tongu…                 100       163                 4           0.000017
-#> # ℹ 5 more variables: patch_area_mean <dbl>, patch_area_total_ha <dbl>,
-#> #   target_resolution <dbl>, data_resolution <dbl>, aggregation_factor <dbl>
+#> 1 Blue-tongu…                  10       703                 4           0.000015
+#> # ℹ 3 more variables: patch_area_mean <dbl>, patch_area_total_ha <dbl>,
+#> #   data_resolution <chr>
 ```
 
 ## Works with raster and vector (shapefile)

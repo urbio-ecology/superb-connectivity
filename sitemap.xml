@@ -31,6 +31,8 @@
 <url><loc>https://urbio-ecology.github.io/urbioconnect/reference/lizard_areas_connected.html</loc></url>
 <url><loc>https://urbio-ecology.github.io/urbioconnect/reference/mean_patch_size.html</loc></url>
 <url><loc>https://urbio-ecology.github.io/urbioconnect/reference/n_patches.html</loc></url>
+<url><loc>https://urbio-ecology.github.io/urbioconnect/reference/new_patch_connectivity.html</loc></url>
+<url><loc>https://urbio-ecology.github.io/urbioconnect/reference/pc-getters.html</loc></url>
 <url><loc>https://urbio-ecology.github.io/urbioconnect/reference/plot_barrier_habitat_interpatch_dist.html</loc></url>
 <url><loc>https://urbio-ecology.github.io/urbioconnect/reference/plot_connectivity.html</loc></url>
 <url><loc>https://urbio-ecology.github.io/urbioconnect/reference/plot_patches.html</loc></url>
@@ -44,7 +46,7 @@
 <url><loc>https://urbio-ecology.github.io/urbioconnect/reference/sf_fragment_habitat.html</loc></url>
 <url><loc>https://urbio-ecology.github.io/urbioconnect/reference/sf_habitat_buffer.html</loc></url>
 <url><loc>https://urbio-ecology.github.io/urbioconnect/reference/sf_habitat_connectivity.html</loc></url>
-<url><loc>https://urbio-ecology.github.io/urbioconnect/reference/summarise_connectivity.html</loc></url>
+<url><loc>https://urbio-ecology.github.io/urbioconnect/reference/summarise-connectivity.html</loc></url>
 <url><loc>https://urbio-ecology.github.io/urbioconnect/reference/total_habitat_area.html</loc></url>
 <url><loc>https://urbio-ecology.github.io/urbioconnect/reference/urbioconnect-package.html</loc></url>
 </urlset>

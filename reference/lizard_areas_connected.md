@@ -29,8 +29,8 @@ A data frame with columns:
 
   Numeric. Squared area, used in connectivity metrics.
 
-An object of class `tbl_df` (inherits from `tbl`, `data.frame`) with 59
-rows and 3 columns.
+An object of class `patch_connectivity` (inherits from `tbl_df`, `tbl`,
+`data.frame`) with 73 rows and 3 columns.
 
 ## Source
 
@@ -43,7 +43,7 @@ at 50 metre interpatch distance.
 ## See also
 
 [`habitat_connectivity()`](https://urbio-ecology.github.io/urbioconnect/reference/habitat_connectivity.md),
-[`summarise_connectivity()`](https://urbio-ecology.github.io/urbioconnect/reference/summarise_connectivity.md)
+[`summarise_connectivity()`](https://urbio-ecology.github.io/urbioconnect/reference/summarise-connectivity.md)
 
 ## Examples
 
@@ -54,23 +54,23 @@ if (FALSE) { # \dontrun{
 lizard_areas_connected <- habitat_connectivity(
     habitat = example_habitat(),
     barrier = example_barrier(),
+    species = "Blue-tongued Lizard",
     interpatch_distance = 50,
     verbose = FALSE
   )
 } # }
 lizard_areas_connected
-#> # A tibble: 59 × 3
-#>    patch_id   area area_squared
-#>       <dbl>  <dbl>        <dbl>
-#>  1        1  5096.    25972178.
-#>  2        3 98006.  9605178767.
-#>  3        5  2416.     5837832.
-#>  4        6  1304.     1700646.
-#>  5        7  5008.    25083449.
-#>  6        8  1112.     1236681.
-#>  7        9  3276.    10733423.
-#>  8       10  3232.    10447202.
-#>  9       11   500.      250028.
-#> 10       12  2004.     4016481.
-#> # ℹ 49 more rows
+#> # patch_connectivity:  data.frame
+#> # Species:             Blue-tongued Lizard
+#> # Patches:             73
+#> # Resolution:         
+#> # Interpatch Distance: 50 m
+#>   patch_id   area area_squared
+#>      <dbl>  <dbl>        <dbl>
+#> 1        1   172.       29587.
+#> 2        2  1592.     2534763.
+#> 3        7 98006.  9605178767.
+#> 4        9  2416.     5837832.
+#> 5       10  1304.     1700646.
+#> # ℹ 68 more rows
 ```

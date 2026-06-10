@@ -43,18 +43,4 @@ fragment_patches <- assign_patches_to_fragments(
 library(terra)
 patch_areas <- add_patch_area(fragment_patches)
 aggregate_connected_patches(patch_areas)
-#> # A tibble: 638 × 3
-#>    patch_id    area area_squared
-#>       <dbl>   <dbl>        <dbl>
-#>  1        1    60.0        3600.
-#>  2        2  1736.      3014096.
-#>  3        7    12.0         144.
-#>  4        8  1200.      1440195.
-#>  5       10 92202.   8501145019.
-#>  6       11    40.0        1600.
-#>  7       12   288.        82955.
-#>  8       28  1212.      1469120.
-#>  9       30    64.0        4096.
-#> 10       31   940.       883705.
-#> # ℹ 628 more rows
 ```

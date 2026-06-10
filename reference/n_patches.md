@@ -26,5 +26,5 @@ Integer. Number of patches.
 
 ``` r
 n_patches(lizard_areas_connected$area)
-#> [1] 59
+#> [1] 73
 ```

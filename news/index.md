@@ -56,6 +56,25 @@
   the wrong id.
   ([\#131](https://github.com/urbio-ecology/urbioconnect/issues/131))
 
+- Add “patch_connectivity” class to
+  [`habitat_connectivity()`](https://urbio-ecology.github.io/urbioconnect/reference/habitat_connectivity.md)
+  function, to pave the way for attaching useful metadata to these data.
+  ([\#133](https://github.com/urbio-ecology/urbioconnect/issues/133)).
+
+- Add `patch_connectivity` S3 class:
+
+  - add pc\_\* accessor functions to get: interpatch_distance, patches,
+    res, species.
+  - Extend `patch_connectivity` onto tibble
+  - Add various checking functions to ensure you can compare the same
+    species, and metrics together.
+  - change `area` parameter for summarise/compare_connectivity to be
+    `connectivity`
+  - remove use of arguments, `target_resolution` and
+    `aggregation_factor` from many functions as it is only really
+    relevant to the spatial processing, and we really only care about
+    the resolution at the end of the day
+
 ### Breaking changes
 
 - `interpatch_distance` is now the full edge-to-edge distance below

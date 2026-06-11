@@ -135,7 +135,7 @@ tbl_sum.patch_connectivity <- function(x) {
     "patch_connectivity" = "data.frame",
     "Species" = pc_species(x),
     "Patches" = pc_patches(x),
-    "Resolution" = paste(pc_res(x), collapse = "x"),
+    "Resolution" = pc_res(x),
     "Interpatch Distance" = paste(pc_interpatch_distance(x), "m")
   )
 }
@@ -166,7 +166,7 @@ pc_patches <- function(x) {
 #' @export
 pc_res <- function(x) {
   x_res <- attr(x, "res")
-  paste(x_res, collapse = "x")
+  paste(round(x_res, 5), collapse = "x")
 }
 
 #' @rdname pc-getters

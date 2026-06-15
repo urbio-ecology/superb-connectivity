@@ -21,8 +21,8 @@
       # A tibble: 3 x 7
         scenario   interpatch_distance res   species       n_patches effective_mesh_ha
         <chr>                    <dbl> <chr> <chr>             <int>             <dbl>
-      1 baseline                    10 ""    Blue-tongued~        73              4.47
-      2 new                         10 ""    Blue-tongued~        72              2.86
-      3 difference                  10 ""    Blue-tongued~        -1             -1.61
+      1 baseline                    10 2x2   Blue-tongued~        73              4.47
+      2 new                         10 2x2   Blue-tongued~        72              2.86
+      3 difference                  10 2x2   Blue-tongued~        -1             -1.61
       # i 1 more variable: prob_connectedness <dbl>
 

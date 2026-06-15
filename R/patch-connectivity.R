@@ -30,6 +30,8 @@ new_patch_connectivity <- function(
   check_names(data, "area")
   check_names(data, "patch_id")
 
+  res <- res %||% NA
+
   vctrs::new_data_frame(
     # tibble::as_tibble(data),
     x = list(
@@ -166,6 +168,9 @@ pc_patches <- function(x) {
 #' @export
 pc_res <- function(x) {
   x_res <- attr(x, "res")
+  if (is.null(x_res)) {
+    return(NA)
+  }
   paste(round(x_res, 5), collapse = "x")
 }
 

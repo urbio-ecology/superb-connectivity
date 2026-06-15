@@ -44,12 +44,25 @@ wren_barrier <- example_wren_barrier()
 wren_barrier_scenario <- example_wren_barrier_scenario()
 plot(wren_habitat, col = "darkgreen", legend = FALSE, main = "wren Habitat")
 
-plot(wren_barrier, col = c("grey", "white"), legend = FALSE, main = "wren Barriers")
+plot(
+wren_barrier,
+col = c("grey", "white"),
+legend = FALSE, main = "wren Barriers")
 
-plot(wren_barrier, col = c("grey", "white"), legend = FALSE, main = "wren Habitat and Barrier")
+plot(
+  wren_barrier,
+  col = c("grey", "white"),
+  legend = FALSE,
+  main = "wren Habitat and Barrier"
+  )
 plot(wren_habitat, col = "darkgreen", legend = FALSE, add = TRUE)
 
-plot(wren_barrier_scenario, col = c("grey", "white"), legend = FALSE, main = "wren Habitat and Barrier scenario")
+plot(
+  wren_barrier_scenario,
+  col = c("grey", "white"),
+  legend = FALSE,
+  main = "wren Habitat and Barrier scenario"
+  )
 plot(wren_habitat, col = "darkgreen", legend = FALSE, add = TRUE)
 }
 \keyword{datasets}

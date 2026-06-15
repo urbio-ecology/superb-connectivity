@@ -8,7 +8,6 @@
 #' \describe{
 #'   \item{patch_id}{Integer. Connected fragment ID.}
 #'   \item{area}{Numeric. Total area of the connected patch in square metres.}
-#'   \item{area_squared}{Numeric. Squared area, used in connectivity metrics.}
 #' }
 #' @source Generated from [example_habitat()] and [example_barrier()] at
 #'   50 metre interpatch distance.

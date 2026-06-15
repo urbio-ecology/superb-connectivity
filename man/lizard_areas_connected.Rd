@@ -9,10 +9,9 @@ A data frame with columns:
 \describe{
 \item{patch_id}{Integer. Connected fragment ID.}
 \item{area}{Numeric. Total area of the connected patch in square metres.}
-\item{area_squared}{Numeric. Squared area, used in connectivity metrics.}
 }
 
-An object of class \code{patch_connectivity} (inherits from \code{tbl_df}, \code{tbl}, \code{data.frame}) with 73 rows and 3 columns.
+An object of class \code{patch_connectivity} (inherits from \code{tbl_df}, \code{tbl}, \code{data.frame}) with 73 rows and 2 columns.
 }
 \source{
 Generated from \code{\link[=example_habitat]{example_habitat()}} and \code{\link[=example_barrier]{example_barrier()}} at

@@ -12,6 +12,8 @@
 #'   included with the package:
 #'   * `example_wren_habitat()` Returns a raster of wren habitat data.
 #'   * `example_wren_barrier()` Returns a raster of wren barrier data.
+#'   * `example_wren_barrier_scenario()` Returns a raster of wren barrier
+#'     scenario data.
 #'
 #' @return A terra raster object or sf object depending on the function called
 #' @name example-wren-data

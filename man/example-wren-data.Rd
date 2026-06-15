@@ -31,6 +31,8 @@ included with the package:
 \itemize{
 \item \code{example_wren_habitat()} Returns a raster of wren habitat data.
 \item \code{example_wren_barrier()} Returns a raster of wren barrier data.
+\item \code{example_wren_barrier_scenario()} Returns a raster of wren barrier
+scenario data.
 }
 }
 \examples{

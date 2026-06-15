@@ -396,7 +396,7 @@ messages.</p>
 <span>  verbose <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Creating barrier mask</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Creating barrier mask <span style="color: #B2B2B2;">[32ms]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Creating barrier mask <span style="color: #B2B2B2;">[33ms]</span></span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Removing habitat underneath barrier</span></span>
 <span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Removing habitat underneath barrier <span style="color: #B2B2B2;">[24ms]</span></span></span>
@@ -407,16 +407,16 @@ messages.</p>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> It snaps to 4 m (interpatch distance 8 m).</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Connectivity may shift for patches near the cut-off.</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> See `vignette(urbioconnect::interpatch-distance-and-resolution)`.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Adding 5m buffer (interpatch distance 10m) <span style="color: #B2B2B2;">[288ms]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Adding 5m buffer (interpatch distance 10m) <span style="color: #B2B2B2;">[302ms]</span></span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Fragmenting habitat layer along barrier intersection</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Fragmenting habitat layer along barrier intersection <span style="color: #B2B2B2;">[31ms]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Fragmenting habitat layer along barrier intersection <span style="color: #B2B2B2;">[32ms]</span></span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Assigning patches ID to fragments</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Assigning patches ID to fragments <span style="color: #B2B2B2;">[2.5s]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Assigning patches ID to fragments <span style="color: #B2B2B2;">[2.2s]</span></span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Summarising area in each patch</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Summarising area in each patch <span style="color: #B2B2B2;">[40ms]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Summarising area in each patch <span style="color: #B2B2B2;">[41ms]</span></span></span>
 <span><span class="co">#&gt; </span></span></code></pre></div>
 <p>The package also includes a pre-computed version of this result (at
 50 m interpatch distance) as <code>lizard_areas_connected</code>:</p>
@@ -425,15 +425,15 @@ messages.</p>
 <span><span class="co">#&gt; <span style="color: #949494;"># patch_connectivity:  data.frame</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># Species:             Blue-tongued Lizard</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># Patches:             73</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># Resolution:         </span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># Resolution:          2x2</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># Interpatch Distance: 50 m</span></span></span>
-<span><span class="co">#&gt;   patch_id   area area_squared</span></span>
-<span><span class="co">#&gt;      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>        1   172.       <span style="text-decoration: underline;">29</span>587.</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span>        2  <span style="text-decoration: underline;">1</span>592.     2<span style="text-decoration: underline;">534</span>763.</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span>        7 <span style="text-decoration: underline;">98</span>006.  <span style="text-decoration: underline;">9</span>605<span style="text-decoration: underline;">178</span>767.</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span>        9  <span style="text-decoration: underline;">2</span>416.     5<span style="text-decoration: underline;">837</span>832.</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span>       10  <span style="text-decoration: underline;">1</span>304.     1<span style="text-decoration: underline;">700</span>646.</span></span>
+<span><span class="co">#&gt;   patch_id   area</span></span>
+<span><span class="co">#&gt;      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>        1   172.</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span>        2  <span style="text-decoration: underline;">1</span>592.</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span>        7 <span style="text-decoration: underline;">98</span>006.</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span>        9  <span style="text-decoration: underline;">2</span>416.</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span>       10  <span style="text-decoration: underline;">1</span>304.</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 68 more rows</span></span></span></code></pre></div>
 <p>If you need the intermediate rasters for mapping or reporting, use
 <code><a href="../reference/habitat_connectivity_full.html">habitat_connectivity_full()</a></code> instead. It returns a named

@@ -25,12 +25,8 @@ A data frame with columns:
 
   Numeric. Total area of the connected patch in square metres.
 
-- area_squared:
-
-  Numeric. Squared area, used in connectivity metrics.
-
 An object of class `patch_connectivity` (inherits from `tbl_df`, `tbl`,
-`data.frame`) with 73 rows and 3 columns.
+`data.frame`) with 73 rows and 2 columns.
 
 ## Source
 
@@ -63,14 +59,14 @@ lizard_areas_connected
 #> # patch_connectivity:  data.frame
 #> # Species:             Blue-tongued Lizard
 #> # Patches:             73
-#> # Resolution:         
+#> # Resolution:          2x2
 #> # Interpatch Distance: 50 m
-#>   patch_id   area area_squared
-#>      <dbl>  <dbl>        <dbl>
-#> 1        1   172.       29587.
-#> 2        2  1592.     2534763.
-#> 3        7 98006.  9605178767.
-#> 4        9  2416.     5837832.
-#> 5       10  1304.     1700646.
+#>   patch_id   area
+#>      <dbl>  <dbl>
+#> 1        1   172.
+#> 2        2  1592.
+#> 3        7 98006.
+#> 4        9  2416.
+#> 5       10  1304.
 #> # ℹ 68 more rows
 ```

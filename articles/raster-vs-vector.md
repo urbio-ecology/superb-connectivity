@@ -116,7 +116,7 @@ raster_result <- habitat_connectivity(
   verbose = FALSE
 )
 rast_time <- toc()
-#> 3.227 sec elapsed
+#> 2.884 sec elapsed
 
 raster_result
 #> # patch_connectivity:  data.frame
@@ -149,7 +149,7 @@ vector_result <- sf_habitat_connectivity(
   interpatch_distance = interpatch_dist
 )
 vect_time <- toc()
-#> 11.297 sec elapsed
+#> 9.706 sec elapsed
 
 vector_result
 #> # patch_connectivity:  data.frame
@@ -189,11 +189,10 @@ exact polygon geometry, so it typically produces slightly different (and
 arguably more precise) patch boundaries, particularly along curved or
 irregular barrier edges.
 
-    #> [1] 3.227
+    #> [1] 2.884
 
 Timings for the methods are also important to consider. The raster
-approach took 3.227 seconds, and the vector approach took 11.297
-seconds.
+approach took 2.884 seconds, and the vector approach took 9.706 seconds.
 
 ## Summarising connectivity metrics
 

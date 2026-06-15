@@ -90,6 +90,10 @@
   [`example_barrier_shp()`](https://urbio-ecology.github.io/urbioconnect/reference/example-lizard-data.md)
   [`example_barrier()`](https://urbio-ecology.github.io/urbioconnect/reference/example-lizard-data.md)
   : Lizard Habitat and Barrier Data from Melbourne.
+- [`example_wren_habitat()`](https://urbio-ecology.github.io/urbioconnect/reference/example-wren-data.md)
+  [`example_wren_barrier()`](https://urbio-ecology.github.io/urbioconnect/reference/example-wren-data.md)
+  [`example_wren_barrier_scenario()`](https://urbio-ecology.github.io/urbioconnect/reference/example-wren-data.md)
+  : Fair Wren Habitat, Barrier, and scenario Data from City of Knox.
 - [`lizard_areas_connected`](https://urbio-ecology.github.io/urbioconnect/reference/lizard_areas_connected.md)
   : Connected habitat patch areas for Blue-tongued Lizard
 

@@ -384,7 +384,7 @@ areas_connected <- habitat_connectivity(
   verbose = TRUE
 )
 #> ℹ Creating barrier mask
-#> ✔ Creating barrier mask [32ms]
+#> ✔ Creating barrier mask [33ms]
 #> 
 #> ℹ Removing habitat underneath barrier
 #> ✔ Removing habitat underneath barrier [24ms]
@@ -395,16 +395,16 @@ areas_connected <- habitat_connectivity(
 #> ℹ It snaps to 4 m (interpatch distance 8 m).
 #> ℹ Connectivity may shift for patches near the cut-off.
 #> ℹ See `vignette(urbioconnect::interpatch-distance-and-resolution)`.
-#> ✔ Adding 5m buffer (interpatch distance 10m) [288ms]
+#> ✔ Adding 5m buffer (interpatch distance 10m) [302ms]
 #> 
 #> ℹ Fragmenting habitat layer along barrier intersection
-#> ✔ Fragmenting habitat layer along barrier intersection [31ms]
+#> ✔ Fragmenting habitat layer along barrier intersection [32ms]
 #> 
 #> ℹ Assigning patches ID to fragments
-#> ✔ Assigning patches ID to fragments [2.5s]
+#> ✔ Assigning patches ID to fragments [2.2s]
 #> 
 #> ℹ Summarising area in each patch
-#> ✔ Summarising area in each patch [40ms]
+#> ✔ Summarising area in each patch [41ms]
 #> 
 ```
 
@@ -417,15 +417,15 @@ lizard_areas_connected
 #> # patch_connectivity:  data.frame
 #> # Species:             Blue-tongued Lizard
 #> # Patches:             73
-#> # Resolution:         
+#> # Resolution:          2x2
 #> # Interpatch Distance: 50 m
-#>   patch_id   area area_squared
-#>      <dbl>  <dbl>        <dbl>
-#> 1        1   172.       29587.
-#> 2        2  1592.     2534763.
-#> 3        7 98006.  9605178767.
-#> 4        9  2416.     5837832.
-#> 5       10  1304.     1700646.
+#>   patch_id   area
+#>      <dbl>  <dbl>
+#> 1        1   172.
+#> 2        2  1592.
+#> 3        7 98006.
+#> 4        9  2416.
+#> 5       10  1304.
 #> # ℹ 68 more rows
 ```
 

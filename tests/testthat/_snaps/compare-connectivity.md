@@ -26,3 +26,16 @@
       3 difference                  10 2x2   Blue-tongued~        -1             -1.61
       # i 1 more variable: prob_connectedness <dbl>
 
+# compare_connectivity() identifies changes in baseline/scenario
+
+    Code
+      results_compare
+    Output
+      # A tibble: 3 x 6
+        scenario interpatch_distance species           n_patches effective_mesh_ha
+        <chr>                  <dbl> <chr>                 <int>             <dbl>
+      1 baseline                 200 Superb Fairy Wren       282           334.   
+      2 new                      200 Superb Fairy Wren       283           333.   
+      3 change                   200 Superb Fairy Wren         1            -0.965
+      # i 1 more variable: prob_connectedness <dbl>
+

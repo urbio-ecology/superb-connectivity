@@ -42,7 +42,7 @@ compare_connectivity.patch_connectivity <- function(
   interpatch_distance <- pc_interpatch_distance(connectivity)
   species <- pc_species(connectivity)
 
-  baseline <- connectivity_metrics(area = connectivity$area)
+  baseline <- connectivity_metrics(area = connectivity_baseline$area)
   new <- connectivity_metrics(
     area = connectivity$area,
     area_baseline = connectivity_baseline$area

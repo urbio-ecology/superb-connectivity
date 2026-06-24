@@ -4,7 +4,7 @@
 
 library(urbioconnect)
 library(terra)
-#> terra 1.9.27
+#> terra 1.9.34
 library(sf)
 #> Linking to GEOS 3.12.1, GDAL 3.8.4, PROJ 9.4.0; sf_use_s2() is TRUE
 ```
@@ -116,7 +116,7 @@ raster_result <- habitat_connectivity(
   verbose = FALSE
 )
 rast_time <- toc()
-#> 2.884 sec elapsed
+#> 2.686 sec elapsed
 
 raster_result
 #> # patch_connectivity:  data.frame
@@ -149,7 +149,7 @@ vector_result <- sf_habitat_connectivity(
   interpatch_distance = interpatch_dist
 )
 vect_time <- toc()
-#> 9.706 sec elapsed
+#> 10.34 sec elapsed
 
 vector_result
 #> # patch_connectivity:  data.frame
@@ -189,10 +189,10 @@ exact polygon geometry, so it typically produces slightly different (and
 arguably more precise) patch boundaries, particularly along curved or
 irregular barrier edges.
 
-    #> [1] 2.884
+    #> [1] 2.686
 
 Timings for the methods are also important to consider. The raster
-approach took 2.884 seconds, and the vector approach took 9.706 seconds.
+approach took 2.686 seconds, and the vector approach took 10.34 seconds.
 
 ## Summarising connectivity metrics
 

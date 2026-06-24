@@ -4,7 +4,7 @@
 
 library(urbioconnect)
 library(terra)
-#> terra 1.9.27
+#> terra 1.9.34
 ```
 
 ## Overview
@@ -384,7 +384,7 @@ areas_connected <- habitat_connectivity(
   verbose = TRUE
 )
 #> ℹ Creating barrier mask
-#> ✔ Creating barrier mask [33ms]
+#> ✔ Creating barrier mask [32ms]
 #> 
 #> ℹ Removing habitat underneath barrier
 #> ✔ Removing habitat underneath barrier [24ms]
@@ -398,13 +398,13 @@ areas_connected <- habitat_connectivity(
 #> ✔ Adding 5m buffer (interpatch distance 10m) [302ms]
 #> 
 #> ℹ Fragmenting habitat layer along barrier intersection
-#> ✔ Fragmenting habitat layer along barrier intersection [32ms]
+#> ✔ Fragmenting habitat layer along barrier intersection [23ms]
 #> 
 #> ℹ Assigning patches ID to fragments
-#> ✔ Assigning patches ID to fragments [2.2s]
+#> ✔ Assigning patches ID to fragments [2s]
 #> 
 #> ℹ Summarising area in each patch
-#> ✔ Summarising area in each patch [41ms]
+#> ✔ Summarising area in each patch [40ms]
 #> 
 ```
 

@@ -45,7 +45,8 @@ be represented if it is at least one raster cell, i.e. keep
 \item{verbose}{Logical. Display progress messages (default: TRUE).}
 }
 \value{
-Data frame with connectivity metrics per patch.
+Data frame with connectivity metrics of all patches. The patch size
+is stored as a list column, "patch_size".
 }
 \description{
 This performs the entire connectivity workflow, returning a dataframe output.
@@ -69,6 +70,10 @@ connectivity <- habitat_connectivity(
     interpatch_distance = 12
   )
 connectivity
+
+# get the patch size:
+connectivity$patch_size[[1]]
+
 }
 \seealso{
 \code{vignette("interpatch-distance-and-resolution")} for the

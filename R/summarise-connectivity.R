@@ -80,8 +80,25 @@ summarise_connectivity.patch_size <- function(
       species,
       interpatch_distance,
       .before = dplyr::everything()
+    ) |>
+    dplyr::mutate(
+      patch_size = list(connectivity)
     )
-  full_results
+
+  vctrs::new_data_frame(
+    x = list(
+      species = full_results$species,
+      interpatch_distance = full_results$interpatch_distance,
+      n_patches = full_results$n_patches,
+      effective_mesh_ha = full_results$effective_mesh_ha,
+      prob_connectedness = full_results$prob_connectedness,
+      patch_area_mean = full_results$patch_area_mean,
+      patch_area_total_ha = full_results$patch_area_total_ha,
+      data_resolution = full_results$data_resolution,
+      patch_size = full_results$patch_size
+    ),
+    class = c("connectivity", "tbl_df", "tbl")
+  )
 }
 
 #' @rdname summarise-connectivity
@@ -134,6 +151,23 @@ summarise_connectivity.default <- function(
       species,
       interpatch_distance,
       .before = dplyr::everything()
+    ) |>
+    dplyr::mutate(
+      patch_size = list(connectivity)
     )
-  full_results
+
+  vctrs::new_data_frame(
+    x = list(
+      species = full_results$species,
+      interpatch_distance = full_results$interpatch_distance,
+      n_patches = full_results$n_patches,
+      effective_mesh_ha = full_results$effective_mesh_ha,
+      prob_connectedness = full_results$prob_connectedness,
+      patch_area_mean = full_results$patch_area_mean,
+      patch_area_total_ha = full_results$patch_area_total_ha,
+      data_resolution = full_results$data_resolution,
+      patch_size = full_results$patch_size
+    ),
+    class = c("connectivity", "tbl_df", "tbl")
+  )
 }

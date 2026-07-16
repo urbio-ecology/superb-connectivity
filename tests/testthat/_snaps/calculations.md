@@ -19,7 +19,7 @@
       # i 3 more variables: patch_area_mean <dbl>, patch_area_total_ha <dbl>,
       #   data_resolution <dbl>
 
-# summarise_connectivity works with patch_connectivity data
+# summarise_connectivity works with patch_size data
 
     Code
       summarise_connectivity(lizard_areas_connected)

@@ -1,4 +1,4 @@
-test_that("patch_connectivity class is compatible with dplyr", {
+test_that("patch_size class is compatible with dplyr", {
   # summarise_connectivity.patch_area
   areas <- habitat_connectivity(
     habitat = example_habitat(),

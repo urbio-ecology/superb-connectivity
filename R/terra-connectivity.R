@@ -397,7 +397,7 @@ habitat_connectivity <- function(
     )$result
   }
 
-  habitat_connectivity <- new_patch_connectivity(
+  habitat_connectivity <- new_patch_size(
     data = habitat_connectivity,
     species = species,
     # store the FULL distance

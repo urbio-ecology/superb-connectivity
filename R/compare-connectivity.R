@@ -32,7 +32,7 @@ compare_connectivity <- function(connectivity, connectivity_baseline, ...) {
 }
 
 #' @export
-compare_connectivity.patch_connectivity <- function(
+compare_connectivity.patch_size <- function(
   connectivity,
   connectivity_baseline,
   ...

@@ -1,4 +1,4 @@
-test_that("compare_connectivity works for patch_connectivity", {
+test_that("compare_connectivity works for patch_size", {
   expect_snapshot(
     compare_connectivity(
       connectivity = lizard_areas_connected,

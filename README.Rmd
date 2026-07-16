@@ -52,6 +52,7 @@ See the [getting started](https://urbio-ecology.github.io/urbioconnect/articles/
 We include a Shiny app for interactive analysis and report generation. You can launch the interactive Shiny app with:
 
 ```r
+library(urbioconnect)
 run_connectivity_app()
 ```
 

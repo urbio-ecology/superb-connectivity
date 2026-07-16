@@ -16,7 +16,7 @@ reference:
   - habitat_connectivity_full
 - title: Patch connectivity class
   contents:
-  - patch_connectivity
+  - patch_size
   - pc-getters
 - title: Raster functions
   contents:

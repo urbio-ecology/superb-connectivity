@@ -15,10 +15,10 @@
 #'   vector based approaches.
 #' @param interpatch_distance Numeric of length 1. The interpatch distance (m)
 #'   the analysis used.
-#' @returns A `patch_connectivity` object: a tibble with `species` and
+#' @returns A `patch_size` object: a tibble with `species` and
 #'   `interpatch_distance` attributes.
 #' @export
-new_patch_connectivity <- function(
+new_patch_size <- function(
   data,
   species,
   interpatch_distance,
@@ -42,11 +42,11 @@ new_patch_connectivity <- function(
     interpatch_distance = interpatch_distance,
     res = res,
     n = nrow(data),
-    class = c("patch_connectivity", "tbl_df", "tbl")
+    class = c("patch_size", "tbl_df", "tbl")
   )
 }
 
-validate_patch_connectivity <- function(x) {
+validate_patch_size <- function(x) {
   species <- pc_species(x)
   check_scalar_character(species)
 
@@ -62,21 +62,21 @@ validate_patch_connectivity <- function(x) {
   invisible(x)
 }
 
-#' @rdname new_patch_connectivity
+#' @rdname new_patch_size
 #' @export
-patch_connectivity <- function(
+patch_size <- function(
   data,
   species,
   interpatch_distance,
   res = NA_real_
 ) {
-  pc <- new_patch_connectivity(
+  pc <- new_patch_size(
     data = data,
     species = species,
     interpatch_distance = interpatch_distance,
     res = res
   )
-  validate_patch_connectivity(pc)
+  validate_patch_size(pc)
   pc
 }
 
@@ -84,7 +84,7 @@ patch_connectivity <- function(
 # Gate on *structural* prerequisites that exist on the bare data dplyr hands us
 # (the required columns), not on metadata attributes -- those live on the
 # template and are restored by df_reconstruct(), not validated here.
-patch_connectivity_can_reconstruct <- function(data) {
+patch_size_can_reconstruct <- function(data) {
   all(c("patch_id", "area") %in% names(data))
 }
 
@@ -96,13 +96,13 @@ df_reconstruct <- function(x, to) {
   x
 }
 
-patch_connectivity_reconstruct <- function(x, to) {
-  if (patch_connectivity_can_reconstruct(x)) {
+patch_size_reconstruct <- function(x, to) {
+  if (patch_size_can_reconstruct(x)) {
     df_reconstruct(x, to)
   } else {
     x <- as.data.frame(x)
     cli::cli_inform(
-      "Removing attributes in {.cls patch_connectivity}",
+      "Removing attributes in {.cls patch_size}",
       "Returning {.cls data.frame}"
     )
     x
@@ -110,31 +110,31 @@ patch_connectivity_reconstruct <- function(x, to) {
 }
 
 #' @exportS3Method dplyr::dplyr_reconstruct
-dplyr_reconstruct.patch_connectivity <- function(data, template) {
-  patch_connectivity_reconstruct(data, template)
+dplyr_reconstruct.patch_size <- function(data, template) {
+  patch_size_reconstruct(data, template)
 }
 
 #' @export
-`[.patch_connectivity` <- function(x, ...) {
+`[.patch_size` <- function(x, ...) {
   out <- NextMethod()
-  patch_connectivity_reconstruct(out, x)
+  patch_size_reconstruct(out, x)
 }
 
 #' @export
-`names<-.patch_connectivity` <- function(x, value) {
+`names<-.patch_size` <- function(x, value) {
   out <- NextMethod()
-  patch_connectivity_reconstruct(out, x)
+  patch_size_reconstruct(out, x)
 }
 
 #' @export
-print.patch_connectivity <- function(x, ..., n = NULL) {
+print.patch_size <- function(x, ..., n = NULL) {
   NextMethod(n = n %||% 5)
 }
 
 #' @exportS3Method tibble::tbl_sum
-tbl_sum.patch_connectivity <- function(x) {
+tbl_sum.patch_size <- function(x) {
   c(
-    "patch_connectivity" = "data.frame",
+    "patch_size" = "data.frame",
     "Species" = pc_species(x),
     "Patches" = pc_patches(x),
     "Resolution" = pc_res(x),
@@ -142,9 +142,9 @@ tbl_sum.patch_connectivity <- function(x) {
   )
 }
 
-#' Metadata from a `patch_connectivity` object
+#' Metadata from a `patch_size` object
 #'
-#' @param x A [patch_connectivity()] object.
+#' @param x A [patch_size()] object.
 #' @returns
 #'  * `pc_species()` Returns the species (character, length 1).
 #'  * `pc_interpatch_distance()` returns the interpatch distance (numeric,

@@ -11,7 +11,7 @@ A data frame with columns:
 \item{area}{Numeric. Total area of the connected patch in square metres.}
 }
 
-An object of class \code{patch_connectivity} (inherits from \code{tbl_df}, \code{tbl}, \code{data.frame}) with 73 rows and 2 columns.
+An object of class \code{patch_size} (inherits from \code{tbl_df}, \code{tbl}, \code{data.frame}) with 73 rows and 2 columns.
 }
 \source{
 Generated from \code{\link[=example_habitat]{example_habitat()}} and \code{\link[=example_barrier]{example_barrier()}} at

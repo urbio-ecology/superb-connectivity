@@ -2,8 +2,8 @@ library(terra)
 library(tidyterra)
 library(tidyverse)
 
-habitat_file <- file.path("ex/lizard_habitat.tif")
-barrier_file <- file.path("ex/lizard_barrier.shp")
+habitat_file <- file.path("inst/ex/lizard_habitat.tif")
+barrier_file <- file.path("inst/ex/lizard_barrier.shp")
 
 lizard_habitat <- terra::rast(habitat_file)
 
@@ -60,13 +60,13 @@ all.equal(
 
 terra::writeRaster(
   x = lizard_habitat_raster,
-  filename = "ex/lizard_habitat_raster.tif",
+  filename = "inst/ex/lizard_habitat_raster.tif",
   filetype = "COG",
   overwrite = TRUE
 )
 terra::writeRaster(
   lizard_barrier_raster,
-  "ex/lizard_barrier_raster.tif",
+  "inst/ex/lizard_barrier_raster.tif",
   filetype = "COG",
   overwrite = TRUE
 )

@@ -7,10 +7,10 @@
 #'
 #' @name summarise-connectivity
 #'
-#' @param connectivity data.frame of class "patch_connectivity", obtained from
+#' @param connectivity data.frame of class "patch_size", obtained from
 #'   [habitat_connectivity()]. Contains area measurements of connected patches.
 #' @param connectivity_baseline Optional. data.frame of class
-#'   "patch_connectivity", obtained from [habitat_connectivity()]. Contains
+#'   "patch_size", obtained from [habitat_connectivity()]. Contains
 #'   baseline area measurements of connected patches. Default is NULL.
 #' @param ... extra arguments to pass through for default method.
 #'
@@ -34,7 +34,7 @@ summarise_connectivity <- function(
 }
 
 #' @export
-summarise_connectivity.patch_connectivity <- function(
+summarise_connectivity.patch_size <- function(
   connectivity,
   connectivity_baseline = NULL,
   ...

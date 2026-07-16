@@ -1,6 +1,6 @@
-test_that("patch_connectivity works", {
+test_that("patch_size works", {
   expect_snapshot(
-    patch_connectivity(
+    patch_size(
       data = data.frame(area = 1:10, patch_id = 1:10),
       species = "birds",
       interpatch_distance = 10,
@@ -9,19 +9,19 @@ test_that("patch_connectivity works", {
   )
 })
 
-test_that("validate_patch_connectivity works", {
+test_that("validate_patch_size works", {
   expect_snapshot(
     error = TRUE,
-    validate_patch_connectivity(iris)
+    validate_patch_size(iris)
   )
   expect_snapshot(
-    validate_patch_connectivity(lizard_areas_connected)
+    validate_patch_size(lizard_areas_connected)
   )
   altered_lizard_areas <- lizard_areas_connected |>
     dplyr::rename(bananas = patch_id)
   expect_snapshot(
     error = TRUE,
-    validate_patch_connectivity(altered_lizard_areas)
+    validate_patch_size(altered_lizard_areas)
   )
 })
 
@@ -43,35 +43,35 @@ test_that("check_scalar works as expected", {
   expect_snapshot(check_scalar(TRUE))
 })
 
-birds_r1_i8 <- new_patch_connectivity(
+birds_r1_i8 <- new_patch_size(
   data = data.frame(patch_id = 1:5, area = 5:1),
   res = c(1, 1),
   species = "birds",
   interpatch_distance = 8
 )
 
-birds_r1_i10 <- new_patch_connectivity(
+birds_r1_i10 <- new_patch_size(
   data = data.frame(patch_id = 1:5, area = 5:1),
   res = c(1, 1),
   species = "birds",
   interpatch_distance = 10
 )
 
-birds_r2_i10 <- new_patch_connectivity(
+birds_r2_i10 <- new_patch_size(
   data = data.frame(patch_id = 1:5, area = 5:1),
   res = c(2, 2),
   species = "birds",
   interpatch_distance = 10
 )
 
-birds_r2_i8 <- new_patch_connectivity(
+birds_r2_i8 <- new_patch_size(
   data = data.frame(patch_id = 1:5, area = 5:1),
   res = c(2, 2),
   species = "birds",
   interpatch_distance = 8
 )
 
-cats_r1_i8 <- new_patch_connectivity(
+cats_r1_i8 <- new_patch_size(
   data = data.frame(patch_id = 1:5, area = 5:1),
   res = c(1, 1),
   species = "cats",

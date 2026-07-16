@@ -1,10 +1,10 @@
-# patch_connectivity works
+# patch_size works
 
     Code
-      patch_connectivity(data = data.frame(area = 1:10, patch_id = 1:10), species = "birds",
+      patch_size(data = data.frame(area = 1:10, patch_id = 1:10), species = "birds",
       interpatch_distance = 10, res = c(1, 1))
     Output
-      # patch_connectivity:  data.frame
+      # patch_size:          data.frame
       # Species:             birds
       # Patches:             10
       # Resolution:          1x1
@@ -18,10 +18,10 @@
       5        5     5
       # i 5 more rows
 
-# validate_patch_connectivity works
+# validate_patch_size works
 
     Code
-      validate_patch_connectivity(iris)
+      validate_patch_size(iris)
     Condition
       Error in `check_character()`:
       ! `x` must be <character>, not <NULL>.
@@ -30,14 +30,14 @@
 ---
 
     Code
-      validate_patch_connectivity(lizard_areas_connected)
+      validate_patch_size(lizard_areas_connected)
 
 ---
 
     Code
-      validate_patch_connectivity(altered_lizard_areas)
+      validate_patch_size(altered_lizard_areas)
     Condition
-      Error in `validate_patch_connectivity()`:
+      Error in `validate_patch_size()`:
       ! `x` must contain a patch_id column.
 
 # check_scalar works as expected

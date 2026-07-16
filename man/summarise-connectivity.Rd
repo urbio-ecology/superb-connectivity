@@ -18,11 +18,11 @@ summarise_connectivity(connectivity, connectivity_baseline = NULL, ...)
 )
 }
 \arguments{
-\item{connectivity}{data.frame of class "patch_connectivity", obtained from
+\item{connectivity}{data.frame of class "patch_size", obtained from
 \code{\link[=habitat_connectivity]{habitat_connectivity()}}. Contains area measurements of connected patches.}
 
 \item{connectivity_baseline}{Optional. data.frame of class
-"patch_connectivity", obtained from \code{\link[=habitat_connectivity]{habitat_connectivity()}}. Contains
+"patch_size", obtained from \code{\link[=habitat_connectivity]{habitat_connectivity()}}. Contains
 baseline area measurements of connected patches. Default is NULL.}
 
 \item{...}{extra arguments to pass through for default method.}

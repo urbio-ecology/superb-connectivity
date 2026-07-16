@@ -1,4 +1,4 @@
-# compare_connectivity works for patch_connectivity
+# compare_connectivity works for patch_size
 
     Code
       compare_connectivity(connectivity = lizard_areas_connected,

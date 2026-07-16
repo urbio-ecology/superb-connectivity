@@ -1,9 +1,9 @@
-# patch_connectivity class is compatible with dplyr
+# patch_size class is compatible with dplyr
 
     Code
       filter(areas, area > 4000)
     Output
-      # patch_connectivity:  data.frame
+      # patch_size:          data.frame
       # Species:             Blue-tongued Lizard
       # Patches:             4
       # Resolution:          2x2
@@ -20,7 +20,7 @@
     Code
       filter(areas, area > 1000)
     Output
-      # patch_connectivity:  data.frame
+      # patch_size:          data.frame
       # Species:             Blue-tongued Lizard
       # Patches:             34
       # Resolution:          2x2
@@ -39,7 +39,7 @@
     Code
       slice(areas, 1:10)
     Output
-      # patch_connectivity:  data.frame
+      # patch_size:          data.frame
       # Species:             Blue-tongued Lizard
       # Patches:             10
       # Resolution:          2x2
@@ -58,7 +58,7 @@
     Code
       head(select(areas, -area))
     Message
-      Removing attributes in <patch_connectivity>
+      Removing attributes in <patch_size>
     Output
         patch_id
       1        1
@@ -73,7 +73,7 @@
     Code
       head(select(areas, -patch_id))
     Message
-      Removing attributes in <patch_connectivity>
+      Removing attributes in <patch_size>
     Output
             area
       1   60.004

@@ -14,10 +14,10 @@
 
 * Fix the shiny app's interpatch-distance input, which was read under the wrong id. (#131)
 
-* Add "patch_connectivity" class to `habitat_connectivity()` function, to pave the way for attaching useful metadata to these data. (#133).
-* Add `patch_connectivity` S3 class:
+* Add "patch_size" class to `habitat_connectivity()` function, to pave the way for attaching useful metadata to these data. (#133).
+* Add `patch_size` S3 class:
     - add pc_* accessor functions to get: interpatch_distance, patches, res, species.
-    - Extend `patch_connectivity` onto tibble
+    - Extend `patch_size` onto tibble
     - Add various checking functions to ensure you can compare the same species, and metrics together.
     - change `area` parameter for summarise/compare_connectivity to be `connectivity`
     - remove use of arguments, `target_resolution` and  `aggregation_factor` from many functions as it is only really relevant to the spatial processing, and we really only care about the resolution at the end of the day

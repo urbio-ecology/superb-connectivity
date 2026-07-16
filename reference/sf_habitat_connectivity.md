@@ -85,7 +85,7 @@ result <- sf_habitat_connectivity(
 #> Warning: attribute variables are assumed to be spatially constant throughout all geometries
 #> Warning: repeating attributes for all sub-geometries for which they may not be constant
 result
-#> # patch_connectivity:  data.frame
+#> # patch_size:          data.frame
 #> # Species:             Blue-tongued lizard
 #> # Patches:             479
 #> # Resolution:          NA

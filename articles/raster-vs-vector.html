@@ -166,10 +166,10 @@ the <code>tictoc</code> package</p>
 <span>  verbose <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span>
 <span><span class="va">rast_time</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/tictoc/man/tic.html" class="external-link">toc</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; 2.686 sec elapsed</span></span>
+<span><span class="co">#&gt; 2.693 sec elapsed</span></span>
 <span></span>
 <span><span class="va">raster_result</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># patch_connectivity:  data.frame</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># patch_size:          data.frame</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># Species:             Blue-tongued Lizard</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># Patches:             703</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># Resolution:          2x2</span></span></span>
@@ -197,10 +197,10 @@ the <code>tictoc</code> package</p>
 <span>  interpatch_distance <span class="op">=</span> <span class="va">interpatch_dist</span></span>
 <span><span class="op">)</span></span>
 <span><span class="va">vect_time</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/tictoc/man/tic.html" class="external-link">toc</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; 10.34 sec elapsed</span></span>
+<span><span class="co">#&gt; 9.946 sec elapsed</span></span>
 <span></span>
 <span><span class="va">vector_result</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># patch_connectivity:  data.frame</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># patch_size:          data.frame</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># Species:             lizard</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># Patches:             483</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># Resolution:          NA</span></span></span>
@@ -233,9 +233,9 @@ approximated at the chosen resolution. The vector approach preserves
 exact polygon geometry, so it typically produces slightly different (and
 arguably more precise) patch boundaries, particularly along curved or
 irregular barrier edges.</p>
-<pre><code><span><span class="co">#&gt; [1] 2.686</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; [1] 2.693</span></span></code></pre>
 <p>Timings for the methods are also important to consider. The raster
-approach took 2.686 seconds, and the vector approach took 10.34
+approach took 2.693 seconds, and the vector approach took 9.946
 seconds.</p>
 </div>
 <div class="section level2">
@@ -413,7 +413,7 @@ cities. <em>MethodsX</em>, 10, 101989. <a href="https://doi.org/10.1016/j.mex.20
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer>

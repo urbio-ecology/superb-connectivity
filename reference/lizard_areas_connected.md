@@ -25,7 +25,7 @@ A data frame with columns:
 
   Numeric. Total area of the connected patch in square metres.
 
-An object of class `patch_connectivity` (inherits from `tbl_df`, `tbl`,
+An object of class `patch_size` (inherits from `tbl_df`, `tbl`,
 `data.frame`) with 73 rows and 2 columns.
 
 ## Source
@@ -56,7 +56,7 @@ lizard_areas_connected <- habitat_connectivity(
   )
 } # }
 lizard_areas_connected
-#> # patch_connectivity:  data.frame
+#> # patch_size:          data.frame
 #> # Species:             Blue-tongued Lizard
 #> # Patches:             73
 #> # Resolution:          2x2

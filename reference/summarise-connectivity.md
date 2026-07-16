@@ -26,13 +26,13 @@ summarise_connectivity(
 
 - connectivity:
 
-  data.frame of class "patch_connectivity", obtained from
+  data.frame of class "patch_size", obtained from
   [`habitat_connectivity()`](https://urbio-ecology.github.io/urbioconnect/reference/habitat_connectivity.md).
   Contains area measurements of connected patches.
 
 - connectivity_baseline:
 
-  Optional. data.frame of class "patch_connectivity", obtained from
+  Optional. data.frame of class "patch_size", obtained from
   [`habitat_connectivity()`](https://urbio-ecology.github.io/urbioconnect/reference/habitat_connectivity.md).
   Contains baseline area measurements of connected patches. Default is
   NULL.

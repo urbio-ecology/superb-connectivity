@@ -1,6 +1,6 @@
-# Metadata from a `patch_connectivity` object
+# Metadata from a `patch_size` object
 
-Metadata from a `patch_connectivity` object
+Metadata from a `patch_size` object
 
 ## Usage
 
@@ -19,7 +19,7 @@ pc_interpatch_distance(x)
 - x:
 
   A
-  [`patch_connectivity()`](https://urbio-ecology.github.io/urbioconnect/reference/new_patch_connectivity.md)
+  [`patch_size()`](https://urbio-ecology.github.io/urbioconnect/reference/new_patch_size.md)
   object.
 
 ## Value

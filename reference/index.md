@@ -23,8 +23,8 @@
 
 ## Patch connectivity class
 
-- [`new_patch_connectivity()`](https://urbio-ecology.github.io/urbioconnect/reference/new_patch_connectivity.md)
-  [`patch_connectivity()`](https://urbio-ecology.github.io/urbioconnect/reference/new_patch_connectivity.md)
+- [`new_patch_size()`](https://urbio-ecology.github.io/urbioconnect/reference/new_patch_size.md)
+  [`patch_size()`](https://urbio-ecology.github.io/urbioconnect/reference/new_patch_size.md)
   : A set of connected habitat patches
 
 - [`pc_species()`](https://urbio-ecology.github.io/urbioconnect/reference/pc-getters.md)
@@ -33,7 +33,7 @@
   [`pc_interpatch_distance()`](https://urbio-ecology.github.io/urbioconnect/reference/pc-getters.md)
   :
 
-  Metadata from a `patch_connectivity` object
+  Metadata from a `patch_size` object
 
 ## Raster functions
 

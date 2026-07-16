@@ -1,12 +1,12 @@
 pandoc: 3.8.3
-pkgdown: 2.2.0
+pkgdown: 2.2.1
 pkgdown_sha: ~
 articles:
   getting-started: getting-started.html
   interpatch-distance-and-resolution: interpatch-distance-and-resolution.html
   raster-vs-vector: raster-vs-vector.html
   targets-pipeline: targets-pipeline.html
-last_built: 2026-06-24T00:00Z
+last_built: 2026-07-16T07:13Z
 urls:
   reference: https://urbio-ecology.github.io/urbioconnect/reference
   article: https://urbio-ecology.github.io/urbioconnect/articles

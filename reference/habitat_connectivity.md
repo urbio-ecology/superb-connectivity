@@ -102,13 +102,13 @@ connectivity <- habitat_connectivity(
     interpatch_distance = 12
   )
 #> ℹ Creating barrier mask
-#> ✔ Creating barrier mask [33ms]
+#> ✔ Creating barrier mask [32ms]
 #> 
 #> ℹ Removing habitat underneath barrier
-#> ✔ Removing habitat underneath barrier [24ms]
+#> ✔ Removing habitat underneath barrier [23ms]
 #> 
 #> ℹ Adding 6m buffer (interpatch distance 12m)
-#> ✔ Adding 6m buffer (interpatch distance 12m) [227ms]
+#> ✔ Adding 6m buffer (interpatch distance 12m) [218ms]
 #> 
 #> ℹ Fragmenting habitat layer along barrier intersection
 #> ✔ Fragmenting habitat layer along barrier intersection [23ms]
@@ -120,7 +120,7 @@ connectivity <- habitat_connectivity(
 #> ✔ Summarising area in each patch [48ms]
 #> 
 connectivity
-#> # patch_connectivity:  data.frame
+#> # patch_size:          data.frame
 #> # Species:             Blue-tongued Lizard
 #> # Patches:             399
 #> # Resolution:          2x2

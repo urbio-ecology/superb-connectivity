@@ -43,6 +43,7 @@ You can launch the interactive Shiny app with:
 
 ``` r
 
+library(urbioconnect)
 run_connectivity_app()
 ```
 
@@ -78,7 +79,7 @@ pak::pak("urbio-ecology/urbioconnect")
 
 library(urbioconnect)
 library(terra)
-#> terra 1.9.27
+#> terra 1.9.34
 
 # load example habitat and barrier rasters
 habitat <- example_habitat()
@@ -108,10 +109,10 @@ areas <- habitat_connectivity(
   interpatch_distance = 10
 )
 #> ℹ Creating barrier mask
-#> ✔ Creating barrier mask [55ms]
+#> ✔ Creating barrier mask [45ms]
 #> 
 #> ℹ Removing habitat underneath barrier
-#> ✔ Removing habitat underneath barrier [14ms]
+#> ✔ Removing habitat underneath barrier [19ms]
 #> 
 #> ℹ Adding 5m buffer (interpatch distance 10m)
 #> Warning: Buffer radius doesn't align with the raster resolution.
@@ -119,20 +120,20 @@ areas <- habitat_connectivity(
 #> ℹ It snaps to 4 m (interpatch distance 8 m).
 #> ℹ Connectivity may shift for patches near the cut-off.
 #> ℹ See `vignette(urbioconnect::interpatch-distance-and-resolution)`.
-#> ✔ Adding 5m buffer (interpatch distance 10m) [114ms]
+#> ✔ Adding 5m buffer (interpatch distance 10m) [97ms]
 #> 
 #> ℹ Fragmenting habitat layer along barrier intersection
-#> ✔ Fragmenting habitat layer along barrier intersection [17ms]
+#> ✔ Fragmenting habitat layer along barrier intersection [15ms]
 #> 
 #> ℹ Assigning patches ID to fragments
-#> ✔ Assigning patches ID to fragments [1.5s]
+#> ✔ Assigning patches ID to fragments [1.1s]
 #> 
 #> ℹ Summarising area in each patch
-#> ✔ Summarising area in each patch [63ms]
+#> ✔ Summarising area in each patch [122ms]
 #> 
 
 areas
-#> # patch_connectivity:  data.frame
+#> # patch_size:          data.frame
 #> # Species:             Blue-tongued Lizard
 #> # Patches:             703
 #> # Resolution:          2x2

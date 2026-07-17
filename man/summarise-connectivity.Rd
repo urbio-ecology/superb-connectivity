@@ -18,11 +18,11 @@ summarise_connectivity(connectivity, connectivity_baseline = NULL, ...)
 )
 }
 \arguments{
-\item{connectivity}{data.frame of class "patch_size", obtained from
+\item{connectivity}{data.frame of class "patch_size_tbl", obtained from
 \code{\link[=habitat_connectivity]{habitat_connectivity()}}. Contains area measurements of connected patches.}
 
 \item{connectivity_baseline}{Optional. data.frame of class
-"patch_size", obtained from \code{\link[=habitat_connectivity]{habitat_connectivity()}}. Contains
+"patch_size_tbl", obtained from \code{\link[=habitat_connectivity]{habitat_connectivity()}}. Contains
 baseline area measurements of connected patches. Default is NULL.}
 
 \item{...}{extra arguments to pass through for default method.}
@@ -47,10 +47,21 @@ areas.
 \description{
 Calculates a comprehensive set of habitat connectivity metrics including
 effective mesh size, probability of connectedness, and patch statistics.
-Intended for usage from objects created by \code{\link[=habitat_connectivity]{habitat_connectivity()}}, but
-raw area vectors can be passed. See examples below.
+There are two methods, the default, and one that dispatches on objects of
+class, \code{patch_size_tbl}, created by \code{\link[=patch_size_tbl]{patch_size_tbl()}}, which is used mostly
+internally inside of \url{habitat_connectivity}. The default method requires
+"connectivity" to be a vector of areas, and also requires scalar values
+(values of length 1) of interpatch distance, resolution, and species. See
+examples below.
 }
 \examples{
+# dispatch on `patch_size_tbl` class - `lizard_areas_connected`
+summarise_connectivity(
+  connectivity = lizard_areas_connected
+)
+
+# default method
+# manually passing area, interpatch distance, resolution, and species
 summarise_connectivity(
   connectivity = lizard_areas_connected$area,
   interpatch_distance = 10,

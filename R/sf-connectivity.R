@@ -241,7 +241,7 @@ sf_habitat_connectivity <- function(
     sf_add_patch_area()
   # group the patches by connected area ID
   areas_connected <- sf_aggregate_connected_patches(habitat_remaining_id)
-  areas_connected <- new_patch_size(
+  areas_connected <- patch_size_tbl(
     data = areas_connected,
     species = species,
     # store the FULL distance

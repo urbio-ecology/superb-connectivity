@@ -375,7 +375,7 @@ aggregate_connected_patches <- function(raster) {
 #' connectivity
 #'
 #' # get the patch size:
-#' connectivity$patch_size[[1]]
+#' patch_sizes(connectivity)[[1]]
 #'
 habitat_connectivity <- function(
   habitat,
@@ -404,7 +404,7 @@ habitat_connectivity <- function(
     )$result
   }
 
-  habitat_connectivity <- new_patch_size(
+  habitat_connectivity <- patch_size_tbl(
     data = habitat_connectivity,
     species = species,
     # store the FULL distance

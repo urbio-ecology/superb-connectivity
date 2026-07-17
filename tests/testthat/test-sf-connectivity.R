@@ -106,7 +106,7 @@ test_that("sf_habitat_connectivity returns a data frame with expected columns", 
     buffer_radius = 200
   )
 
-  expect_s3_class(result, "patch_size")
+  expect_s3_class(result, "patch_size_tbl")
   expect_snapshot(names(result))
   expect_gt(nrow(result), 0)
   expect_all_true(as.numeric(result$area) > 0)

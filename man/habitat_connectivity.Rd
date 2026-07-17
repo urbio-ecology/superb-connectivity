@@ -72,7 +72,7 @@ connectivity <- habitat_connectivity(
 connectivity
 
 # get the patch size:
-connectivity$patch_size[[1]]
+patch_sizes(connectivity)[[1]]
 
 }
 \seealso{

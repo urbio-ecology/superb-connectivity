@@ -25,9 +25,11 @@ A \code{patch_size_tbl} object: a tibble with \code{species} and
 \code{interpatch_distance} attributes.
 }
 \description{
-The object returned by \code{\link[=habitat_connectivity]{habitat_connectivity()}}: a \link[tibble:tibble]{tibble}
-of connected patch areas that also carries the \code{species} and
-\code{interpatch_distance} the analysis was run with as attributes.
+A \link[tibble:tibble]{tibble} of connected patch areas (one row per patch)
+that also carries the \code{species} and \code{interpatch_distance} the analysis
+was run with as attributes. \code{\link[=habitat_connectivity]{habitat_connectivity()}} builds one of these
+internally for each call; retrieve it from the returned \code{connectivity}
+summary with \code{\link[=patch_sizes]{patch_sizes()}}.
 }
 \details{
 Because it is a tibble subclass it behaves like a data frame directly --

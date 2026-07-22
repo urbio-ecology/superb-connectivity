@@ -358,8 +358,12 @@ aggregate_connected_patches <- function(raster) {
 #'   `habitat_buffer()` warns and returns the habitat unchanged. See
 #'   `vignette("interpatch-distance-and-resolution")`.
 #' @param verbose Logical. Display progress messages (default: TRUE).
-#' @returns Data frame with connectivity metrics of all patches. The patch size
-#'  is stored as a list column, "patch_size".
+#' @returns A `connectivity` object (one row): a tibble of landscape-level
+#'  connectivity metrics (patch count, effective mesh size, probability of
+#'  connectedness, mean and total patch area) for the species and
+#'  interpatch distance supplied. The per-patch areas the summary is built
+#'  from are stored in a list column, "patch_size" -- retrieve them with
+#'  [patch_sizes()].
 #' @seealso `vignette("interpatch-distance-and-resolution")` for the
 #'   relationship between interpatch distance, buffer radius, and resolution.
 #' @export

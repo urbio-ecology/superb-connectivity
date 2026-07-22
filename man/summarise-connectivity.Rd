@@ -18,12 +18,14 @@ summarise_connectivity(connectivity, connectivity_baseline = NULL, ...)
 )
 }
 \arguments{
-\item{connectivity}{data.frame of class "patch_size_tbl", obtained from
+\item{connectivity}{data.frame of class "patch_size_tbl", obtained via
+\code{\link[=patch_sizes]{patch_sizes()}} from a \code{connectivity} object returned by
 \code{\link[=habitat_connectivity]{habitat_connectivity()}}. Contains area measurements of connected patches.}
 
 \item{connectivity_baseline}{Optional. data.frame of class
-"patch_size_tbl", obtained from \code{\link[=habitat_connectivity]{habitat_connectivity()}}. Contains
-baseline area measurements of connected patches. Default is NULL.}
+"patch_size_tbl", obtained via \code{\link[=patch_sizes]{patch_sizes()}} from a \code{connectivity}
+object returned by \code{\link[=habitat_connectivity]{habitat_connectivity()}}. Contains baseline area
+measurements of connected patches. Default is NULL.}
 
 \item{...}{extra arguments to pass through for default method.}
 
@@ -49,7 +51,7 @@ Calculates a comprehensive set of habitat connectivity metrics including
 effective mesh size, probability of connectedness, and patch statistics.
 There are two methods, the default, and one that dispatches on objects of
 class, \code{patch_size_tbl}, created by \code{\link[=patch_size_tbl]{patch_size_tbl()}}, which is used mostly
-internally inside of \url{habitat_connectivity}. The default method requires
+internally inside of \code{\link[=habitat_connectivity]{habitat_connectivity()}}. The default method requires
 "connectivity" to be a vector of areas, and also requires scalar values
 (values of length 1) of interpatch distance, resolution, and species. See
 examples below.

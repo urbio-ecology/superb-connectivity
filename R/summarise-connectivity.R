@@ -4,18 +4,20 @@
 #' effective mesh size, probability of connectedness, and patch statistics.
 #' There are two methods, the default, and one that dispatches on objects of
 #' class, `patch_size_tbl`, created by [patch_size_tbl()], which is used mostly
-#' internally inside of [habitat_connectivity](). The default method requires
+#' internally inside of [habitat_connectivity()]. The default method requires
 #' "connectivity" to be a vector of areas, and also requires scalar values
 #' (values of length 1) of interpatch distance, resolution, and species. See
 #' examples below.
 #'
 #' @name summarise-connectivity
 #'
-#' @param connectivity data.frame of class "patch_size_tbl", obtained from
+#' @param connectivity data.frame of class "patch_size_tbl", obtained via
+#'   [patch_sizes()] from a `connectivity` object returned by
 #'   [habitat_connectivity()]. Contains area measurements of connected patches.
 #' @param connectivity_baseline Optional. data.frame of class
-#'   "patch_size_tbl", obtained from [habitat_connectivity()]. Contains
-#'   baseline area measurements of connected patches. Default is NULL.
+#'   "patch_size_tbl", obtained via [patch_sizes()] from a `connectivity`
+#'   object returned by [habitat_connectivity()]. Contains baseline area
+#'   measurements of connected patches. Default is NULL.
 #' @param ... extra arguments to pass through for default method.
 #'
 #' @returns A tibble with connectivity metrics including number of patches,

@@ -5,13 +5,11 @@
 \alias{lizard_areas_connected}
 \title{Connected habitat patch areas for Blue-tongued Lizard}
 \format{
-A data frame with columns:
+A \code{patch_size_tbl} with columns:
 \describe{
 \item{patch_id}{Integer. Connected fragment ID.}
 \item{area}{Numeric. Total area of the connected patch in square metres.}
 }
-
-An object of class \code{patch_size_tbl} (inherits from \code{tbl_df}, \code{tbl}, \code{data.frame}) with 73 rows and 2 columns.
 }
 \source{
 Generated from \code{\link[=example_habitat]{example_habitat()}} and \code{\link[=example_barrier]{example_barrier()}} at
@@ -19,29 +17,30 @@ Generated from \code{\link[=example_habitat]{example_habitat()}} and \code{\link
 }
 \usage{
 lizard_areas_connected
-
-lizard_areas_connected
 }
 \description{
-Pre-computed output of \code{\link[=habitat_connectivity]{habitat_connectivity()}} run on the lizard example
-data at a 50 metre interpatch distance. Contains one row per connected
-habitat patch.
+Pre-computed per-patch areas for the lizard example data at a 50 metre
+interpatch distance. This is a \code{patch_size_tbl} -- the per-patch table
+carried inside the \code{connectivity} object returned by
+\code{\link[=habitat_connectivity]{habitat_connectivity()}}, extracted with the \code{\link[=patch_sizes]{patch_sizes()}} accessor.
+Contains one row per connected habitat patch.
 }
 \examples{
 # This was the code that was run to create this object. We don't run it
 # as it takes some time to run
 \dontrun{
-lizard_areas_connected <- habitat_connectivity(
+lizard_connectivity <- habitat_connectivity(
     habitat = example_habitat(),
     barrier = example_barrier(),
     species = "Blue-tongued Lizard",
     interpatch_distance = 50,
     verbose = FALSE
   )
+lizard_areas_connected <- patch_sizes(lizard_connectivity)[[1]]
 }
 lizard_areas_connected
 }
 \seealso{
-\code{\link[=habitat_connectivity]{habitat_connectivity()}}, \code{\link[=summarise_connectivity]{summarise_connectivity()}}
+\code{\link[=habitat_connectivity]{habitat_connectivity()}}, \code{\link[=patch_sizes]{patch_sizes()}}, \code{\link[=summarise_connectivity]{summarise_connectivity()}}
 }
 \keyword{datasets}

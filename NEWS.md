@@ -22,9 +22,13 @@
     - change `area` parameter for summarise/compare_connectivity to be `connectivity`
     - remove use of arguments, `target_resolution` and  `aggregation_factor` from many functions as it is only really relevant to the spatial processing, and we really only care about the resolution at the end of the day
 
+* `habitat_connectivity()` now returns a one-row `connectivity`-class landscape summary (`n_patches`, `effective_mesh_ha`, `prob_connectedness`, `patch_area_mean`, `patch_area_total_ha`, ...) instead of the raw per-patch table. The per-patch areas travel with it in a `patch_size` list-column, retrievable with the new `patch_sizes()` accessor. `sf_habitat_connectivity()` still returns the per-patch table directly for now. (#141)
+* Rename the per-patch class and constructor `patch_size()` -> `patch_size_tbl()` (and internal `new_patch_size()` -> `new_patch_size_tbl()`), freeing up the `patch_sizes` name for the new accessor above. (#138)
+
 ## Breaking changes
 
 * `interpatch_distance` is now the full edge-to-edge distance below which two patches count as connected. It is halved internally to the buffer radius, so connectivity results differ from previous versions; reproduce old output by passing `buffer_radius =` the old value. (#131)
+* `habitat_connectivity()` return type changed from a per-patch `patch_size_tbl` to a one-row `connectivity` summary. Code relying on per-patch columns (e.g. `habitat_connectivity(...)$area`) should instead use `patch_sizes(habitat_connectivity(...))[[1]]`. (#141)
  
 # urbioconnect 0.1.0
 

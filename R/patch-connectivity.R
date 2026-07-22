@@ -1,8 +1,10 @@
 #' A set of connected habitat patches
 #'
-#' The object returned by [habitat_connectivity()]: a [tibble][tibble::tibble]
-#' of connected patch areas that also carries the `species` and
-#' `interpatch_distance` the analysis was run with as attributes.
+#' A [tibble][tibble::tibble] of connected patch areas (one row per patch)
+#' that also carries the `species` and `interpatch_distance` the analysis
+#' was run with as attributes. [habitat_connectivity()] builds one of these
+#' internally for each call; retrieve it from the returned `connectivity`
+#' summary with [patch_sizes()].
 #'
 #' Because it is a tibble subclass it behaves like a data frame directly --
 #' `$`, `[`, [DT::datatable()], [utils::write.csv()] and ggplot2 all work

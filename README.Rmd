@@ -111,12 +111,13 @@ areas <- habitat_connectivity(
 areas
 ```
 
-Summarise the connectivity metrics:
+`areas` already contains the landscape-level summary (effective mesh size,
+probability of connectedness, patch counts, and so on). The per-patch areas
+that summary is built from are stored in a list-column, and can be pulled
+out with `patch_sizes()`:
 
-```{r summarise}
-summarise_connectivity(
-  connectivity = areas
-)
+```{r patch-detail}
+patch_sizes(areas)[[1]]
 ```
 
 

@@ -254,16 +254,25 @@ We developed each step of the pipeline as a set of functions that can be run ind
 
 ```{r}
 #| label: shortcut
-areas_connected <- habitat_connectivity(
+areas <- habitat_connectivity(
   habitat = habitat,
   barrier = barrier,
   species = "Blue-tongued Lizard",
   interpatch_distance = interpatch_distance,
   verbose = TRUE
 )
+
+areas
 ```
 
-The package also includes a pre-computed version of this result (at 50 m interpatch distance) as `lizard_areas_connected`:
+`areas` is a `connectivity` object: a one-row landscape summary containing the same kind of metrics we computed by hand above (`n_patches`, `effective_mesh_ha`, `prob_connectedness`, and so on). The per-patch areas that summary is built from travel with it in a list-column, and can be pulled out with `patch_sizes()`:
+
+```{r}
+#| label: shortcut-patch-sizes
+patch_sizes(areas)[[1]]
+```
+
+The package also includes a pre-computed per-patch table (at 50 m interpatch distance) as `lizard_areas_connected`, equivalent to `patch_sizes(habitat_connectivity(...))[[1]]`:
 
 ```{r}
 #| label: precomputed
@@ -297,20 +306,21 @@ buffered_radiuses <- interpatch_distances / 2
 all_results <- purrr::map(
   interpatch_distances,
   function(d) {
-    areas <- habitat_connectivity(
+    habitat_connectivity(
       habitat = habitat,
       barrier = barrier,
       species = "Blue-tongued Lizard",
       interpatch_distance = d,
       verbose = FALSE
     )
-    summarise_connectivity(connectivity = areas)
   }
 ) |>
   purrr::list_rbind()
 
 all_results
 ```
+
+Each call to `habitat_connectivity()` already returns a one-row summary, so `purrr::list_rbind()` stacks them directly -- there's no separate `summarise_connectivity()` step needed here.
 
 With multiple buffer distances you can visualise how connectivity changes using `plot_connectivity()`:
 
@@ -334,4 +344,4 @@ The core raster workflow in `urbioconnect` is:
 6. `aggregate_connected_patches()` - summarise patch areas
 7. `summarise_connectivity()` - compute effective mesh size and probability of connectedness
 
-Or, equivalently, use `habitat_connectivity()` for the data frame output, or `habitat_connectivity_full()` when you also need the intermediate rasters.
+Or, equivalently, use `habitat_connectivity()` for the one-row landscape summary (with per-patch data available via `patch_sizes()`), or `habitat_connectivity_full()` when you also need the intermediate rasters.

@@ -75,6 +75,25 @@
     relevant to the spatial processing, and we really only care about
     the resolution at the end of the day
 
+- [`habitat_connectivity()`](https://urbio-ecology.github.io/urbioconnect/reference/habitat_connectivity.md)
+  now returns a one-row `connectivity`-class landscape summary
+  (`n_patches`, `effective_mesh_ha`, `prob_connectedness`,
+  `patch_area_mean`, `patch_area_total_ha`, …) instead of the raw
+  per-patch table. The per-patch areas travel with it in a `patch_size`
+  list-column, retrievable with the new
+  [`patch_sizes()`](https://urbio-ecology.github.io/urbioconnect/reference/patch_sizes.md)
+  accessor.
+  [`sf_habitat_connectivity()`](https://urbio-ecology.github.io/urbioconnect/reference/sf_habitat_connectivity.md)
+  still returns the per-patch table directly for now.
+  ([\#141](https://github.com/urbio-ecology/urbioconnect/issues/141))
+
+- Rename the per-patch class and constructor `patch_size()` -\>
+  [`patch_size_tbl()`](https://urbio-ecology.github.io/urbioconnect/reference/new_patch_size_tbl.md)
+  (and internal `new_patch_size()` -\>
+  [`new_patch_size_tbl()`](https://urbio-ecology.github.io/urbioconnect/reference/new_patch_size_tbl.md)),
+  freeing up the `patch_sizes` name for the new accessor above.
+  ([\#138](https://github.com/urbio-ecology/urbioconnect/issues/138))
+
 ### Breaking changes
 
 - `interpatch_distance` is now the full edge-to-edge distance below
@@ -82,6 +101,12 @@
   buffer radius, so connectivity results differ from previous versions;
   reproduce old output by passing `buffer_radius =` the old value.
   ([\#131](https://github.com/urbio-ecology/urbioconnect/issues/131))
+- [`habitat_connectivity()`](https://urbio-ecology.github.io/urbioconnect/reference/habitat_connectivity.md)
+  return type changed from a per-patch `patch_size_tbl` to a one-row
+  `connectivity` summary. Code relying on per-patch columns
+  (e.g. `habitat_connectivity(...)$area`) should instead use
+  `patch_sizes(habitat_connectivity(...))[[1]]`.
+  ([\#141](https://github.com/urbio-ecology/urbioconnect/issues/141))
 
 ## urbioconnect 0.1.0
 

@@ -82,7 +82,12 @@ habitat_connectivity(
 
 ## Value
 
-Data frame with connectivity metrics per patch.
+A `connectivity` object (one row): a tibble of landscape-level
+connectivity metrics (patch count, effective mesh size, probability of
+connectedness, mean and total patch area) for the species and interpatch
+distance supplied. The per-patch areas the summary is built from are
+stored in a list column, "patch_size" – retrieve them with
+[`patch_sizes()`](https://urbio-ecology.github.io/urbioconnect/reference/patch_sizes.md).
 
 ## See also
 
@@ -102,7 +107,7 @@ connectivity <- habitat_connectivity(
     interpatch_distance = 12
   )
 #> ℹ Creating barrier mask
-#> ✔ Creating barrier mask [32ms]
+#> ✔ Creating barrier mask [31ms]
 #> 
 #> ℹ Removing habitat underneath barrier
 #> ✔ Removing habitat underneath barrier [23ms]
@@ -111,16 +116,25 @@ connectivity <- habitat_connectivity(
 #> ✔ Adding 6m buffer (interpatch distance 12m) [218ms]
 #> 
 #> ℹ Fragmenting habitat layer along barrier intersection
-#> ✔ Fragmenting habitat layer along barrier intersection [23ms]
+#> ✔ Fragmenting habitat layer along barrier intersection [25ms]
 #> 
 #> ℹ Assigning patches ID to fragments
 #> ✔ Assigning patches ID to fragments [2.2s]
 #> 
 #> ℹ Summarising area in each patch
-#> ✔ Summarising area in each patch [48ms]
+#> ✔ Summarising area in each patch [47ms]
 #> 
 connectivity
-#> # patch_size:          data.frame
+#> # A tibble: 1 × 9
+#>   species     interpatch_distance n_patches effective_mesh_ha prob_connectedness
+#>   <chr>                     <dbl>     <int>             <dbl>              <dbl>
+#> 1 Blue-tongu…                  12       399                 4           0.000016
+#> # ℹ 4 more variables: patch_area_mean <dbl>, patch_area_total_ha <dbl>,
+#> #   data_resolution <chr>, patch_size <list>
+
+# get the patch size:
+patch_sizes(connectivity)[[1]]
+#> # patch_size_tbl:      data.frame
 #> # Species:             Blue-tongued Lizard
 #> # Patches:             399
 #> # Resolution:          2x2

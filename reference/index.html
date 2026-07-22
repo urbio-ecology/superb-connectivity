@@ -15,11 +15,11 @@
     </button>
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
-      <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
+      <ul class="navbar-nav me-auto"><li class="nav-item"><a class="nav-link" href="../articles/urbioconnect.html">Get started</a></li>
+<li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/getting-started.html">Getting started</a></li>
-    <li><a class="dropdown-item" href="../articles/interpatch-distance-and-resolution.html">Interpatch distance and raster resolution</a></li>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/interpatch-distance-and-resolution.html">Interpatch distance and raster resolution</a></li>
     <li><a class="dropdown-item" href="../articles/raster-vs-vector.html">Using raster vs vector</a></li>
     <li><a class="dropdown-item" href="../articles/targets-pipeline.html">Using urbioconnect in a targets pipeline</a></li>
   </ul></li>
@@ -122,17 +122,24 @@
 
       <dl><dt>
 
-          <code><a href="new_patch_size.html">new_patch_size()</a></code> <code><a href="new_patch_size.html">patch_size()</a></code>
+          <code><a href="patch_sizes.html">patch_sizes()</a></code>
 
         </dt>
-        <dd>A set of connected habitat patches</dd>
+        <dd>Extract the per-patch tables from a <code>connectivity</code> object</dd>
 
         <dt>
 
           <code><a href="pc-getters.html">pc_species()</a></code> <code><a href="pc-getters.html">pc_patches()</a></code> <code><a href="pc-getters.html">pc_res()</a></code> <code><a href="pc-getters.html">pc_interpatch_distance()</a></code>
 
         </dt>
-        <dd>Metadata from a <code>patch_size</code> object</dd>
+        <dd>Metadata from a <code>patch_size_tbl</code> object</dd>
+
+        <dt>
+
+          <code><a href="new_patch_size_tbl.html">new_patch_size_tbl()</a></code> <code><a href="new_patch_size_tbl.html">patch_size_tbl()</a></code>
+
+        </dt>
+        <dd>A set of connected habitat patches</dd>
       </dl></div><div class="section level2">
       <h2 id="raster-functions">Raster functions<a class="anchor" aria-label="anchor" href="#raster-functions"></a></h2>
 

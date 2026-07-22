@@ -1,6 +1,6 @@
-# Metadata from a `patch_size` object
+# Metadata from a `patch_size_tbl` object
 
-Metadata from a `patch_size` object
+Metadata from a `patch_size_tbl` object
 
 ## Usage
 
@@ -19,7 +19,7 @@ pc_interpatch_distance(x)
 - x:
 
   A
-  [`patch_size()`](https://urbio-ecology.github.io/urbioconnect/reference/new_patch_size.md)
+  [`patch_size_tbl()`](https://urbio-ecology.github.io/urbioconnect/reference/new_patch_size_tbl.md)
   object.
 
 ## Value

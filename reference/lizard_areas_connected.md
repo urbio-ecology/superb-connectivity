@@ -1,21 +1,22 @@
 # Connected habitat patch areas for Blue-tongued Lizard
 
-Pre-computed output of
-[`habitat_connectivity()`](https://urbio-ecology.github.io/urbioconnect/reference/habitat_connectivity.md)
-run on the lizard example data at a 50 metre interpatch distance.
-Contains one row per connected habitat patch.
+Pre-computed per-patch areas for the lizard example data at a 50 metre
+interpatch distance. This is a `patch_size_tbl` – the per-patch table
+carried inside the `connectivity` object returned by
+[`habitat_connectivity()`](https://urbio-ecology.github.io/urbioconnect/reference/habitat_connectivity.md),
+extracted with the
+[`patch_sizes()`](https://urbio-ecology.github.io/urbioconnect/reference/patch_sizes.md)
+accessor. Contains one row per connected habitat patch.
 
 ## Usage
 
 ``` r
 lizard_areas_connected
-
-lizard_areas_connected
 ```
 
 ## Format
 
-A data frame with columns:
+A `patch_size_tbl` with columns:
 
 - patch_id:
 
@@ -24,9 +25,6 @@ A data frame with columns:
 - area:
 
   Numeric. Total area of the connected patch in square metres.
-
-An object of class `patch_size` (inherits from `tbl_df`, `tbl`,
-`data.frame`) with 73 rows and 2 columns.
 
 ## Source
 
@@ -39,6 +37,7 @@ at 50 metre interpatch distance.
 ## See also
 
 [`habitat_connectivity()`](https://urbio-ecology.github.io/urbioconnect/reference/habitat_connectivity.md),
+[`patch_sizes()`](https://urbio-ecology.github.io/urbioconnect/reference/patch_sizes.md),
 [`summarise_connectivity()`](https://urbio-ecology.github.io/urbioconnect/reference/summarise-connectivity.md)
 
 ## Examples
@@ -47,16 +46,17 @@ at 50 metre interpatch distance.
 # This was the code that was run to create this object. We don't run it
 # as it takes some time to run
 if (FALSE) { # \dontrun{
-lizard_areas_connected <- habitat_connectivity(
+lizard_connectivity <- habitat_connectivity(
     habitat = example_habitat(),
     barrier = example_barrier(),
     species = "Blue-tongued Lizard",
     interpatch_distance = 50,
     verbose = FALSE
   )
+lizard_areas_connected <- patch_sizes(lizard_connectivity)[[1]]
 } # }
 lizard_areas_connected
-#> # patch_size:          data.frame
+#> # patch_size_tbl:      data.frame
 #> # Species:             Blue-tongued Lizard
 #> # Patches:             73
 #> # Resolution:          2x2

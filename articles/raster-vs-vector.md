@@ -116,10 +116,29 @@ raster_result <- habitat_connectivity(
   verbose = FALSE
 )
 rast_time <- toc()
-#> 2.693 sec elapsed
+#> 2.678 sec elapsed
 
 raster_result
-#> # patch_size:          data.frame
+#> # A tibble: 1 × 9
+#>   species     interpatch_distance n_patches effective_mesh_ha prob_connectedness
+#>   <chr>                     <dbl>     <int>             <dbl>              <dbl>
+#> 1 Blue-tongu…                  10       703                 4           0.000015
+#> # ℹ 4 more variables: patch_area_mean <dbl>, patch_area_total_ha <dbl>,
+#> #   data_resolution <chr>, patch_size <list>
+```
+
+[`habitat_connectivity()`](https://urbio-ecology.github.io/urbioconnect/reference/habitat_connectivity.md)
+returns a `connectivity` object: a one-row landscape summary
+(`n_patches`, `effective_mesh_ha`, `prob_connectedness`, and so on). The
+per-patch areas that summary is built from travel with it in a
+list-column, and can be pulled out with
+[`patch_sizes()`](https://urbio-ecology.github.io/urbioconnect/reference/patch_sizes.md):
+
+``` r
+
+raster_patches <- patch_sizes(raster_result)[[1]]
+raster_patches
+#> # patch_size_tbl:      data.frame
 #> # Species:             Blue-tongued Lizard
 #> # Patches:             703
 #> # Resolution:          2x2
@@ -134,8 +153,7 @@ raster_result
 #> # ℹ 698 more rows
 ```
 
-The raster result has columns `patch_id`, `area` (square metres), and
-`area_squared`.
+`raster_patches` has columns `patch_id` and `area` (square metres).
 
 ### Vector approach
 
@@ -149,10 +167,10 @@ vector_result <- sf_habitat_connectivity(
   interpatch_distance = interpatch_dist
 )
 vect_time <- toc()
-#> 9.946 sec elapsed
+#> 9.662 sec elapsed
 
 vector_result
-#> # patch_size:          data.frame
+#> # patch_size_tbl:      data.frame
 #> # Species:             lizard
 #> # Patches:             483
 #> # Resolution:          NA
@@ -167,16 +185,22 @@ vector_result
 #> # ℹ 478 more rows
 ```
 
-The vector result has columns `patch_id`, `area` , and `area_squared`.
+Unlike
+[`habitat_connectivity()`](https://urbio-ecology.github.io/urbioconnect/reference/habitat_connectivity.md),
+[`sf_habitat_connectivity()`](https://urbio-ecology.github.io/urbioconnect/reference/sf_habitat_connectivity.md)
+returns the per-patch table directly – a `patch_size_tbl` with one row
+per connected patch and columns `patch_id` and `area`, rather than a
+summarised `connectivity` object. This asymmetry between the raster and
+vector entry points is a known follow-up, noted again below.
 
 ## Comparing raster vs vector
 
-Both approaches produce one row per connected habitat patch, with patch
-area and squared area.
+Both approaches identify one connected patch per row of their respective
+per-patch tables, with patch area and squared area.
 
 ``` r
 
-nrow(raster_result)
+nrow(raster_patches)
 #> [1] 703
 nrow(vector_result)
 #> [1] 483
@@ -189,50 +213,47 @@ exact polygon geometry, so it typically produces slightly different (and
 arguably more precise) patch boundaries, particularly along curved or
 irregular barrier edges.
 
-    #> [1] 2.693
+    #> [1] 2.678
 
 Timings for the methods are also important to consider. The raster
-approach took 2.693 seconds, and the vector approach took 9.946 seconds.
+approach took 2.678 seconds, and the vector approach took 9.662 seconds.
 
 ## Summarising connectivity metrics
 
+[`habitat_connectivity()`](https://urbio-ecology.github.io/urbioconnect/reference/habitat_connectivity.md)
+already returns the landscape summary directly (`raster_result`, above).
+For the vector approach,
+[`sf_habitat_connectivity()`](https://urbio-ecology.github.io/urbioconnect/reference/sf_habitat_connectivity.md)
+returns the per-patch table, so it needs an explicit
 [`summarise_connectivity()`](https://urbio-ecology.github.io/urbioconnect/reference/summarise-connectivity.md)
-works with output from either approach. You simply pass the appropriate
-area columns as vectors.
+call to produce the equivalent summary. Pass the `patch_size_tbl`
+straight through –
+[`summarise_connectivity()`](https://urbio-ecology.github.io/urbioconnect/reference/summarise-connectivity.md)
+reads the species, interpatch distance, and resolution from the object
+itself, so there is no need to supply them again:
 
 ``` r
 
-# Raster approach output uses the `area` column
-summarise_connectivity(
-  connectivity = raster_result$area,
-  interpatch_distance = interpatch_dist,
-  data_resolution = 10,
-  species = "Blue-tongued Lizard (raster)"
-)
-#> # A tibble: 1 × 8
+summarise_connectivity(connectivity = vector_result)
+#> # A tibble: 1 × 9
+#>   species interpatch_distance n_patches effective_mesh_ha prob_connectedness
+#>   <chr>                 <dbl>     <int>             <dbl>              <dbl>
+#> 1 lizard                   10       483                 4           0.000016
+#> # ℹ 4 more variables: patch_area_mean <dbl>, patch_area_total_ha <dbl>,
+#> #   data_resolution <chr>, patch_size <list>
+```
+
+Compare that against the raster summary computed earlier:
+
+``` r
+
+raster_result
+#> # A tibble: 1 × 9
 #>   species     interpatch_distance n_patches effective_mesh_ha prob_connectedness
 #>   <chr>                     <dbl>     <int>             <dbl>              <dbl>
 #> 1 Blue-tongu…                  10       703                 4           0.000015
-#> # ℹ 3 more variables: patch_area_mean <dbl>, patch_area_total_ha <dbl>,
-#> #   data_resolution <dbl>
-```
-
-``` r
-
-# Vector approach output uses the `area` column
-# Strip units before passing to summarise_connectivity
-summarise_connectivity(
-  connectivity = vector_result$area,
-  interpatch_distance = interpatch_dist,
-  data_resolution = NA,
-  species = "Blue-tongued Lizard (vector)"
-) 
-#> # A tibble: 1 × 8
-#>   species     interpatch_distance n_patches effective_mesh_ha prob_connectedness
-#>   <chr>                     <dbl>     <int>             <dbl>              <dbl>
-#> 1 Blue-tongu…                  10       483                 4           0.000016
-#> # ℹ 3 more variables: patch_area_mean <dbl>, patch_area_total_ha <dbl>,
-#> #   data_resolution <lgl>
+#> # ℹ 4 more variables: patch_area_mean <dbl>, patch_area_total_ha <dbl>,
+#> #   data_resolution <chr>, patch_size <list>
 ```
 
 The metrics — effective mesh size, probability of connectedness, mean

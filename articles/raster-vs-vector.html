@@ -29,12 +29,12 @@
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
+<li class="nav-item"><a class="nav-link" href="../articles/urbioconnect.html">Get started</a></li>
 <li class="nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="active nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
-<li><a class="dropdown-item" href="../articles/getting-started.html">Getting started</a></li>
-    <li><a class="dropdown-item" href="../articles/interpatch-distance-and-resolution.html">Interpatch distance and raster resolution</a></li>
+<li><a class="dropdown-item" href="../articles/interpatch-distance-and-resolution.html">Interpatch distance and raster resolution</a></li>
     <li><a class="dropdown-item" href="../articles/raster-vs-vector.html">Using raster vs vector</a></li>
     <li><a class="dropdown-item" href="../articles/targets-pipeline.html">Using urbioconnect in a targets pipeline</a></li>
   </ul>
@@ -166,10 +166,25 @@ the <code>tictoc</code> package</p>
 <span>  verbose <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span>
 <span><span class="va">rast_time</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/tictoc/man/tic.html" class="external-link">toc</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; 2.693 sec elapsed</span></span>
+<span><span class="co">#&gt; 2.678 sec elapsed</span></span>
 <span></span>
 <span><span class="va">raster_result</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># patch_size:          data.frame</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 9</span></span></span>
+<span><span class="co">#&gt;   species     interpatch_distance n_patches effective_mesh_ha prob_connectedness</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> Blue-tongu…                  10       703                 4           0.000<span style="text-decoration: underline;">015</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 4 more variables: patch_area_mean &lt;dbl&gt;, patch_area_total_ha &lt;dbl&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   data_resolution &lt;chr&gt;, patch_size &lt;list&gt;</span></span></span></code></pre></div>
+<p><code><a href="../reference/habitat_connectivity.html">habitat_connectivity()</a></code> returns a
+<code>connectivity</code> object: a one-row landscape summary
+(<code>n_patches</code>, <code>effective_mesh_ha</code>,
+<code>prob_connectedness</code>, and so on). The per-patch areas that
+summary is built from travel with it in a list-column, and can be pulled
+out with <code><a href="../reference/patch_sizes.html">patch_sizes()</a></code>:</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">raster_patches</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/patch_sizes.html">patch_sizes</a></span><span class="op">(</span><span class="va">raster_result</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span>
+<span><span class="va">raster_patches</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># patch_size_tbl:      data.frame</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># Species:             Blue-tongued Lizard</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># Patches:             703</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># Resolution:          2x2</span></span></span>
@@ -182,13 +197,13 @@ the <code>tictoc</code> package</p>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span>        8  <span style="text-decoration: underline;">1</span>200. </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span>       10 <span style="text-decoration: underline;">92</span>034. </span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 698 more rows</span></span></span></code></pre></div>
-<p>The raster result has columns <code>patch_id</code>,
-<code>area</code> (square metres), and <code>area_squared</code>.</p>
+<p><code>raster_patches</code> has columns <code>patch_id</code> and
+<code>area</code> (square metres).</p>
 </div>
 <div class="section level3">
 <h3 id="vector-approach">Vector approach<a class="anchor" aria-label="anchor" href="#vector-approach"></a>
 </h3>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/tictoc/man/tic.html" class="external-link">tic</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">vector_result</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sf_habitat_connectivity.html">sf_habitat_connectivity</a></span><span class="op">(</span></span>
 <span>  habitat <span class="op">=</span> <span class="va">habitat_sf_clean</span>,</span>
@@ -197,10 +212,10 @@ the <code>tictoc</code> package</p>
 <span>  interpatch_distance <span class="op">=</span> <span class="va">interpatch_dist</span></span>
 <span><span class="op">)</span></span>
 <span><span class="va">vect_time</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/tictoc/man/tic.html" class="external-link">toc</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; 9.946 sec elapsed</span></span>
+<span><span class="co">#&gt; 9.662 sec elapsed</span></span>
 <span></span>
 <span><span class="va">vector_result</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># patch_size:          data.frame</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># patch_size_tbl:      data.frame</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># Species:             lizard</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># Patches:             483</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># Resolution:          NA</span></span></span>
@@ -213,17 +228,22 @@ the <code>tictoc</code> package</p>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span>        4  850.</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span>        5    8 </span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 478 more rows</span></span></span></code></pre></div>
-<p>The vector result has columns <code>patch_id</code>,
-<code>area</code> , and <code>area_squared</code>.</p>
+<p>Unlike <code><a href="../reference/habitat_connectivity.html">habitat_connectivity()</a></code>,
+<code><a href="../reference/sf_habitat_connectivity.html">sf_habitat_connectivity()</a></code> returns the per-patch table
+directly – a <code>patch_size_tbl</code> with one row per connected
+patch and columns <code>patch_id</code> and <code>area</code>, rather
+than a summarised <code>connectivity</code> object. This asymmetry
+between the raster and vector entry points is a known follow-up, noted
+again below.</p>
 </div>
 </div>
 <div class="section level2">
 <h2 id="comparing-raster-vs-vector">Comparing raster vs vector<a class="anchor" aria-label="anchor" href="#comparing-raster-vs-vector"></a>
 </h2>
-<p>Both approaches produce one row per connected habitat patch, with
-patch area and squared area.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rspatial.github.io/terra/reference/dimensions.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">raster_result</span><span class="op">)</span></span>
+<p>Both approaches identify one connected patch per row of their
+respective per-patch tables, with patch area and squared area.</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rspatial.github.io/terra/reference/dimensions.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">raster_patches</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 703</span></span>
 <span><span class="fu"><a href="https://rspatial.github.io/terra/reference/dimensions.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">vector_result</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 483</span></span></code></pre></div>
@@ -233,45 +253,40 @@ approximated at the chosen resolution. The vector approach preserves
 exact polygon geometry, so it typically produces slightly different (and
 arguably more precise) patch boundaries, particularly along curved or
 irregular barrier edges.</p>
-<pre><code><span><span class="co">#&gt; [1] 2.693</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; [1] 2.678</span></span></code></pre>
 <p>Timings for the methods are also important to consider. The raster
-approach took 2.693 seconds, and the vector approach took 9.946
+approach took 2.678 seconds, and the vector approach took 9.662
 seconds.</p>
 </div>
 <div class="section level2">
 <h2 id="summarising-connectivity-metrics">Summarising connectivity metrics<a class="anchor" aria-label="anchor" href="#summarising-connectivity-metrics"></a>
 </h2>
-<p><code><a href="../reference/summarise-connectivity.html">summarise_connectivity()</a></code> works with output from either
-approach. You simply pass the appropriate area columns as vectors.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Raster approach output uses the `area` column</span></span>
-<span><span class="fu"><a href="../reference/summarise-connectivity.html">summarise_connectivity</a></span><span class="op">(</span></span>
-<span>  connectivity <span class="op">=</span> <span class="va">raster_result</span><span class="op">$</span><span class="va">area</span>,</span>
-<span>  interpatch_distance <span class="op">=</span> <span class="va">interpatch_dist</span>,</span>
-<span>  data_resolution <span class="op">=</span> <span class="fl">10</span>,</span>
-<span>  species <span class="op">=</span> <span class="st">"Blue-tongued Lizard (raster)"</span></span>
-<span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 8</span></span></span>
+<p><code><a href="../reference/habitat_connectivity.html">habitat_connectivity()</a></code> already returns the landscape
+summary directly (<code>raster_result</code>, above). For the vector
+approach, <code><a href="../reference/sf_habitat_connectivity.html">sf_habitat_connectivity()</a></code> returns the per-patch
+table, so it needs an explicit <code><a href="../reference/summarise-connectivity.html">summarise_connectivity()</a></code>
+call to produce the equivalent summary. Pass the
+<code>patch_size_tbl</code> straight through –
+<code><a href="../reference/summarise-connectivity.html">summarise_connectivity()</a></code> reads the species, interpatch
+distance, and resolution from the object itself, so there is no need to
+supply them again:</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/summarise-connectivity.html">summarise_connectivity</a></span><span class="op">(</span>connectivity <span class="op">=</span> <span class="va">vector_result</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 9</span></span></span>
+<span><span class="co">#&gt;   species interpatch_distance n_patches effective_mesh_ha prob_connectedness</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                 <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> lizard                   10       483                 4           0.000<span style="text-decoration: underline;">016</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 4 more variables: patch_area_mean &lt;dbl&gt;, patch_area_total_ha &lt;dbl&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   data_resolution &lt;chr&gt;, patch_size &lt;list&gt;</span></span></span></code></pre></div>
+<p>Compare that against the raster summary computed earlier:</p>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">raster_result</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 9</span></span></span>
 <span><span class="co">#&gt;   species     interpatch_distance n_patches effective_mesh_ha prob_connectedness</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> Blue-tongu…                  10       703                 4           0.000<span style="text-decoration: underline;">015</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 3 more variables: patch_area_mean &lt;dbl&gt;, patch_area_total_ha &lt;dbl&gt;,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   data_resolution &lt;dbl&gt;</span></span></span></code></pre></div>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Vector approach output uses the `area` column</span></span>
-<span><span class="co"># Strip units before passing to summarise_connectivity</span></span>
-<span><span class="fu"><a href="../reference/summarise-connectivity.html">summarise_connectivity</a></span><span class="op">(</span></span>
-<span>  connectivity <span class="op">=</span> <span class="va">vector_result</span><span class="op">$</span><span class="va">area</span>,</span>
-<span>  interpatch_distance <span class="op">=</span> <span class="va">interpatch_dist</span>,</span>
-<span>  data_resolution <span class="op">=</span> <span class="cn">NA</span>,</span>
-<span>  species <span class="op">=</span> <span class="st">"Blue-tongued Lizard (vector)"</span></span>
-<span><span class="op">)</span> </span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 8</span></span></span>
-<span><span class="co">#&gt;   species     interpatch_distance n_patches effective_mesh_ha prob_connectedness</span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> Blue-tongu…                  10       483                 4           0.000<span style="text-decoration: underline;">016</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 3 more variables: patch_area_mean &lt;dbl&gt;, patch_area_total_ha &lt;dbl&gt;,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   data_resolution &lt;lgl&gt;</span></span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 4 more variables: patch_area_mean &lt;dbl&gt;, patch_area_total_ha &lt;dbl&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   data_resolution &lt;chr&gt;, patch_size &lt;list&gt;</span></span></span></code></pre></div>
 <p>The metrics — effective mesh size, probability of connectedness, mean
 patch area — will be close but not identical between the two approaches,
 reflecting the geometric differences described above.</p>
@@ -350,7 +365,7 @@ approximation</li>
 </h3>
 <p>If your habitat is in raster format but you want to use the vector
 approach (or vice versa), conversion is straightforward.</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Raster to vector</span></span>
 <span><span class="va">habitat_sf</span> <span class="op">&lt;-</span> <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/as.polygons.html" class="external-link">as.polygons</a></span><span class="op">(</span><span class="fu"><a href="../reference/example-lizard-data.html">example_habitat</a></span><span class="op">(</span><span class="op">)</span>, dissolve <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_as_sf.html" class="external-link">st_as_sf</a></span><span class="op">(</span><span class="op">)</span></span>
@@ -376,7 +391,7 @@ the raster approach.</p>
 <p>Both approaches expose individual functions if you need finer control
 — for example, to inspect intermediate outputs or to substitute a custom
 step.</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Raster step-by-step</span></span>
 <span><span class="va">barrier_mask</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_barrier_mask.html">create_barrier_mask</a></span><span class="op">(</span><span class="va">barrier_rast</span><span class="op">)</span></span>
 <span><span class="va">remaining</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/drop_habitat_under_barrier.html">drop_habitat_under_barrier</a></span><span class="op">(</span><span class="va">habitat_rast</span>, <span class="va">barrier_mask</span><span class="op">)</span></span>
@@ -385,7 +400,7 @@ step.</p>
 <span><span class="va">patches</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/assign_patches_to_fragments.html">assign_patches_to_fragments</a></span><span class="op">(</span><span class="va">remaining</span>, <span class="va">fragmented</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/add_patch_area.html">add_patch_area</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">areas</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/aggregate_connected_patches.html">aggregate_connected_patches</a></span><span class="op">(</span><span class="va">patches</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Vector step-by-step</span></span>
 <span><span class="va">buffered_sf</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sf_habitat_buffer.html">sf_habitat_buffer</a></span><span class="op">(</span><span class="va">habitat_sf_clean</span>, interpatch_distance <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
 <span><span class="va">fragments_sf</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sf_fragment_habitat.html">sf_fragment_habitat</a></span><span class="op">(</span><span class="va">buffered_sf</span>, <span class="va">barrier_sf_clean</span><span class="op">)</span></span>

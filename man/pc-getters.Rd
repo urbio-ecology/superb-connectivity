@@ -6,7 +6,7 @@
 \alias{pc_patches}
 \alias{pc_res}
 \alias{pc_interpatch_distance}
-\title{Metadata from a \code{patch_size} object}
+\title{Metadata from a \code{patch_size_tbl} object}
 \usage{
 pc_species(x)
 
@@ -17,7 +17,7 @@ pc_res(x)
 pc_interpatch_distance(x)
 }
 \arguments{
-\item{x}{A \code{\link[=patch_size]{patch_size()}} object.}
+\item{x}{A \code{\link[=patch_size_tbl]{patch_size_tbl()}} object.}
 }
 \value{
 \itemize{
@@ -30,5 +30,5 @@ number of rows (numeric, length 1).
 }
 }
 \description{
-Metadata from a \code{patch_size} object
+Metadata from a \code{patch_size_tbl} object
 }

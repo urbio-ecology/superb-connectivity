@@ -2,22 +2,35 @@
 #'
 #' Calculates a comprehensive set of habitat connectivity metrics including
 #' effective mesh size, probability of connectedness, and patch statistics.
-#' Intended for usage from objects created by [habitat_connectivity()], but
-#' raw area vectors can be passed. See examples below.
+#' There are two methods, the default, and one that dispatches on objects of
+#' class, `patch_size_tbl`, created by [patch_size_tbl()], which is used mostly
+#' internally inside of [habitat_connectivity()]. The default method requires
+#' "connectivity" to be a vector of areas, and also requires scalar values
+#' (values of length 1) of interpatch distance, resolution, and species. See
+#' examples below.
 #'
 #' @name summarise-connectivity
 #'
-#' @param connectivity data.frame of class "patch_size", obtained from
+#' @param connectivity data.frame of class "patch_size_tbl", obtained via
+#'   [patch_sizes()] from a `connectivity` object returned by
 #'   [habitat_connectivity()]. Contains area measurements of connected patches.
 #' @param connectivity_baseline Optional. data.frame of class
-#'   "patch_size", obtained from [habitat_connectivity()]. Contains
-#'   baseline area measurements of connected patches. Default is NULL.
+#'   "patch_size_tbl", obtained via [patch_sizes()] from a `connectivity`
+#'   object returned by [habitat_connectivity()]. Contains baseline area
+#'   measurements of connected patches. Default is NULL.
 #' @param ... extra arguments to pass through for default method.
 #'
 #' @returns A tibble with connectivity metrics including number of patches,
 #'   probability of connectedness, effective mesh size, mean and total patch
 #'   areas.
 #' @examples
+#' # dispatch on `patch_size_tbl` class - `lizard_areas_connected`
+#' summarise_connectivity(
+#'   connectivity = lizard_areas_connected
+#' )
+#'
+#' # default method
+#' # manually passing area, interpatch distance, resolution, and species
 #' summarise_connectivity(
 #'   connectivity = lizard_areas_connected$area,
 #'   interpatch_distance = 10,
@@ -33,8 +46,36 @@ summarise_connectivity <- function(
   UseMethod("summarise_connectivity")
 }
 
+#' Construct a `connectivity` summary object
+#'
+#' Internal constructor shared by the `summarise_connectivity()` methods. Takes
+#' the assembled results tibble (which must already contain every summary
+#' column plus the `patch_size` list-column) and returns the classed
+#' `connectivity` object with a stable column order.
+#'
+#' @param x Tibble with the summary columns and `patch_size`
+#'   list-column.
+#' @returns A `connectivity` object (a tibble subclass).
+#' @noRd
+new_connectivity <- function(x) {
+  vctrs::new_data_frame(
+    x = list(
+      species = x$species,
+      interpatch_distance = x$interpatch_distance,
+      n_patches = x$n_patches,
+      effective_mesh_ha = x$effective_mesh_ha,
+      prob_connectedness = x$prob_connectedness,
+      patch_area_mean = x$patch_area_mean,
+      patch_area_total_ha = x$patch_area_total_ha,
+      data_resolution = x$data_resolution,
+      patch_size = x$patch_size
+    ),
+    class = c("connectivity", "tbl_df", "tbl")
+  )
+}
+
 #' @export
-summarise_connectivity.patch_size <- function(
+summarise_connectivity.patch_size_tbl <- function(
   connectivity,
   connectivity_baseline = NULL,
   ...
@@ -80,8 +121,12 @@ summarise_connectivity.patch_size <- function(
       species,
       interpatch_distance,
       .before = dplyr::everything()
+    ) |>
+    dplyr::mutate(
+      patch_size = list(connectivity)
     )
-  full_results
+
+  new_connectivity(full_results)
 }
 
 #' @rdname summarise-connectivity
@@ -134,6 +179,10 @@ summarise_connectivity.default <- function(
       species,
       interpatch_distance,
       .before = dplyr::everything()
+    ) |>
+    dplyr::mutate(
+      patch_size = list(connectivity)
     )
-  full_results
+
+  new_connectivity(full_results)
 }

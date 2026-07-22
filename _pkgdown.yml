@@ -16,8 +16,9 @@ reference:
   - habitat_connectivity_full
 - title: Patch connectivity class
   contents:
-  - patch_size
+  - patch_sizes
   - pc-getters
+  - new_patch_size_tbl
 - title: Raster functions
   contents:
   - create_barrier_mask
@@ -57,3 +58,7 @@ reference:
 - title: Shiny app
   contents:
   - run_connectivity_app
+navbar:
+  structure:
+    left:  [intro, reference, articles, tutorials, news]
+    right: [search, github, lightswitch]

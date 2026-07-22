@@ -319,6 +319,8 @@ aggregate_connected_patches <- function(raster) {
     ) |>
     dplyr::mutate(area_squared = area^2) |>
     dplyr::mutate(dplyr::across(dplyr::starts_with("area"), \(x) round(x, 3)))
+
+  summed
 }
 
 #' Calculate habitat connectivity using terra
@@ -356,7 +358,12 @@ aggregate_connected_patches <- function(raster) {
 #'   `habitat_buffer()` warns and returns the habitat unchanged. See
 #'   `vignette("interpatch-distance-and-resolution")`.
 #' @param verbose Logical. Display progress messages (default: TRUE).
-#' @returns Data frame with connectivity metrics per patch.
+#' @returns A `connectivity` object (one row): a tibble of landscape-level
+#'  connectivity metrics (patch count, effective mesh size, probability of
+#'  connectedness, mean and total patch area) for the species and
+#'  interpatch distance supplied. The per-patch areas the summary is built
+#'  from are stored in a list column, "patch_size" -- retrieve them with
+#'  [patch_sizes()].
 #' @seealso `vignette("interpatch-distance-and-resolution")` for the
 #'   relationship between interpatch distance, buffer radius, and resolution.
 #' @export
@@ -370,6 +377,10 @@ aggregate_connected_patches <- function(raster) {
 #'     interpatch_distance = 12
 #'   )
 #' connectivity
+#'
+#' # get the patch size:
+#' patch_sizes(connectivity)[[1]]
+#'
 habitat_connectivity <- function(
   habitat,
   barrier,
@@ -397,7 +408,7 @@ habitat_connectivity <- function(
     )$result
   }
 
-  habitat_connectivity <- new_patch_size(
+  habitat_connectivity <- patch_size_tbl(
     data = habitat_connectivity,
     species = species,
     # store the FULL distance
@@ -405,7 +416,9 @@ habitat_connectivity <- function(
     res = terra::res(habitat)
   )
 
-  habitat_connectivity
+  connectivity <- summarise_connectivity(connectivity = habitat_connectivity)
+
+  connectivity
 }
 
 #' @noRd

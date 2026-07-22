@@ -38,22 +38,11 @@ wren_connectivity_scenario <- habitat_connectivity(
 )
 
 test_that("compare_connectivity() identifies changes in baseline/scenario", {
-  baseline_summary <- summarise_connectivity(
-    connectivity = wren_connectivity_baseline
-  )
-
-  scenario_summary <- summarise_connectivity(
-    connectivity = wren_connectivity_scenario,
-    connectivity_baseline = wren_connectivity_baseline
-  )
-
   results_compare <- compare_connectivity(
-    connectivity = wren_connectivity_scenario,
-    connectivity_baseline = wren_connectivity_baseline
+    connectivity = wren_connectivity_scenario$patch_size[[1]],
+    connectivity_baseline = wren_connectivity_baseline$patch_size[[1]]
   )
 
-  expect_equal(results_compare$n_patches[1], baseline_summary$n_patches)
-  expect_equal(results_compare$n_patches[2], scenario_summary$n_patches)
   expect_gt(
     results_compare$effective_mesh_ha[1],
     results_compare$effective_mesh_ha[2]

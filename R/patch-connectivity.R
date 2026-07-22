@@ -1,8 +1,10 @@
 #' A set of connected habitat patches
 #'
-#' The object returned by [habitat_connectivity()]: a [tibble][tibble::tibble]
-#' of connected patch areas that also carries the `species` and
-#' `interpatch_distance` the analysis was run with as attributes.
+#' A [tibble][tibble::tibble] of connected patch areas (one row per patch)
+#' that also carries the `species` and `interpatch_distance` the analysis
+#' was run with as attributes. [habitat_connectivity()] builds one of these
+#' internally for each call; retrieve it from the returned `connectivity`
+#' summary with [patch_sizes()].
 #'
 #' Because it is a tibble subclass it behaves like a data frame directly --
 #' `$`, `[`, [DT::datatable()], [utils::write.csv()] and ggplot2 all work
@@ -15,10 +17,10 @@
 #'   vector based approaches.
 #' @param interpatch_distance Numeric of length 1. The interpatch distance (m)
 #'   the analysis used.
-#' @returns A `patch_size` object: a tibble with `species` and
+#' @returns A `patch_size_tbl` object: a tibble with `species` and
 #'   `interpatch_distance` attributes.
 #' @export
-new_patch_size <- function(
+new_patch_size_tbl <- function(
   data,
   species,
   interpatch_distance,
@@ -42,11 +44,11 @@ new_patch_size <- function(
     interpatch_distance = interpatch_distance,
     res = res,
     n = nrow(data),
-    class = c("patch_size", "tbl_df", "tbl")
+    class = c("patch_size_tbl", "tbl_df", "tbl")
   )
 }
 
-validate_patch_size <- function(x) {
+validate_patch_size_tbl <- function(x) {
   species <- pc_species(x)
   check_scalar_character(species)
 
@@ -62,21 +64,21 @@ validate_patch_size <- function(x) {
   invisible(x)
 }
 
-#' @rdname new_patch_size
+#' @rdname new_patch_size_tbl
 #' @export
-patch_size <- function(
+patch_size_tbl <- function(
   data,
   species,
   interpatch_distance,
   res = NA_real_
 ) {
-  pc <- new_patch_size(
+  pc <- new_patch_size_tbl(
     data = data,
     species = species,
     interpatch_distance = interpatch_distance,
     res = res
   )
-  validate_patch_size(pc)
+  validate_patch_size_tbl(pc)
   pc
 }
 
@@ -84,7 +86,7 @@ patch_size <- function(
 # Gate on *structural* prerequisites that exist on the bare data dplyr hands us
 # (the required columns), not on metadata attributes -- those live on the
 # template and are restored by df_reconstruct(), not validated here.
-patch_size_can_reconstruct <- function(data) {
+patch_size_tbl_can_reconstruct <- function(data) {
   all(c("patch_id", "area") %in% names(data))
 }
 
@@ -96,13 +98,13 @@ df_reconstruct <- function(x, to) {
   x
 }
 
-patch_size_reconstruct <- function(x, to) {
-  if (patch_size_can_reconstruct(x)) {
+patch_size_tbl_reconstruct <- function(x, to) {
+  if (patch_size_tbl_can_reconstruct(x)) {
     df_reconstruct(x, to)
   } else {
     x <- as.data.frame(x)
     cli::cli_inform(
-      "Removing attributes in {.cls patch_size}",
+      "Removing attributes in {.cls patch_size_tbl}",
       "Returning {.cls data.frame}"
     )
     x
@@ -110,31 +112,31 @@ patch_size_reconstruct <- function(x, to) {
 }
 
 #' @exportS3Method dplyr::dplyr_reconstruct
-dplyr_reconstruct.patch_size <- function(data, template) {
-  patch_size_reconstruct(data, template)
+dplyr_reconstruct.patch_size_tbl <- function(data, template) {
+  patch_size_tbl_reconstruct(data, template)
 }
 
 #' @export
-`[.patch_size` <- function(x, ...) {
+`[.patch_size_tbl` <- function(x, ...) {
   out <- NextMethod()
-  patch_size_reconstruct(out, x)
+  patch_size_tbl_reconstruct(out, x)
 }
 
 #' @export
-`names<-.patch_size` <- function(x, value) {
+`names<-.patch_size_tbl` <- function(x, value) {
   out <- NextMethod()
-  patch_size_reconstruct(out, x)
+  patch_size_tbl_reconstruct(out, x)
 }
 
 #' @export
-print.patch_size <- function(x, ..., n = NULL) {
+print.patch_size_tbl <- function(x, ..., n = NULL) {
   NextMethod(n = n %||% 5)
 }
 
 #' @exportS3Method tibble::tbl_sum
-tbl_sum.patch_size <- function(x) {
+tbl_sum.patch_size_tbl <- function(x) {
   c(
-    "patch_size" = "data.frame",
+    "patch_size_tbl" = "data.frame",
     "Species" = pc_species(x),
     "Patches" = pc_patches(x),
     "Resolution" = pc_res(x),
@@ -142,9 +144,9 @@ tbl_sum.patch_size <- function(x) {
   )
 }
 
-#' Metadata from a `patch_size` object
+#' Metadata from a `patch_size_tbl` object
 #'
-#' @param x A [patch_size()] object.
+#' @param x A [patch_size_tbl()] object.
 #' @returns
 #'  * `pc_species()` Returns the species (character, length 1).
 #'  * `pc_interpatch_distance()` returns the interpatch distance (numeric,
@@ -178,4 +180,23 @@ pc_res <- function(x) {
 #' @export
 pc_interpatch_distance <- function(x) {
   attr(x, "interpatch_distance")
+}
+
+#' Extract the per-patch tables from a `connectivity` object
+#'
+#' A `connectivity` object (from [habitat_connectivity()] or
+#' [summarise_connectivity()]) carries the underlying per-patch areas in a
+#' `patch_size` list-column. `patch_sizes()` returns them.
+#'
+#' @param x A `connectivity` object.
+#' @returns A list of [patch_size_tbl()] objects, one per row of `x` (always a
+#'   list, even for a single-row summary).
+#' @export
+patch_sizes <- function(x) {
+  if (!inherits(x, "connectivity")) {
+    cli::cli_abort(
+      "{.arg x} must be a {.cls connectivity} object, not {.cls {class(x)}}."
+    )
+  }
+  x[["patch_size"]]
 }

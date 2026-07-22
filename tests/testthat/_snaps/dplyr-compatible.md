@@ -1,9 +1,9 @@
-# patch_size class is compatible with dplyr
+# patch_size_tbl class is compatible with dplyr
 
     Code
-      filter(areas, area > 4000)
+      filter(ps, area > 4000)
     Output
-      # patch_size:          data.frame
+      # patch_size_tbl:      data.frame
       # Species:             Blue-tongued Lizard
       # Patches:             4
       # Resolution:          2x2
@@ -18,9 +18,9 @@
 ---
 
     Code
-      filter(areas, area > 1000)
+      filter(ps, area > 1000)
     Output
-      # patch_size:          data.frame
+      # patch_size_tbl:      data.frame
       # Species:             Blue-tongued Lizard
       # Patches:             34
       # Resolution:          2x2
@@ -37,9 +37,9 @@
 ---
 
     Code
-      slice(areas, 1:10)
+      slice(ps, 1:10)
     Output
-      # patch_size:          data.frame
+      # patch_size_tbl:      data.frame
       # Species:             Blue-tongued Lizard
       # Patches:             10
       # Resolution:          2x2
@@ -56,9 +56,9 @@
 ---
 
     Code
-      head(select(areas, -area))
+      head(select(ps, -area))
     Message
-      Removing attributes in <patch_size>
+      Removing attributes in <patch_size_tbl>
     Output
         patch_id
       1        1
@@ -71,9 +71,9 @@
 ---
 
     Code
-      head(select(areas, -patch_id))
+      head(select(ps, -patch_id))
     Message
-      Removing attributes in <patch_size>
+      Removing attributes in <patch_size_tbl>
     Output
             area
       1   60.004
